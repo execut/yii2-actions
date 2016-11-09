@@ -1,0 +1,22 @@
+{
+  "name": "execut/yii2-actions",
+  "description": "A standard set of actions for yii2 through TDD ",
+  "keywords": ["yii2 actions", "yii2 action"],
+  "homepage": "https://github.com/execut/yii2-actions",
+  "type": "yii2-extension",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "eXeCUT"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "yiisoft/yii2": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "execut\\action\\": ""
+    }
+  }
+}
