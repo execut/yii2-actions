@@ -5,7 +5,7 @@
  * Time: 17:51
  */
 
-namespace execut\actions\actions;
+namespace execut\actions;
 
 
 use execut\actions\action\Params;
