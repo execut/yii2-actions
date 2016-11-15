@@ -9,7 +9,7 @@ namespace execut;
 
 
 use execut\TestCase;
-use execut\actions\actions\Action;
+use execut\actions\Action;
 use execut\actions\action\Adapter;
 use execut\actions\action\Params;
 use execut\yii\web\Controller;
@@ -111,7 +111,7 @@ class ActionTest extends TestCase
     }
 
     /**
-     * @return \execut\actions\actions\Action
+     * @return \execut\actions\Action
      */
     protected function getAction()
     {

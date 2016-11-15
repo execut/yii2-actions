@@ -9,7 +9,7 @@ namespace execut\actions\action;
 
 
 use execut\TestCase;
-use execut\actions\actions\Action;
+use execut\actions\Action;
 use execut\actions\action\Adapter;
 use execut\yii\web\Controller;
 use yii\base\Module;
@@ -80,7 +80,7 @@ class ParamsTest extends TestCase
     }
 
     /**
-     * @return \execut\actions\actions\Action
+     * @return \execut\actions\Action
      */
     protected function getAction()
     {
