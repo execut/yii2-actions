@@ -6,7 +6,7 @@
  * Time: 11:41 AM
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
 
 use yii\base\Component;

@@ -5,18 +5,18 @@
  * Time: 11:26
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
 
-use execut\action\Adapter;
-use execut\action\adapter\helper\FormLoader;
+use execut\actions\action\Adapter;
+use execut\actions\action\adapter\helper\FormLoader;
 use yii\base\Model;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
 /**
  * Class GridView
- * @package execut\action
+ * @package execut\actions\action
  * @property Model $filter
  */
 class Form extends Adapter

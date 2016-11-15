@@ -5,16 +5,16 @@
  * Time: 11:26
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
 
-use execut\action\Adapter;
+use execut\actions\action\Adapter;
 use yii\base\Model;
 use yii\web\Response;
 
 /**
  * Class GridView
- * @package execut\action
+ * @package execut\actions\action
  * @property Model $filter
  */
 class File extends Adapter

@@ -6,7 +6,7 @@
  * Time: 14:03
  */
 
-namespace execut\action;
+namespace execut\actions\action;
 
 
 use yii\base\Component;

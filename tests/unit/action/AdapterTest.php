@@ -5,19 +5,19 @@
  * Time: 10:05
  */
 
-namespace execut\action;
+namespace execut\actions\action;
 
 
 use execut\TestCase;
-use execut\action\adapter\ViewRenderer;
-use execut\action\adapter\ViewRendererTest;
+use execut\actions\action\adapter\ViewRenderer;
+use execut\actions\action\adapter\ViewRendererTest;
 use yii\web\Response;
 
 class AdapterTest extends TestCase
 {
     public function testRender() {
         $adapter = $this->getMockForAbstractClass(Adapter::className());
-        $response = new \execut\action\Response();
+        $response = new \execut\actions\action\Response();
         $adapter->expects($this->once())->method('_run')->will($this->returnValue($response));
 
         $this->assertEquals($response, $adapter->run());
@@ -26,7 +26,7 @@ class AdapterTest extends TestCase
 
     public function testWithView() {
         $adapter = $this->getMockForAbstractClass(Adapter::className());
-        $response = new \execut\action\Response([
+        $response = new \execut\actions\action\Response([
             'content' => [
                 'testProperty' => 'testValue',
             ],
@@ -36,7 +36,7 @@ class AdapterTest extends TestCase
         $view = new AdapterTestView();
         $adapter->view = $view;
         $result = $adapter->run();
-        $this->assertInstanceOf(\execut\action\Response::className(), $result);
+        $this->assertInstanceOf(\execut\actions\action\Response::className(), $result);
         $this->assertEquals('run result', $result->content);
         $this->assertEquals('testValue', $view->testProperty);
     }
@@ -99,7 +99,7 @@ class AdapterTest extends TestCase
     public function testRenderWithResponse() {
         $adapter = $this->getMockForAbstractClass(Adapter::className());
         $adapter->method('_run')->will($this->returnCallback(function () use ($adapter) {
-            return new \execut\action\Response([
+            return new \execut\actions\action\Response([
                 'content' => new Response(),
             ]);
         }));
@@ -111,7 +111,7 @@ class AdapterTest extends TestCase
 //    public function testRenderWithViewString() {
 //        $adapter = $this->getMockForAbstractClass(Adapter::className());
 //        $adapter->method('_run')->will($this->returnCallback(function () use ($adapter) {
-//            return new \execut\action\Response([
+//            return new \execut\actions\action\Response([
 //                'content' => [
 //                    'test' => 'test',
 //                ],

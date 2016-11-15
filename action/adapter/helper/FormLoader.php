@@ -5,10 +5,10 @@
  * Time: 10:42
  */
 
-namespace execut\action\adapter\helper;
+namespace execut\actions\action\adapter\helper;
 
 
-use execut\action\adapter\Helper;
+use execut\actions\action\adapter\Helper;
 use yii\db\ActiveRecord;
 use yii\web\UploadedFile;
 

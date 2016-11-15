@@ -5,7 +5,7 @@
  * Time: 13:33
  */
 
-namespace execut\action\adapter\viewRenderer;
+namespace execut\actions\action\adapter\viewRenderer;
 
 
 use execut\TestCase;
@@ -13,7 +13,7 @@ use execut\TestCase;
 class WidgetTest extends TestCase
 {
     public function testRender() {
-        $viewRenderer = new \execut\action\adapter\viewRenderer\Widget();
+        $viewRenderer = new \execut\actions\action\adapter\viewRenderer\Widget();
         $viewRenderer->widget = [
             'class' => WidgetForTest::className(),
             'out' => 'test',
@@ -23,7 +23,7 @@ class WidgetTest extends TestCase
     }
 
     public function testSetActionVarsInWidgetOptions() {
-        $viewRenderer = new \execut\action\adapter\viewRenderer\Widget();
+        $viewRenderer = new \execut\actions\action\adapter\viewRenderer\Widget();
         $viewRenderer->key = 'test';
         $viewRenderer->widget = [
             'key' => '{key}',

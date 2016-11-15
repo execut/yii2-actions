@@ -5,11 +5,11 @@
  * Time: 9:59
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
 
-use execut\action\Adapter;
-use execut\action\Response;
+use execut\actions\action\Adapter;
+use execut\actions\action\Response;
 
 class Delete extends Adapter
 {

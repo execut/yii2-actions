@@ -5,12 +5,12 @@
  * Time: 16:00
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
 
-use execut\action\Adapter;
-use execut\action\adapter\viewRenderer\DetailView;
-use execut\action\Response;
+use execut\actions\action\Adapter;
+use execut\actions\action\adapter\viewRenderer\DetailView;
+use execut\actions\action\Response;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 

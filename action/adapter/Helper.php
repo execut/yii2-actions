@@ -1,5 +1,5 @@
 <?php
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 /**
  * User: execut
  * Date: 15.07.16

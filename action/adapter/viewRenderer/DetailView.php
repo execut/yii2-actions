@@ -5,7 +5,7 @@
  * Time: 13:47
  */
 
-namespace execut\action\adapter\viewRenderer;
+namespace execut\actions\action\adapter\viewRenderer;
 
 
 use yii\helpers\Url;

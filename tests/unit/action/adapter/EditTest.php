@@ -5,7 +5,7 @@
  * Time: 16:15
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 use execut\TestCase;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;

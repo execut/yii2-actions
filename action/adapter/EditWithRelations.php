@@ -5,11 +5,11 @@
  * Time: 14:13
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
-use execut\action\Adapter;
-use execut\action\adapter\viewRenderer\DetailView;
-use execut\action\adapter\viewRenderer\DynaGrid;
+use execut\actions\action\Adapter;
+use execut\actions\action\adapter\viewRenderer\DetailView;
+use execut\actions\action\adapter\viewRenderer\DynaGrid;
 use execut\yii\db\query\ActiveQuery;
 use execut\yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
@@ -43,7 +43,7 @@ class EditWithRelations extends Adapter
 
     public function getDefaultRelationAdapterConfig() {
         $config = [
-            'class' => \execut\action\adapter\GridView::className(),
+            'class' => \execut\actions\action\adapter\GridView::className(),
             'view' => [
                 'class' => DynaGrid::className(),
                 'title' => '',

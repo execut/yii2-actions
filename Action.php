@@ -5,10 +5,10 @@
  * Time: 17:51
  */
 
-namespace execut;
+namespace execut\actions\actions;
 
 
-use execut\action\Params;
+use execut\actions\action\Params;
 use yii\web\Response;
 
 class Action extends \yii\base\Action

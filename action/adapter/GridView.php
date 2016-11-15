@@ -5,11 +5,11 @@
  * Time: 11:26
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
 
-use execut\action\Adapter;
-use execut\action\adapter\viewRenderer\DynaGrid;
+use execut\actions\action\Adapter;
+use execut\actions\action\adapter\viewRenderer\DynaGrid;
 use execut\yii\helpers\Html;
 use yii\base\Model;
 use yii\data\ArrayDataProvider;
@@ -18,10 +18,10 @@ use yii\widgets\ActiveForm;
 
 /**
  * Class GridView
- * @package execut\action
+ * @package execut\actions\action
  * @property Model $filter
  */
-class GridView extends \execut\action\adapter\Form
+class GridView extends \execut\actions\action\adapter\Form
 {
     public $attributes = [
         'id',

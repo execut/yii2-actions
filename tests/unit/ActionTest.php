@@ -9,9 +9,9 @@ namespace execut;
 
 
 use execut\TestCase;
-use execut\Action;
-use execut\action\Adapter;
-use execut\action\Params;
+use execut\actions\actions\Action;
+use execut\actions\action\Adapter;
+use execut\actions\action\Params;
 use execut\yii\web\Controller;
 use yii\base\Module;
 use yii\web\Response;
@@ -33,7 +33,7 @@ class ActionTest extends TestCase
         $adapter = $this->getMockForAbstractClass(Adapter::className());
         $action->controller->expects($this->once())->method('render')->with('test', ['test'])->will($this->returnValue('test'));
 
-        $response = new \execut\action\Response();
+        $response = new \execut\actions\action\Response();
         $adapter->expects($this->exactly(2))->method('_run')->will($this->returnCallback(function () use ($adapter, $response) {
             $this->assertInstanceOf(Params::className(), $adapter->actionParams);
             $response->content = ['test'];
@@ -78,7 +78,7 @@ class ActionTest extends TestCase
     public function testAddFlashes() {
         $action = $this->getAction();
 
-        $response = new \execut\action\Response([
+        $response = new \execut\actions\action\Response([
             'flashes' => ['test'],
         ]);
         $adapter = $this->getMockForAbstractClass(Adapter::className());
@@ -100,7 +100,7 @@ class ActionTest extends TestCase
 
         $adapter = $this->getMockForAbstractClass(Adapter::className());
         $adapter->method('_run')->will($this->returnCallback(function () use ($adapter) {
-            return new \execut\action\Response([
+            return new \execut\actions\action\Response([
                 'content' => new Response()
             ]);
         }));
@@ -111,7 +111,7 @@ class ActionTest extends TestCase
     }
 
     /**
-     * @return \execut\Action
+     * @return \execut\actions\actions\Action
      */
     protected function getAction()
     {

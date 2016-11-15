@@ -5,10 +5,10 @@
  * Time: 13:25
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
 
-use execut\action\Adapter;
+use execut\actions\action\Adapter;
 use yii\base\Component;
 
 abstract class ViewRenderer extends Component

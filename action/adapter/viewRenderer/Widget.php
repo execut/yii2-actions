@@ -5,9 +5,9 @@
  * Time: 13:29
  */
 
-namespace execut\action\adapter\viewRenderer;
+namespace execut\actions\action\adapter\viewRenderer;
 
-use execut\action\adapter\ViewRenderer;
+use execut\actions\action\adapter\ViewRenderer;
 use execut\yii\helpers\ArrayHelper;
 
 class Widget extends ViewRenderer

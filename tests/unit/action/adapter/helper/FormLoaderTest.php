@@ -5,12 +5,12 @@
  * Time: 10:28
  */
 
-namespace execut\action\adapter\helper;
+namespace execut\actions\action\adapter\helper;
 
 
-use execut\action\Adapter;
-use execut\action\adapter\Form;
-use execut\action\adapter\GridView;
+use execut\actions\action\Adapter;
+use execut\actions\action\adapter\Form;
+use execut\actions\action\adapter\GridView;
 use execut\TestCase;
 use yii\base\Model;
 use yii\web\UploadedFile;

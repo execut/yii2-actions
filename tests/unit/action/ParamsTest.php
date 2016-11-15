@@ -5,12 +5,12 @@
  * Time: 17:51
  */
 
-namespace execut\action;
+namespace execut\actions\action;
 
 
 use execut\TestCase;
-use execut\Action;
-use execut\action\Adapter;
+use execut\actions\actions\Action;
+use execut\actions\action\Adapter;
 use execut\yii\web\Controller;
 use yii\base\Module;
 use yii\web\Response;
@@ -80,7 +80,7 @@ class ParamsTest extends TestCase
     }
 
     /**
-     * @return \execut\Action
+     * @return \execut\actions\actions\Action
      */
     protected function getAction()
     {

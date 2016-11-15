@@ -5,13 +5,13 @@
  * Time: 10:05
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
 
 use execut\TestCase;
-use execut\action\Adapter;
-use execut\action\adapter\ViewRenderer;
-use execut\action\adapter\ViewRendererTest;
+use execut\actions\action\Adapter;
+use execut\actions\action\adapter\ViewRenderer;
+use execut\actions\action\adapter\ViewRendererTest;
 
 class StackTest extends TestCase
 {

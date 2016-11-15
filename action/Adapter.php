@@ -5,10 +5,10 @@
  * Time: 10:38
  */
 
-namespace execut\action;
+namespace execut\actions\action;
 
 
-use execut\action\adapter\ViewRenderer;
+use execut\actions\action\adapter\ViewRenderer;
 use execut\yii\helpers\ArrayHelper;
 use yii\base\Component;
 use yii\web\Response;
@@ -51,7 +51,7 @@ abstract class Adapter extends Component
 
     public function getResponse($params = null) {
         if ($this->response === null) {
-            $this->response = new \execut\action\Response($params);
+            $this->response = new \execut\actions\action\Response($params);
         }
 
         return $this->response;

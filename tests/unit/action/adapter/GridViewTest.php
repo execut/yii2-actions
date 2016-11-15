@@ -5,7 +5,7 @@
  * Time: 10:05
  */
 
-namespace execut\action\adapter;
+namespace execut\actions\action\adapter;
 
 
 use execut\TestCase;
