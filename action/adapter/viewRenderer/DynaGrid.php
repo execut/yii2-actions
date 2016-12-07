@@ -68,7 +68,7 @@ class DynaGrid extends Widget
 
         return [
             'class' => \kartik\dynagrid\DynaGrid::className(),
-            'storage' => \kartik\dynagrid\DynaGrid::TYPE_SESSION,
+            'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
 //            'pageSize' => 100000,
             'gridOptions' => [
                 'export' => [
@@ -104,10 +104,20 @@ class DynaGrid extends Widget
                 'dataProvider' => $this->dataProvider,
             ],
             'options' => [
-                'id' => $modelClass::getModelId(),
+                'id' => $this->getGridId(),
             ],
             'columns' => $columns,
         ];
+    }
+
+    protected function getGridId() {
+        $modelClass = $this->modelClass;
+        $userId = '';
+        if (\yii::$app->user) {
+            $userId .= \yii::$app->user->id;
+        }
+
+        return $modelClass::getModelId() . $userId;
     }
 
     protected function renderAlertBlock()
