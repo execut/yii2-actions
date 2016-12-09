@@ -22,8 +22,14 @@ class Edit extends Form
     public $requestType = self::POST;
     protected function _run() {
         $class = $this->modelClass;
-        if ($this->actionParams && !empty($this->actionParams->get['id'])) {
-            $id = $this->actionParams->get['id'];
+        $actionParams = $this->actionParams;
+        if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
+            if (!empty($actionParams->get['id'])) {
+                $id = $actionParams->get['id'];
+            } else {
+                $id = $actionParams->post['id'];
+            }
+
             $mode = 'view';
 //            $modelInstance = new $class;
             if (!empty($this->filesAttributes)) {
@@ -44,9 +50,7 @@ class Edit extends Form
                 $selectAttributes = '*';
             }
 
-            $model = $class::find()->select($selectAttributes)->andWhere([
-                'id' => $id,
-            ])->one();
+            $model = $class::findByPk($id);
         } else {
             $model = new $class;
             $mode = 'edit';

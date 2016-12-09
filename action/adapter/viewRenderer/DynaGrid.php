@@ -22,23 +22,11 @@ class DynaGrid extends Widget
     public $uniqueId = null;
     public $urlAttributes = [];
     public $isAllowedAdding = true;
+    public $isAllowedMassEdit = false;
     public $refreshAttributes = [];
     public function getDefaultWidgetOptions()
     {
-        $ucfirstTitle = $lcfirstTitle = $title = $this->title;
-        $modelClass = $this->modelClass;
-        if ($this->isAllowedAdding) {
-            $addButton = Html::a('<i class="glyphicon glyphicon-plus"></i>', Url::to(array_merge([
-                '/' . $this->getUniqueId() . '/update',
-            ], $this->urlAttributes)), [
-                'type' => 'button',
-                'data-pjax' => 0,
-                'title' => 'Add ' . $lcfirstTitle,
-                'class' => 'btn btn-success'
-            ]) . ' ';
-        } else {
-            $addButton = '';
-        }
+        $ucfirstTitle = $title = $this->title;
 
         $refreshUrlParams = [
             $this->adapter->uniqueId,
@@ -91,7 +79,8 @@ class DynaGrid extends Widget
                 'filterModel' => $this->filter,
                 'afterHeader' => $alertBlock,
                 'toolbar' => [
-                    ['content' => $addButton .
+                    ['content' => $this->renderMassEditButton()],
+                    ['content' => $this->renderAddButton() .
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', $refreshUrlParams, ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid'])
                     ],
                     ['content' => '{dynagridFilter}{dynagridSort}{dynagrid}'],
@@ -102,12 +91,25 @@ class DynaGrid extends Widget
                     'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . \yii::t('executimport', $ucfirstTitle . ' list') . '</h3>',
                 ],
                 'dataProvider' => $this->dataProvider,
+                'options' => [
+                    'id' => $this->getGridId(),
+                ],
             ],
             'options' => [
-                'id' => $this->getGridId(),
+                'id' => $this->getDynaGridId(),
             ],
             'columns' => $columns,
         ];
+    }
+
+    protected function getDynaGridId() {
+        $modelClass = $this->modelClass;
+        $userId = '';
+        if (\yii::$app->user) {
+            $userId .= \yii::$app->user->id;
+        }
+
+        return 'dynagrid-' . $modelClass::getModelId() . $userId;
     }
 
     protected function getGridId() {
@@ -117,7 +119,7 @@ class DynaGrid extends Widget
             $userId .= \yii::$app->user->id;
         }
 
-        return $modelClass::getModelId() . $userId;
+        return 'grid-' . $modelClass::getModelId() . $userId;
     }
 
     protected function renderAlertBlock()
@@ -139,7 +141,9 @@ class DynaGrid extends Widget
             $out .= "\n" . Alert::widget($alertWidgetOptions);
             $session->removeFlash($type);
         }
+
         $out .= "\n</div>";
+
         return $out;
     }
 
@@ -148,6 +152,70 @@ class DynaGrid extends Widget
             return $this->uniqueId;
         } else {
             return $this->adapter->actionParams->getUniqueId(['module', 'controller']);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function renderAddButton()
+    {
+        if ($this->isAllowedAdding) {
+            $lcfirstTitle = $this->title;
+            return Html::a('<i class="glyphicon glyphicon-plus"></i>', Url::to(array_merge([
+                    '/' . $this->getUniqueId() . '/update',
+                ], $this->urlAttributes)), [
+                    'type' => 'button',
+                    'data-pjax' => 0,
+                    'title' => 'Add ' . $lcfirstTitle,
+                    'class' => 'btn btn-success'
+                ]) . ' ';
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function renderMassEditButton()
+    {
+        if ($this->isAllowedMassEdit) {
+            $lcfirstTitle = $this->title;
+
+            return \mickgeek\actionbar\Widget::widget([
+                'renderContainer' => false,
+                'grid' => $this->getGridId(),
+                'templates' => [
+                    '{bulk-actions}' => [
+//                        'class' => 'col-xs-4'
+                    ],
+//                    '{create}' => ['class' => 'col-xs-8 text-right'],
+                ],
+                'bulkActionsItems' => [
+//                    'Update Status' => [
+//                        'mass-edit' => 'Mass edit',
+//                    ],
+                    'General' => ['mass-update' => 'Mass edit',],
+                ],
+                'bulkActionsOptions' => [
+                    'options' => [
+                        'mass-update' => [
+                            'url' => Url::toRoute(['mass-update']),
+                            'method' => 'get',
+                            'name' => 'id',
+                        ],
+                    ],
+                    'class' => 'form-control',
+                ],
+            ]);
+
+            return Html::a('<i class="glyphicon glyphicon-edit"></i>', Url::to(array_merge([
+                    '/' . $this->getUniqueId() . '/update',
+                ], $this->urlAttributes)), [
+                    'type' => 'button',
+                    'data-pjax' => 0,
+                    'title' => 'Edit selected ' . $lcfirstTitle,
+                    'class' => 'btn btn-default'
+                ]) . ' ';
         }
     }
 }
