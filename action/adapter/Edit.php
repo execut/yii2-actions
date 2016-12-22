@@ -94,7 +94,7 @@ class Edit extends Form
                 $params[$attribute] = $model->$attribute;
             }
 
-            if ($t = \yii::$app->db->transaction) {
+            if (\yii::$app->has('db') && $t = \yii::$app->db->transaction) {
                 while ($t->getIsActive()) {
                     $t->commit();
                 }

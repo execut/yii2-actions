@@ -66,7 +66,7 @@ class EditTest extends TestCase
 //        ];
         $action->run();
         $model = $action->model;
-        $this->assertTrue($model->findIsCalled);
+        $this->assertTrue(TestModel::$findIsCalled);
 //        $this->assertEquals(['savedAttribute', 'addinalAttribute'], $model->selectAttributes);
     }
 
@@ -144,15 +144,11 @@ class TestModel extends ActiveRecord {
         return '';
     }
 
-    public $findIsCalled = false;
-    public static function find() {
-        $result = new self;
-        return $result;
-    }
+    public static $findIsCalled = false;
 
-    public function one() {
-        $this->findIsCalled = true;
-        return $this;
+    public static function findByPk() {
+        self::$findIsCalled = true;
+        return new self;
     }
 
     public $where = null;

@@ -27,6 +27,23 @@ class GridView extends \execut\actions\action\adapter\Form
         'id',
         'text' => 'name',
     ];
+
+    protected $handlers = [];
+
+    public function setHandlers($handlers) {
+        foreach ($handlers as $key => $handler) {
+            if (is_array($handler)) {
+                $handlers[$key] = \yii::createObject($handler);
+            }
+        }
+
+        $this->handlers = $handlers;
+    }
+
+    public function getHandlers() {
+        return $this->handlers;
+    }
+
     protected function _run() {
         parent::_run();
         $filter = $this->model;
@@ -35,6 +52,18 @@ class GridView extends \execut\actions\action\adapter\Form
          * @var ArrayDataProvider $dataProvider
          */
         $dataProvider = $filter->getDataProvider();
+        if (!empty($this->actionParams->get['handle'])) {
+            $handlerKey = $this->actionParams->get['handle'];
+            $handlers = $this->handlers;
+            if (!empty($handlers[$handlerKey])) {
+                $handler = $handlers[$handlerKey];
+                $handler->dataProvider = $dataProvider;
+                if (($result = $handler->run()) !== null) {
+                    return $result;
+                }
+            }
+        }
+
         $actionParams = $this->actionParams;
         $response = $this->getResponse();
         if ($actionParams->isAjax && !$actionParams->isPjax && !$this->isDisableAjax && $dataProvider) {

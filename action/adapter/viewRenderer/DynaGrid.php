@@ -8,15 +8,21 @@
 namespace execut\actions\action\adapter\viewRenderer;
 
 
+use execut\yii\helpers\ArrayHelper;
 use execut\yii\helpers\Html;
 use kartik\export\ExportMenu;
 use yii\bootstrap\Alert;
+use yii\data\BaseDataProvider;
 use yii\helpers\Url;
+use yii\web\JsExpression;
 
 class DynaGrid extends Widget
 {
     public $title = null;
     public $modelClass = null;
+    /**
+     * @var BaseDataProvider
+     */
     public $dataProvider = null;
     public $filter = null;
     public $uniqueId = null;
@@ -24,6 +30,28 @@ class DynaGrid extends Widget
     public $isAllowedAdding = true;
     public $isAllowedMassEdit = false;
     public $refreshAttributes = [];
+    public $handleButtons = [];
+    public $defaultHandleButtons = [
+        'visible' => [
+            'icon' => 'eye-open',
+            'label' => 'Mark visible',
+            'confirmMessage' => 'You sure want mark # records as visible?',
+            'enable' => false,
+        ],
+        'unvisible' => [
+            'icon' => 'eye-close',
+            'label' => 'Mark unvisible',
+            'confirmMessage' => 'You sure want mark # records as unvisible?',
+            'enable' => false,
+        ],
+        'delete' => [
+            'icon' => 'trash',
+            'label' => 'Delete',
+            'button' => 'danger',
+            'confirmMessage' => 'You sure want delete # records?',
+            'enable' => false,
+        ],
+    ];
     public function getDefaultWidgetOptions()
     {
         $ucfirstTitle = $title = $this->title;
@@ -80,6 +108,7 @@ class DynaGrid extends Widget
                 'afterHeader' => $alertBlock,
                 'toolbar' => [
                     ['content' => $this->renderMassEditButton()],
+                    ['content' => $this->renderVisibleButtons()],
                     ['content' => $this->renderAddButton() .
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', $refreshUrlParams, ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid'])
                     ],
@@ -191,9 +220,6 @@ class DynaGrid extends Widget
 //                    '{create}' => ['class' => 'col-xs-8 text-right'],
                 ],
                 'bulkActionsItems' => [
-//                    'Update Status' => [
-//                        'mass-edit' => 'Mass edit',
-//                    ],
                     'General' => ['mass-update' => 'Mass edit',],
                 ],
                 'bulkActionsOptions' => [
@@ -207,15 +233,44 @@ class DynaGrid extends Widget
                     'class' => 'form-control',
                 ],
             ]);
-
-            return Html::a('<i class="glyphicon glyphicon-edit"></i>', Url::to(array_merge([
-                    '/' . $this->getUniqueId() . '/update',
-                ], $this->urlAttributes)), [
-                    'type' => 'button',
-                    'data-pjax' => 0,
-                    'title' => 'Edit selected ' . $lcfirstTitle,
-                    'class' => 'btn btn-default'
-                ]) . ' ';
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function renderVisibleButtons(): string
+    {
+        $buttons = '';
+        $handleButtons = ArrayHelper::merge($this->defaultHandleButtons, $this->handleButtons);
+        foreach ($handleButtons as $handle => $buttonOptions) {
+            if (isset($buttonOptions['enable']) && $buttonOptions['enable'] === false) {
+                continue;
+            }
+
+            $urlParams = \yii::$app->request->getQueryParams();
+            $urlParams[0] = '';
+            $urlParams['handle'] = $handle;
+            $buttonClass = 'default';
+            if (!empty($buttonOptions['button'])) {
+                $buttonClass = $buttonOptions['button'];
+            }
+
+            $icon = $buttonOptions['icon'];
+            $confirmMessage = strtr($buttonOptions['confirmMessage'], '#', $this->dataProvider->getTotalCount());
+            $buttons .= Html::a('<i class="glyphicon glyphicon-' . $icon . '"></i>', Url::to($urlParams), [
+                'type' => 'button',
+                'onclick' => new JsExpression(<<<JS
+return confirm('$confirmMessage');
+JS
+),
+                'data-pjax' => 0,
+                'title' => $buttonOptions['label'],
+                'class' => 'btn btn-' . $buttonClass
+            ]);
+
+        }
+
+        return $buttons;
     }
 }
