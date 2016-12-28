@@ -10,6 +10,7 @@ namespace execut\actions\action\adapter\gridView\handler;
 
 
 use execut\actions\action\adapter\gridView\Handler;
+use yii\db\ActiveQuery;
 
 class Model extends Handler
 {
@@ -20,19 +21,24 @@ class Model extends Handler
     public function run() {
         $dataProvider = $this->dataProvider;
         $class = $this->modelClass;
-        $ids = $dataProvider->query->select('id')->queryAttribute('id');
         $method = $this->method;
         $arguments = [];
         if ($this->attributes !== null) {
             $arguments[] = $this->attributes;
         }
 
+        /**
+         * @var ActiveQuery
+         */
+        $q = $dataProvider->query;
+        $q->limit(65535);
+        $ids = $q->select('id')->queryAttribute('id');
         $arguments[] = ['id' => $ids];
         $count = $class::$method(...$arguments);
 
         $response = new \execut\actions\action\Response();
         $flashes = [
-            'kv-detail-success' => strtr($this->successMessage, '#', $count),
+            'kv-detail-success' => strtr($this->successMessage, ['#' => $count]),
         ];
         $response->content = \yii::$app->response->redirect($this->getReferer());
         $response->flashes = $flashes;

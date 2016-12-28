@@ -257,7 +257,7 @@ class DynaGrid extends Widget
             }
 
             $icon = $buttonOptions['icon'];
-            $confirmMessage = strtr($buttonOptions['confirmMessage'], '#', $this->dataProvider->getTotalCount());
+            $confirmMessage = strtr($buttonOptions['confirmMessage'], ['#' => (string) $this->dataProvider->getTotalCount()]);
             $buttons .= Html::a('<i class="glyphicon glyphicon-' . $icon . '"></i>', Url::to($urlParams), [
                 'type' => 'button',
                 'onclick' => new JsExpression(<<<JS

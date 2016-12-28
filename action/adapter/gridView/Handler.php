@@ -10,9 +10,13 @@ namespace execut\actions\action\adapter\gridView;
 
 
 use yii\base\Component;
+use yii\data\ActiveDataProvider;
 
 abstract class Handler extends Component
 {
+    /**
+     * @var ActiveDataProvider
+     */
     public $dataProvider = null;
     abstract public function run();
 }
