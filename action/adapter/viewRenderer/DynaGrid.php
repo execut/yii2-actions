@@ -84,7 +84,7 @@ class DynaGrid extends Widget
 
         return [
             'class' => \kartik\dynagrid\DynaGrid::className(),
-            'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
+//            'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
 //            'pageSize' => 100000,
             'gridOptions' => [
                 'export' => [
@@ -117,7 +117,7 @@ class DynaGrid extends Widget
                     '{export}',
                 ],
                 'panel' => [
-                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . \yii::t('executimport', $ucfirstTitle . ' list') . '</h3>',
+                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . $ucfirstTitle . ' list' . '</h3>',
                 ],
                 'dataProvider' => $this->dataProvider,
                 'options' => [
@@ -134,21 +134,21 @@ class DynaGrid extends Widget
     protected function getDynaGridId() {
         $modelClass = $this->modelClass;
         $userId = '';
-        if (\yii::$app->user) {
-            $userId .= \yii::$app->user->id;
-        }
+//        if (\yii::$app->user) {
+//            $userId .= \yii::$app->user->id;
+//        }
 
-        return 'dynagrid-' . $modelClass::getModelId() . $userId;
+        return 'dynagrid-' . $modelClass;// . $userId;
     }
 
     protected function getGridId() {
         $modelClass = $this->modelClass;
         $userId = '';
-        if (\yii::$app->user) {
-            $userId .= \yii::$app->user->id;
-        }
+//        if (\yii::$app->user) {
+//            $userId .= \yii::$app->user->id;
+//        }
 
-        return 'grid-' . $modelClass::getModelId() . $userId;
+        return 'grid-' . $this->getDynaGridId() . $userId;
     }
 
     protected function renderAlertBlock()
