@@ -9,8 +9,8 @@ namespace execut\actions\action;
 
 
 use execut\actions\action\adapter\ViewRenderer;
-use execut\yii\helpers\ArrayHelper;
 use yii\base\Component;
+use yii\helpers\ArrayHelper;
 use yii\web\Response;
 
 abstract class Adapter extends Component

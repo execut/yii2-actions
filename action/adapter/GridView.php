@@ -105,7 +105,7 @@ class GridView extends \execut\actions\action\adapter\Form
     {
         return [
             'class' => DynaGrid::className(),
-            'title' => $this->model->getModelLabel(2),
+//            'title' => $this->model->getModelLabel(2),
             'modelClass' => $this->model->className(),
         ];
     }

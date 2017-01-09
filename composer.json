@@ -12,7 +12,9 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "yiisoft/yii2": "@dev"
+    "yiisoft/yii2": "@dev",
+    "kartik-v/yii2-export": "@dev",
+    "kartik-v/yii2-dynagrid": "dev-master"
   },
   "autoload": {
     "psr-4": {

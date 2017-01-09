@@ -10,7 +10,7 @@ namespace execut\actions\action\adapter;
 
 use execut\actions\action\Adapter;
 use execut\actions\action\adapter\helper\FormLoader;
-use execut\yii\helpers\ArrayHelper;
+use yii\helpers\ArrayHelper;
 use execut\yii\helpers\Html;
 use yii\base\Model;
 use yii\data\ArrayDataProvider;

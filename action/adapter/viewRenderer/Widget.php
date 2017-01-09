@@ -8,7 +8,7 @@
 namespace execut\actions\action\adapter\viewRenderer;
 
 use execut\actions\action\adapter\ViewRenderer;
-use execut\yii\helpers\ArrayHelper;
+use yii\helpers\ArrayHelper;
 
 class Widget extends ViewRenderer
 {

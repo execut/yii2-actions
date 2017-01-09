@@ -11,7 +11,7 @@ use execut\actions\action\Adapter;
 use execut\actions\action\adapter\viewRenderer\DetailView;
 use execut\actions\action\adapter\viewRenderer\DynaGrid;
 use execut\yii\db\query\ActiveQuery;
-use execut\yii\helpers\ArrayHelper;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\web\Response;
 

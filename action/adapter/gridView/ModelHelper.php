@@ -9,8 +9,7 @@
 namespace execut\actions\action\adapter\gridView;
 
 
-use execut\helpers\StringHelper;
-use execut\yii\helpers\ArrayHelper;
+use yii\helpers\ArrayHelper;
 use kartik\daterange\DateRangePicker;
 use kartik\detail\DetailView;
 use kartik\grid\ActionColumn;
