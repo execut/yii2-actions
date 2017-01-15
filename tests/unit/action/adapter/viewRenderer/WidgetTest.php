@@ -8,7 +8,7 @@
 namespace execut\actions\action\adapter\viewRenderer;
 
 
-use execut\TestCase;
+use execut\actions\TestCase;
 
 class WidgetTest extends TestCase
 {

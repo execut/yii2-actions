@@ -132,23 +132,18 @@ class DynaGrid extends Widget
     }
 
     protected function getDynaGridId() {
-        $modelClass = $this->modelClass;
+        $m = $this->modelClass;
+        $tableName = $m::tableName();
         $userId = '';
-//        if (\yii::$app->user) {
-//            $userId .= \yii::$app->user->id;
-//        }
+        if (\yii::$app->user) {
+            $userId .= \yii::$app->user->id;
+        }
 
-        return 'dynagrid-' . $modelClass;// . $userId;
+        return 'dynagrid-' . $tableName . '-' . $userId;
     }
 
     protected function getGridId() {
-        $modelClass = $this->modelClass;
-        $userId = '';
-//        if (\yii::$app->user) {
-//            $userId .= \yii::$app->user->id;
-//        }
-
-        return 'grid-' . $this->getDynaGridId() . $userId;
+        return 'grid-' . $this->getDynaGridId();
     }
 
     protected function renderAlertBlock()

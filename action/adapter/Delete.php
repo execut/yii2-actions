@@ -38,7 +38,9 @@ class Delete extends Adapter
 
         $id = $this->actionParams->get['id'];
         $modelClass = $this->modelClass;
-        $model = $modelClass::findByPk($id);
+        $model = $modelClass::find()->andWhere([
+            'id' => $id
+        ])->one();
 
         return $this->model = $model;
     }

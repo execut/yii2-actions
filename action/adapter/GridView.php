@@ -51,7 +51,7 @@ class GridView extends \execut\actions\action\adapter\Form
         /**
          * @var ArrayDataProvider $dataProvider
          */
-        $dataProvider = $filter->getDataProvider();
+        $dataProvider = $filter->search();
         if (!empty($this->actionParams->get['handle'])) {
             $handlerKey = $this->actionParams->get['handle'];
             $handlers = $this->handlers;

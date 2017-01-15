@@ -7,12 +7,11 @@
 
 namespace execut;
 
-
-use execut\TestCase;
 use execut\actions\Action;
 use execut\actions\action\Adapter;
 use execut\actions\action\Params;
-use execut\yii\web\Controller;
+use yii\web\Controller;
+use execut\actions\TestCase;
 use yii\base\Module;
 use yii\web\Response;
 use yii\web\Session;
@@ -115,7 +114,7 @@ class ActionTest extends TestCase
      */
     protected function getAction()
     {
-        $controller = $this->getMockBuilder(Controller::className())->setMethods(['render', 'getPost', 'getGet', 'isAjax', 'isPjax', 'getFiles'])->setConstructorArgs(['id', new Module('id')])->getMock();
+        $controller = $this->getMockBuilder(Controller::className())->setMethods(['render'])->setConstructorArgs(['id', new Module('id')])->getMock();
 
         $action = new Action('id', $controller);
         return $action;

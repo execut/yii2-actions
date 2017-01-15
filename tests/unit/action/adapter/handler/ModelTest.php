@@ -8,8 +8,8 @@
 
 namespace execut\actions\action\adapter\gridView\handler;
 use execut\actions\action\adapter\Response;
-use execut\TestCase;
-use execut\yii\db\ActiveRecord;
+use execut\actions\TestCase;
+use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
 
 class ModelTest extends TestCase

@@ -6,7 +6,7 @@
  */
 
 namespace execut\actions\action\adapter;
-use execut\TestCase;
+use execut\actions\TestCase;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
 use yii\web\Response;
@@ -146,9 +146,13 @@ class TestModel extends ActiveRecord {
 
     public static $findIsCalled = false;
 
-    public static function findByPk() {
-        self::$findIsCalled = true;
+    public static function find() {
         return new self;
+    }
+
+    public function one() {
+        self::$findIsCalled = true;
+        return $this;
     }
 
     public $where = null;

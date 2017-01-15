@@ -8,9 +8,9 @@
 namespace execut\actions\action;
 
 
-use execut\TestCase;
 use execut\actions\action\adapter\ViewRenderer;
 use execut\actions\action\adapter\ViewRendererTest;
+use execut\actions\TestCase;
 use yii\web\Response;
 
 class AdapterTest extends TestCase

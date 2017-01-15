@@ -6,7 +6,7 @@
  */
 
 namespace execut\actions\action\adapter;
-use execut\TestCase;
+use execut\actions\TestCase;
 use yii\db\ActiveRecord;
 use yii\web\Response;
 use yii\web\UploadedFile;

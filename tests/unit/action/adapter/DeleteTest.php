@@ -8,8 +8,8 @@
 namespace execut\actions\action\adapter;
 
 
-use execut\TestCase;
-use execut\yii\db\ActiveRecord;
+use execut\actions\TestCase;
+use yii\db\ActiveRecord;
 use yii\helpers\Url;
 use yii\web\Request;
 use yii\web\Response;
@@ -59,10 +59,19 @@ class DeleteTest extends TestCase
 class DeleteTestModel extends ActiveRecord {
     public $isDeleteCalled = false;
     public $pk = null;
-    public static function findByPk($pk) {
+    public static function find() {
         $model = new self;
-        $model->pk = $pk;
+
         return $model;
+    }
+
+    public function andWhere($where) {
+        $this->pk = $where['id'];
+        return $this;
+    }
+
+    public function one() {
+        return $this;
     }
 
     public function delete()
@@ -70,7 +79,7 @@ class DeleteTestModel extends ActiveRecord {
         return $this->isDeleteCalled = true;
     }
 
-    public function toString()
+    public function __toString()
     {
         return 'deletedModel';
     }

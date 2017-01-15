@@ -50,7 +50,9 @@ class Edit extends Form
                 $selectAttributes = '*';
             }
 
-            $model = $class::findByPk($id);
+            $model = $class::find()->andWhere([
+                'id' => $id
+            ])->one();
         } else {
             $model = new $class;
             $mode = 'edit';

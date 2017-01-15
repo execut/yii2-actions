@@ -8,7 +8,7 @@
 namespace execut\actions\action\adapter;
 
 
-use execut\TestCase;
+use execut\actions\TestCase;
 use execut\actions\action\Adapter;
 use execut\actions\action\adapter\ViewRenderer;
 use execut\actions\action\adapter\ViewRendererTest;

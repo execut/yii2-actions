@@ -10,7 +10,7 @@ namespace execut\actions\action\adapter;
 
 use execut\actions\action\adapter\gridView\Handler;
 use execut\actions\action\Response;
-use execut\TestCase;
+use execut\actions\TestCase;
 use yii\base\Model;
 use yii\data\ArrayDataProvider;
 
@@ -121,18 +121,14 @@ class GridViewTest extends TestCase
 
 class GridViewTestFilter extends Model {
     public $attribute;
-    protected $dataProvider = null;
+    public $dataProvider = null;
     public function rules() {
         return [
             [['attribute'], 'required']
         ];
     }
 
-    public function setDataProvider($dp) {
-        $this->dataProvider = $dp;
-    }
-
-    public function getDataProvider() {
+    public function search() {
         return $this->dataProvider;
     }
 }

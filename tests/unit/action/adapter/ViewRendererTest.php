@@ -8,7 +8,7 @@
 namespace execut\actions\action\adapter;
 
 
-use execut\TestCase;
+use execut\actions\TestCase;
 use yii\base\View;
 
 class ViewRendererTest extends TestCase

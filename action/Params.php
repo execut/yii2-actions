@@ -33,14 +33,18 @@ class Params extends Object
         return '/' . implode('/', $parts);
     }
 
-    public static function createFromAction($action) {
+    public static function createFromAction($action, $helper = null) {
         $controller = $action->controller;
+        if ($helper === null) {
+            $helper = new RequestHelper();
+        }
+
         return new self([
-            'post' => $controller->getPost(),
-            'get' => $controller->getGet(),
-            'files' => $controller->getFiles(),
-            'isPjax' => $controller->isPjax(),
-            'isAjax' => $controller->isAjax(),
+            'post' => $helper->getPost(),
+            'get' => $helper->getGet(),
+            'files' => $helper->getFiles(),
+            'isPjax' => $helper->isPjax(),
+            'isAjax' => $helper->isAjax(),
             'action' => $action->id,
             'controller' => $controller->id,
             'module' => $controller->module->uniqueId,

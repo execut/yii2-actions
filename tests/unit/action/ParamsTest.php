@@ -8,10 +8,10 @@
 namespace execut\actions\action;
 
 
-use execut\TestCase;
+use execut\actions\TestCase;
 use execut\actions\Action;
 use execut\actions\action\Adapter;
-use execut\yii\web\Controller;
+use yii\web\Controller;
 use yii\base\Module;
 use yii\web\Response;
 use yii\web\Session;
@@ -43,13 +43,20 @@ class ParamsTest extends TestCase
 
         $controller = $action->controller;
 
-        $controller->expects($this->any())->method('getPost')->will($this->returnValue($_POST));
-        $controller->expects($this->any())->method('getGet')->will($this->returnValue($_GET));
-        $controller->expects($this->any())->method('getFiles')->will($this->returnValue($_FILES));
-        $controller->expects($this->any())->method('isAjax')->willReturn(true);
-        $controller->expects($this->any())->method('isPjax')->willReturn(true);
+        $helper = $this->getMockBuilder(RequestHelper::className())->setMethods([
+            'getPost',
+            'getGet',
+            'getFiles',
+            'isAjax',
+            'isPjax'
+        ])->getMock();
+        $helper->expects($this->any())->method('getPost')->will($this->returnValue($_POST));
+        $helper->expects($this->any())->method('getGet')->will($this->returnValue($_GET));
+        $helper->expects($this->any())->method('getFiles')->will($this->returnValue($_FILES));
+        $helper->expects($this->any())->method('isAjax')->willReturn(true);
+        $helper->expects($this->any())->method('isPjax')->willReturn(true);
 
-        $params = Params::createFromAction($action);
+        $params = Params::createFromAction($action, $helper);
 
         $this->assertEquals($_POST, $params->post);
         $this->assertEquals($_GET, $params->get);
@@ -84,7 +91,7 @@ class ParamsTest extends TestCase
      */
     protected function getAction()
     {
-        $controller = $this->getMockBuilder(Controller::className())->setMethods(['render', 'getPost', 'getGet', 'isAjax', 'isPjax', 'getFiles'])->setConstructorArgs(['id', new Module('id')])->getMock();
+        $controller = $this->getMockBuilder(Controller::className())->setMethods(['render'])->setConstructorArgs(['id', new Module('id')])->getMock();
 
         $action = new Action('id', $controller);
         return $action;
