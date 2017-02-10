@@ -11,6 +11,7 @@ namespace execut\actions\action\adapter;
 use execut\actions\action\Adapter;
 use execut\actions\action\adapter\viewRenderer\DetailView;
 use execut\actions\action\Response;
+use yii\bootstrap\Html;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 
@@ -104,16 +105,22 @@ class Edit extends Form
 
             $result = \yii::$app->response->redirect($params);
         } else {
+            if (!empty($model->errors)) {
+                $flashes['error'] = Html::errorSummary($model);
+            }
+
             $result = [
                 'mode' => $mode,
                 'model' => $model
             ];
         }
 
-        return $this->getResponse([
+        $response = $this->getResponse([
             'flashes' => $flashes,
             'content' => $result,
         ]);
+
+        return $response;
     }
 
     public function getDefaultViewRendererConfig() {

@@ -61,10 +61,10 @@ trait ModelHelper
             'id' => [
                 'attribute' => 'id',
             ],
-            'visible' => [
-                'class' => BooleanColumn::class,
-                'attribute' => 'visible',
-            ],
+//            'visible' => [
+//                'class' => BooleanColumn::class,
+//                'attribute' => 'visible',
+//            ],
             'name' => [
                 'attribute' => 'name'
             ],
@@ -101,13 +101,14 @@ trait ModelHelper
             }
         }
 
-        $columns = ArrayHelper::merge($standardColumns, $columns);
+        $columns = ArrayHelper::merge($columns, $standardColumns);
 
         return $columns;
     }
 
     public function getRelationColumn($relationName, $url) {
-        $attribute = Inflector::camel2id($relationName, '_') . '_id';
+        $attribute = $this->getAttributeFromRelation($relationName);
+
         $modelClass = $this->getRelation($relationName)->modelClass;
         $sourceInitText = [];
         if (!empty($this->$attribute)) {
@@ -118,7 +119,7 @@ trait ModelHelper
                 $sourceIds[] = $this->$attribute;
             }
 
-            $sourceInitText = $modelClass::find()->byId($sourceIds)->forSelect('name', false);
+            $sourceInitText = ArrayHelper::map($modelClass::find()->andWhere(['id' => $sourceIds])->asArray()->all(), 'id', 'name');
         }
 
 //        $sourcesNameAttribute = $modelClass::getFormAttributeName('name');
@@ -158,14 +159,14 @@ JS
     }
 
     public function getRelationField($relationName, $url) {
-        $attribute = Inflector::camel2id($relationName, '_') . '_id';
-        $modelClass = $this->getRelation($relationName)->modelClass;
+        $attribute = $this->getAttributeFromRelation($relationName);
+//        $modelClass = $this->getRelation($relationName)->modelClass;
         $sourceInitText = '';
         if (!empty($this->$attribute)) {
             $sourceInitText = $this->$relationName->name;
         }
 
-        $sourcesNameAttribute = $modelClass::getFormAttributeName('name');
+//        $sourcesNameAttribute = $modelClass::getFormAttributeName('name');
 
         return [
             'type' => DetailView::INPUT_SELECT2,
@@ -201,8 +202,7 @@ JS
         ]);
     }
 
-    public function search($data) {
-        $this->load($data);
+    public function search() {
         $result = $this->getDataProvider();
 
         return $result;
@@ -231,5 +231,24 @@ JS
         $q->andFilterWhere($this->attributes);
 
         return $q;
+    }
+
+    public static function getModelLabel($modelClass) {
+        $modelClass = str_replace('\models', '', $modelClass);
+        $parts = explode('\\', $modelClass);
+
+        return \yii::t($modelClass::getTranslationCategory(), $parts[count($parts) - 1]);
+    }
+
+    /**
+     * @param $relationName
+     * @return mixed
+     */
+    protected function getAttributeFromRelation($relationName)
+    {
+        $getter = 'get' . ucfirst($relationName);
+        $relation = $this->$getter();
+        $attribute = current($relation->link);
+        return $attribute;
     }
 }

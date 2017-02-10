@@ -78,7 +78,7 @@ class EditWithRelations extends Adapter
         unset($editConfig['class']);
         $edit = $editAdapterClass::createFromAdapter($this, $editConfig);
         $result = $edit->run();
-        $result->flashes = $this->flashes = $edit->flashes;
+        $result->flashes = ArrayHelper::merge($this->flashes, ArrayHelper::merge($edit->flashes, $result->flashes));
         if ($result->content instanceof Response) {
             return $result;
         }

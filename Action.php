@@ -8,11 +8,21 @@
 namespace execut\actions;
 
 
+use execut\actions\action\Adapter;
 use execut\actions\action\Params;
 use yii\web\Response;
 
+/**
+ * Class Action
+ *
+ * @property Adapter $adapter
+ * @package execut\actions
+ */
 class Action extends \yii\base\Action
 {
+    /**
+     * @var Adapter
+     */
     protected $_adapter;
     protected $_view;
     public $flashes = [];
@@ -39,6 +49,9 @@ class Action extends \yii\base\Action
         $this->_adapter = $adapter;
     }
 
+    /**
+     * @return Adapter
+     */
     public function getAdapter() {
 
         return $this->_adapter;

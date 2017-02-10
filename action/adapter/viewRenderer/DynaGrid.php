@@ -68,7 +68,7 @@ class DynaGrid extends Widget
 
         $columns = $this->filter->getGridColumns();
 //        $flash = '<aasd';
-        $alertBlock = $this->renderAlertBlock();
+//        $alertBlock = $this->renderAlertBlock();
         $fullExportMenu = ExportMenu::widget([
             'dataProvider' => $this->dataProvider,
 //            'dataProvider' => $dataProvider,
@@ -105,7 +105,7 @@ class DynaGrid extends Widget
 //                    ],
                 ],
                 'filterModel' => $this->filter,
-                'afterHeader' => $alertBlock,
+//                'afterHeader' => $alertBlock,
                 'toolbar' => [
                     ['content' => $this->renderMassEditButton()],
                     ['content' => $this->renderVisibleButtons()],
@@ -133,7 +133,7 @@ class DynaGrid extends Widget
 
     protected function getDynaGridId() {
         $m = $this->modelClass;
-        $tableName = $m::tableName();
+        $tableName = trim($m::tableName(), '}{%');
         $userId = '';
         if (\yii::$app->user) {
             $userId .= \yii::$app->user->id;
