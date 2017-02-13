@@ -56,15 +56,19 @@ trait ModelHelper
         return $columns;
     }
 
+    public function getBooleanColumn($name) {
+        return [
+            'class' => BooleanColumn::class,
+            'attribute' => $name,
+        ];
+    }
+
     public function getStandardColumns($columns = []) {
         $standardColumns = [
             'id' => [
                 'attribute' => 'id',
             ],
-//            'visible' => [
-//                'class' => BooleanColumn::class,
-//                'attribute' => 'visible',
-//            ],
+            'visible' => $this->getBooleanColumn('visible'),
             'name' => [
                 'attribute' => 'name'
             ],
@@ -92,6 +96,9 @@ trait ModelHelper
             ],
             'actions' => [
                 'class' => ActionColumn::className(),
+                'buttons' => [
+                    'view' => function () {},
+                ],
             ],
         ];
 
