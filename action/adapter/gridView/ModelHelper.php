@@ -9,6 +9,7 @@
 namespace execut\actions\action\adapter\gridView;
 
 
+use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use kartik\daterange\DateRangePicker;
 use kartik\detail\DetailView;
@@ -22,6 +23,54 @@ use yii\web\JsExpression;
 
 trait ModelHelper
 {
+    public function standardFind(ActiveQuery $query) {
+        if ($this->hasAttribute('visible')) {
+            $query->andFilterWhere([
+                'visible' => $this->visible,
+            ]);
+        }
+
+        if ($this->hasAttribute('id')) {
+            $query->andFilterWhere([
+                'id' => $this->id,
+            ]);
+        }
+
+        if ($this->hasAttribute('name')) {
+            $query->andFilterWhere([
+                'ILIKE',
+                'name',
+                $this->name,
+            ]);
+        }
+
+
+        $dateFields = [
+            'updated',
+            'created',
+        ];
+        foreach ($dateFields as $field) {
+            if ($this->hasAttribute($field) && $this->$field) {
+                $parts = explode(' - ', $this->$field);
+                if (!empty($parts[0])) {
+                    $query->andFilterWhere([
+                        '>=',
+                        $field,
+                        $parts[0] . ' 0:00:00'
+                    ]);
+                }
+
+                if (!empty($parts[1])) {
+                    $query->andFilterWhere([
+                        '<=',
+                        $field,
+                        $parts[1] . ' 23:59:59'
+                    ]);
+                }
+            }
+        }
+    }
+
     public function getStandardFields($columns = []) {
         $standardColumns = [
             'id' => [
@@ -257,5 +306,10 @@ JS
         $relation = $this->$getter();
         $attribute = current($relation->link);
         return $attribute;
+    }
+
+    public function __toString()
+    {
+        return '#' . $this->id . ' ' . $this->name;
     }
 }
