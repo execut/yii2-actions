@@ -60,12 +60,18 @@ class EditWithRelations extends Adapter
             $relationConfig = $this->relationAdapterConfig;
         }
 
-        $config =  ArrayHelper::merge($this->getDefaultRelationAdapterConfig(), $relationConfig);
-        $config['model'] = $relationFilter;
-        $config['view']['urlAttributes'] = $relationFilter->attributes;
-        $config['view']['modelClass'] = $relationFilter->className();
         $actionParams = $this->actionParams;
-        $config['view']['uniqueId'] = '/' . $actionParams->module . '/' . Inflector::camel2id($relationFilter->formName());
+        $config = [
+            'model' => $relationFilter,
+            'view' => [
+                'urlAttributes' => $relationFilter->attributes,
+                'modelClass' => $relationFilter->className(),
+                'uniqueId' => '/' . $actionParams->module . '/' . Inflector::camel2id($relationFilter->formName()),
+            ],
+        ];
+
+        $config = ArrayHelper::merge($config, $this->getDefaultRelationAdapterConfig());
+        $config = ArrayHelper::merge($config, $relationConfig);
 
         return $config;
     }

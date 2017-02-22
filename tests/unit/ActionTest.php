@@ -11,12 +11,11 @@ use execut\actions\Action;
 use execut\actions\action\Adapter;
 use execut\actions\action\Params;
 use yii\web\Controller;
-use execut\actions\TestCase;
 use yii\base\Module;
 use yii\web\Response;
 use yii\web\Session;
 
-class ActionTest extends TestCase
+class ActionTest extends \execut\actions\TestCase
 {
     public $beforeRunTriggered = false;
     public $afterRunTriggered = false;
