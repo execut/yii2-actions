@@ -18,8 +18,14 @@ use yii\helpers\ArrayHelper;
 trait MassEditTrait
 {
     public $id = null;
-    public static function findByPk($ids) {
+    public static function find()
+    {
+        return new self;
+    }
+
+    public function andWhere($where) {
 //        $ids = \yii::$app->request->post('ids');
+        $ids = $where['id'];
         $result = new self;
         /**
          * @var ActiveQuery $q
@@ -48,6 +54,10 @@ trait MassEditTrait
         $result->id = $ids;
 
         return $result;
+    }
+
+    public function one() {
+        return $this;
     }
 
     protected static function getEqualAttributes($prevAttributes, $currentAttributes) {

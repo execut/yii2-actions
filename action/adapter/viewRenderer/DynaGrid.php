@@ -117,7 +117,7 @@ class DynaGrid extends Widget
                     '{export}',
                 ],
                 'panel' => [
-                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . $ucfirstTitle . ' list' . '</h3>',
+                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . $ucfirstTitle . ' ' . \yii::t('execut.actions', 'list') . '</h3>',
                 ],
                 'dataProvider' => $this->dataProvider,
                 'options' => [
@@ -191,7 +191,7 @@ class DynaGrid extends Widget
                 ], $this->urlAttributes)), [
                     'type' => 'button',
                     'data-pjax' => 0,
-                    'title' => 'Add ' . $lcfirstTitle,
+                    'title' => \yii::t('execut.actions', 'Add') . ' ' . $lcfirstTitle,
                     'class' => 'btn btn-success'
                 ]) . ' ';
         }
