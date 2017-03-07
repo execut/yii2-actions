@@ -36,14 +36,16 @@ class Action extends \yii\base\Action
 
     public function initI18N() {
         \yii::setAlias('@execut', '@vendor/execut');
-        \Yii::$app->i18n->translations['execut.actions'] = [
-            'class' => 'yii\i18n\PhpMessageSource',
-            'sourceLanguage' => 'en-US',
-            'basePath' => '@execut/yii2-actions/messages',
-            'fileMap' => [
-                'execut.actions' => 'actions.php',
-            ],
-        ];
+        if (\Yii::$app->i18n) {
+            \Yii::$app->i18n->translations['execut.actions'] = [
+                'class' => 'yii\i18n\PhpMessageSource',
+                'sourceLanguage' => 'en-US',
+                'basePath' => '@execut/yii2-actions/messages',
+                'fileMap' => [
+                    'execut.actions' => 'actions.php',
+                ],
+            ];
+        }
     }
 
     public function setView($view) {
