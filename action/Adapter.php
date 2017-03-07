@@ -39,8 +39,10 @@ abstract class Adapter extends Component
         }
 
         if ($view = $this->getView()) {
-            foreach ($response->content as $key => $value) {
-                $view->$key = $value;
+            if (is_array($response->content)) {
+                foreach ($response->content as $key => $value) {
+                    $view->$key = $value;
+                }
             }
 
             $response->content = $view->run();
