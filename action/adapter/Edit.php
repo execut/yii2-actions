@@ -21,6 +21,7 @@ class Edit extends Form
     public $relations = [];
     public $additionalAttributes = [];
     public $requestType = self::POST;
+    public $scenario = null;
     protected function _run() {
         $class = $this->modelClass;
         $actionParams = $this->actionParams;
@@ -63,6 +64,9 @@ class Edit extends Form
 //            var_dump($model->getRelation($relation));
 //            exit;
 //        }
+        if ($this->scenario !== null) {
+            $model->setScenario($this->scenario);
+        }
         $this->model = $model;
         foreach ($this->additionalAttributes as $attribute) {
             if ((isset($this->actionParams->get[$attribute])) && ($value = $this->actionParams->get[$attribute])) {

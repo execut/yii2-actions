@@ -290,8 +290,8 @@ JS
     }
 
     public static function getModelLabel($modelClass) {
-        $modelClass = str_replace('\models', '', $modelClass);
-        $parts = explode('\\', $modelClass);
+        $modelClassForParting = str_replace('\models', '', $modelClass);
+        $parts = explode('\\', $modelClassForParting);
 
         return \yii::t($modelClass::getTranslationCategory(), $parts[count($parts) - 1]);
     }
