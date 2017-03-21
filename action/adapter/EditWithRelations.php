@@ -107,10 +107,8 @@ class EditWithRelations extends Adapter
                     $relationModelClass = $relationQuery->modelClass;
                     $relationFilter = new $relationModelClass;
                     if (is_array($relationQuery->via) | is_null($relationQuery->via)) {
-                        if (!is_null($relationQuery->via)) {
-                            foreach ($relationQuery->link as $key => $relatedKey) {
-                                $relationFilter->$key = $model->$relatedKey;
-                            }
+                        foreach ($relationQuery->link as $key => $relatedKey) {
+                            $relationFilter->$key = $model->$relatedKey;
                         }
                     } else {
                         $key = key($relationQuery->via->link);
