@@ -11,6 +11,7 @@ use execut\actions\action\adapter\Response;
 use execut\actions\TestCase;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
+use yii\db\Command;
 
 class ModelTest extends TestCase
 {
@@ -27,9 +28,11 @@ class ModelTest extends TestCase
     }
 
     public function testRun() {
-        $query = $this->getMockBuilder(ActiveRecord::className())->setMethods(['select', 'queryAttribute', 'limit'])->getMock();
+        $query = $this->getMockBuilder(ActiveRecord::className())->setMethods(['select', 'queryAttribute', 'limit', 'createCommand'])->getMock();
         $query->method('select')->with('id')->willReturn($query);
-        $query->method('queryAttribute')->willReturn([1, 2]);
+        $command = $this->getMockBuilder(Command::class)->setMethods(['queryColumn'])->getMock();
+        $command->method('queryColumn')->willReturn([1, 2]);
+        $query->method('createCommand')->willReturn($command);
         $query->expects($this->once())->method('limit')->with(65535);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

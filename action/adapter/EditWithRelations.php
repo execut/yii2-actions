@@ -38,7 +38,9 @@ class EditWithRelations extends Adapter
     }
 
     public function getEditAdapterConfig() {
-        return ArrayHelper::merge($this->getDefaultEditAdapterConfig(), $this->editAdapterConfig);
+        $config = ArrayHelper::merge($this->getDefaultEditAdapterConfig(), $this->editAdapterConfig);
+
+        return $config;
     }
 
     public function getDefaultRelationAdapterConfig() {
@@ -104,7 +106,12 @@ class EditWithRelations extends Adapter
                 if (!is_array($relationQuery)) {
                     $relationModelClass = $relationQuery->modelClass;
                     $relationFilter = new $relationModelClass;
-                    $id = key($relationQuery->link);
+                    if (is_array($relationQuery->via) | is_null($relationQuery->via)) {
+                        $id = key($relationQuery->link);
+                    } else {
+                        $id = key($relationQuery->via->link);
+                    }
+
                     $relationFilter->$id = $model->id;
                 } else {
                     $relationFilter = $relationQuery;

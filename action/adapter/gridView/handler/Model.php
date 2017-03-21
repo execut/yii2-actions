@@ -32,7 +32,7 @@ class Model extends Handler
          */
         $q = $dataProvider->query;
         $q->limit(65535);
-        $ids = $q->select('id')->queryAttribute('id');
+        $ids = $q->select('id')->createCommand()->queryColumn('id');
         $arguments[] = ['id' => $ids];
         $count = $class::$method(...$arguments);
 

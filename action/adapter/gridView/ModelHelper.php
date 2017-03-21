@@ -162,7 +162,7 @@ trait ModelHelper
         return $columns;
     }
 
-    public function getRelationColumn($relationName, $url) {
+    public function getRelationColumn($relationName, $url, $nameAttribute = 'name') {
         $attribute = $this->getAttributeFromRelation($relationName);
 
         $modelClass = $this->getRelation($relationName)->modelClass;
@@ -175,14 +175,15 @@ trait ModelHelper
                 $sourceIds[] = $this->$attribute;
             }
 
-            $sourceInitText = ArrayHelper::map($modelClass::find()->andWhere(['id' => $sourceIds])->asArray()->all(), 'id', 'name');
+            $models = $modelClass::find()->andWhere(['id' => $sourceIds])->all();
+            $sourceInitText = ArrayHelper::map($models, 'id', $nameAttribute);
         }
 
 //        $sourcesNameAttribute = $modelClass::getFormAttributeName('name');
 
         return [
             'attribute' => $attribute,
-            'value' => $relationName . '.name',
+            'value' => $relationName . '.' . $nameAttribute,
 //                'value' => function () {
 //                    return 'asdasd';
 //                },
@@ -194,7 +195,6 @@ trait ModelHelper
                     'multiple' => true,
                 ],
                 'pluginOptions' => [
-
                     'allowClear' => true,
                     'ajax' => [
                         'url' => Url::to([$url]),
@@ -214,12 +214,12 @@ JS
         ];
     }
 
-    public function getRelationField($relationName, $url) {
+    public function getRelationField($relationName, $url, $nameAttribute = 'name') {
         $attribute = $this->getAttributeFromRelation($relationName);
 //        $modelClass = $this->getRelation($relationName)->modelClass;
         $sourceInitText = '';
         if (!empty($this->$attribute)) {
-            $sourceInitText = $this->$relationName->name;
+            $sourceInitText = $this->$relationName->$nameAttribute;
         }
 
 //        $sourcesNameAttribute = $modelClass::getFormAttributeName('name');

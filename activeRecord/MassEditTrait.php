@@ -224,7 +224,17 @@ trait MassEditTrait
         $oldAttributes = $this->oldAttributes;
         $updatedAttributes = [];
         $attributes = $this->getAttributes($this->safeAttributes());
+        foreach ($attributes as $attribute => $value) {
+            if (!isset($oldAttributes[$attribute]) || $oldAttributes[$attribute] === null) {
+                $oldAttributes[$attribute] = '';
+            }
+        }
+
         foreach ($attributes as $key => $value) {
+            if ($value === null) {
+                $value = '';
+            }
+
             if ((!isset($oldAttributes[$key]) && $value !== null)) {
                 $updatedAttributes[$key] = $value;
             } else if (isset($oldAttributes[$key]) && !$this->compareValues($oldAttributes[$key], $value)) {
@@ -249,8 +259,10 @@ trait MassEditTrait
             $modelsNames[] = $row->name;
         }
 
-        return ArrayHelper::merge(parent::getFormFields(), [
+        $fields = parent::getFormFields();
+        return ArrayHelper::merge($fields, [
             'id' => [
+                'displayOnly' => false,
                 'type' => DetailView::INPUT_WIDGET,
                 'attribute' => 'id',
                 'value' => function () use ($modelsNames) {
