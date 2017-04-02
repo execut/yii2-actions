@@ -20,8 +20,10 @@ class FormTest extends TestCase
         $adapter = new Form();
         $adapter->model = [
             'class' => GridViewTestFilter::className(),
+            'scenario' => 'test'
         ];
         $this->assertInstanceOf(GridViewTestFilter::className(), $adapter->model);
+        $this->assertEquals('test', $adapter->model->scenario);
 
         $adapter->model = GridViewTestFilter::className();
         $this->assertInstanceOf(GridViewTestFilter::className(), $adapter->model);

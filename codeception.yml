@@ -1,4 +1,4 @@
-namespace: execut
+namespace: execut\actions
 paths:
     tests: tests
     log: tests/_log

@@ -90,8 +90,9 @@ class Edit extends Form
                 $operation = 'updated';
             }
 
-            $flashes['kv-detail-success'] = 'Record ' . $model . ' ' .  $operation;
             $model->save();
+            $flashes['kv-detail-success'] = 'Record #' . $model->id . ' successfully ' .  $operation;
+
             $params = [
                 $this->actionParams->uniqueId,
                 'id' => $model->id

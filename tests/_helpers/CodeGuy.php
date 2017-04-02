@@ -1,5 +1,5 @@
 <?php
-namespace execut;
+namespace execut\actions;
 
 /**
  * Inherited Methods

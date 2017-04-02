@@ -51,7 +51,7 @@ class DeleteTest extends TestCase
         $this->assertEquals(1, $model->pk);
 
         $this->assertEquals([
-            'kv-detail-success' => 'Record ' . $model . ' deleted',
+            'kv-detail-success' => 'Record #' . $model->id . ' is successfully deleted',
         ], $response->flashes);
     }
 }
@@ -59,6 +59,7 @@ class DeleteTest extends TestCase
 class DeleteTestModel extends ActiveRecord {
     public $isDeleteCalled = false;
     public $pk = null;
+    public $id = 1;
     public static function find() {
         $model = new self;
 
