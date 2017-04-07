@@ -5,10 +5,6 @@
 namespace execut\actions;
 
 
-class TestCase extends \yii\codeception\TestCase
+class TestCase extends \Codeception\Test\Unit
 {
-    public $appConfig = [
-        'id' => 'actions-test',
-        'basePath' => __DIR__,
-    ];
 }
