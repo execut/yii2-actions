@@ -5,4 +5,7 @@
 
 class_name: CodeGuy
 modules:
-    #enabled: [execut\CodeHelper]
+    enabled: # [execut\CodeHelper]
+      - Yii2:
+          configFile: tests/configs/main.php
+
