@@ -179,14 +179,9 @@ trait ModelHelper
             $sourceInitText = ArrayHelper::map($models, 'id', $nameAttribute);
         }
 
-//        $sourcesNameAttribute = $modelClass::getFormAttributeName('name');
-
         return [
             'attribute' => $attribute,
             'value' => $relationName . '.' . $nameAttribute,
-//                'value' => function () {
-//                    return 'asdasd';
-//                },
             'filter' => $sourceInitText,
             'filterType' => GridView::FILTER_SELECT2,
             'filterWidgetOptions' => [

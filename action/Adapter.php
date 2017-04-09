@@ -17,7 +17,13 @@ abstract class Adapter extends Component
 {
     public $flashes = [];
     public $action = null;
+    /**
+     * @var Params
+     */
     public $actionParams = null;
+    /**
+     * @var \execut\actions\action\Response
+     */
     protected $response = null;
 
     /**
