@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="execut\actions.unit" tests="45" assertions="102" failures="0" errors="0" time="0.047079">
+    <testcase name="testGetParams" class="execut\ActionTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/ActionTest.php" assertions="1" time="0.003699"/>
+    <testcase name="testRun" class="execut\ActionTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/ActionTest.php" assertions="11" time="0.005135"/>
+    <testcase name="testGetAdapter" class="execut\ActionTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/ActionTest.php" assertions="1" time="0.000289"/>
+    <testcase name="testAddFlashes" class="execut\ActionTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/ActionTest.php" assertions="1" time="0.002360"/>
+    <testcase name="testRenderWithResponse" class="execut\ActionTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/ActionTest.php" assertions="2" time="0.000354"/>
+    <testcase name="testRender" class="execut\actions\action\AdapterTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/AdapterTest.php" assertions="3" time="0.001673"/>
+    <testcase name="testWithView" class="execut\actions\action\AdapterTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/AdapterTest.php" assertions="4" time="0.000217"/>
+    <testcase name="testSetViewFromConfig" class="execut\actions\action\AdapterTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/AdapterTest.php" assertions="1" time="0.000203"/>
+    <testcase name="testGetDefaultViewConfig" class="execut\actions\action\AdapterTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/AdapterTest.php" assertions="1" time="0.000477"/>
+    <testcase name="testGetData" class="execut\actions\action\AdapterTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/AdapterTest.php" assertions="2" time="0.000211"/>
+    <testcase name="testCreateFromAdapter" class="execut\actions\action\AdapterTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/AdapterTest.php" assertions="1" time="0.000196"/>
+    <testcase name="testSetActionParams" class="execut\actions\action\AdapterTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/AdapterTest.php" assertions="1" time="0.000210"/>
+    <testcase name="testGetUniqueId" class="execut\actions\action\AdapterTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/AdapterTest.php" assertions="1" time="0.000462"/>
+    <testcase name="testRenderWithResponse" class="execut\actions\action\AdapterTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/AdapterTest.php" assertions="1" time="0.000471"/>
+    <testcase name="testGetUniqueId" class="execut\actions\action\ParamsTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/ParamsTest.php" assertions="1" time="0.000182"/>
+    <testcase name="testCreateFromAction" class="execut\actions\action\ParamsTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/ParamsTest.php" assertions="6" time="0.001089"/>
+    <testcase name="testGetData" class="execut\actions\action\ParamsTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/ParamsTest.php" assertions="2" time="0.000168"/>
+    <testcase name="testGetUniqueIdWithoutAction" class="execut\actions\action\ParamsTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/ParamsTest.php" assertions="1" time="0.000175"/>
+    <testcase name="testGetPost" class="execut\actions\action\RequestHelperTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/RequestHelperTest.php" assertions="1" time="0.000185"/>
+    <testcase name="testGetGet" class="execut\actions\action\RequestHelperTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/RequestHelperTest.php" assertions="1" time="0.000165"/>
+    <testcase name="testGetFiles" class="execut\actions\action\RequestHelperTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/RequestHelperTest.php" assertions="1" time="0.000162"/>
+    <testcase name="testGetIsAjax" class="execut\actions\action\RequestHelperTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/RequestHelperTest.php" assertions="1" time="0.000171"/>
+    <testcase name="testGetIsPjax" class="execut\actions\action\RequestHelperTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/RequestHelperTest.php" assertions="1" time="0.000162"/>
+    <testcase name="testRun" class="execut\actions\action\adapter\DeleteTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/DeleteTest.php" assertions="5" time="0.000900"/>
+    <testcase name="testRunWithNewRecord" class="execut\actions\action\adapter\EditTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/EditTest.php" assertions="4" time="0.001130"/>
+    <testcase name="testCreateNewRecord" class="execut\actions\action\adapter\EditTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/EditTest.php" assertions="4" time="0.002360"/>
+    <testcase name="testEdit" class="execut\actions\action\adapter\EditTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/EditTest.php" assertions="1" time="0.000239"/>
+    <testcase name="testWithAdditionalAttributes" class="execut\actions\action\adapter\EditTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/EditTest.php" assertions="2" time="0.000321"/>
+    <testcase name="testRenderFile" class="execut\actions\action\adapter\FileTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/FileTest.php" assertions="5" time="0.010333"/>
+    <testcase name="testSetModel" class="execut\actions\action\adapter\FormTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/FormTest.php" assertions="3" time="0.000233"/>
+    <testcase name="testGetData" class="execut\actions\action\adapter\FormTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/FormTest.php" assertions="3" time="0.000248"/>
+    <testcase name="testOutputVars" class="execut\actions\action\adapter\FormTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/FormTest.php" assertions="1" time="0.000366"/>
+    <testcase name="testAjaxValidate" class="execut\actions\action\adapter\FormTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/FormTest.php" assertions="3" time="0.002613"/>
+    <testcase name="testAfterValidate" class="execut\actions\action\adapter\FormTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/FormTest.php" assertions="1" time="0.000235"/>
+    <testcase name="testRun" class="execut\actions\action\adapter\GridViewTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/GridViewTest.php" assertions="2" time="0.001146"/>
+    <testcase name="testSetHandlers" class="execut\actions\action\adapter\GridViewTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/GridViewTest.php" assertions="1" time="0.000568"/>
+    <testcase name="testRunWithDataProviderHandler" class="execut\actions\action\adapter\GridViewTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/GridViewTest.php" assertions="2" time="0.000269"/>
+    <testcase name="testRun" class="execut\actions\action\adapter\ViewRendererTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/ViewRendererTest.php" assertions="2" time="0.000210"/>
+    <testcase name="testRun" class="execut\actions\action\adapter\gridView\handler\ModelTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/handler/ModelTest.php" assertions="7" time="0.002129"/>
+    <testcase name="testNotValid" class="execut\actions\action\adapter\helper\FormLoaderTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/helper/FormLoaderTest.php" assertions="1" time="0.000510"/>
+    <testcase name="testValid" class="execut\actions\action\adapter\helper\FormLoaderTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/helper/FormLoaderTest.php" assertions="1" time="0.001016"/>
+    <testcase name="testFileUpload" class="execut\actions\action\adapter\helper\FormLoaderTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/helper/FormLoaderTest.php" assertions="3" time="0.001815"/>
+    <testcase name="testRender" class="execut\actions\action\adapter\viewRenderer\WidgetTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/viewRenderer/WidgetTest.php" assertions="1" time="0.000870"/>
+    <testcase name="testSetActionVarsInWidgetOptions" class="execut\actions\action\adapter\viewRenderer\WidgetTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/viewRenderer/WidgetTest.php" assertions="2" time="0.000327"/>
+    <testcase name="testSetDefaultOptions" class="execut\actions\action\adapter\viewRenderer\WidgetTest" file="/var/www/detalika.ru/vendor/execut/yii2-actions/tests/unit/action/adapter/viewRenderer/WidgetTest.php" assertions="2" time="0.000825"/>
+  </testsuite>
+</testsuites>

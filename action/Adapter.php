@@ -84,7 +84,7 @@ abstract class Adapter extends Component
     public function getView() {
         $view = $this->view;
         if (is_array($view)) {
-            $view = ArrayHelper::merge($view, $this->getDefaultViewRendererConfig());
+            $view = ArrayHelper::merge($this->getDefaultViewRendererConfig(), $view);
             if (empty($view)) {
                 return null;
             }
