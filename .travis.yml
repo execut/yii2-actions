@@ -9,13 +9,22 @@ matrix:
   #allow_failures:
     #- php: 7.0
 
+# Disable x-debug to speed up things
+before_install: phpenv config-rm xdebug.ini
+
+# Install packages those will be required during build
 before_script:
   - travis_retry composer self-update
   - travis_retry composer global require fxp/composer-asset-plugin:~1.1.3
   - travis_retry composer install ${COMPOSER_FLAGS} --no-interaction --prefer-source
 
 script:
-  - phpunit --coverage-text --coverage-clover=coverage.clover
+  - composer test
 
-after_script:
-- php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
+#after_script:
+
+# Cache folder, you can delete cache from Travis CI web interface
+cache:
+    directories:
+        - vendor
+- $HOME/.composer/cache
