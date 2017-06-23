@@ -78,7 +78,6 @@ class EditWithRelations extends Adapter
         return $config;
     }
 
-
     public function run() {
         $editConfig = $this->getEditAdapterConfig();
         $editAdapterClass = $editConfig['class'];

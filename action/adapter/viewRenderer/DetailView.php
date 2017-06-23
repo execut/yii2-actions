@@ -15,13 +15,14 @@ class DetailView extends Widget
     public $uniqueId = null;
     public $model = null;
     public $mode = null;
+    public $heading = 'Редактирование';
 
     public function getDefaultWidgetOptions()
     {
         return [
             'class' => \kartik\detail\DetailView::className(),
             'panel'=>[
-                'heading'=>'Редактирование',
+                'heading'=> $this->heading,
                 'type'=>\kartik\detail\DetailView::TYPE_PRIMARY,
             ],
             'buttons1' => '{update}',

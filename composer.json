@@ -17,9 +17,15 @@
     "kartik-v/yii2-detail-view": "@stable",
     "kartik-v/yii2-mpdf": "@stable"
   },
+  "require-dev": {
+    "codeception/codeception": "@dev"
+  },
   "autoload": {
     "psr-4": {
       "execut\\actions\\": ""
     }
+  },
+  "scripts": {
+    "test": "./vendor/bin/codecept run --no-interaction"
   }
 }

@@ -22,6 +22,8 @@ class Edit extends Form
     public $additionalAttributes = [];
     public $requestType = self::POST;
     public $scenario = null;
+    public $createFormLabel = 'Создание';
+    public $editFormLabel = 'Редактирование';
     protected function _run() {
         $class = $this->modelClass;
         $actionParams = $this->actionParams;
@@ -67,6 +69,7 @@ class Edit extends Form
         if ($this->scenario !== null) {
             $model->setScenario($this->scenario);
         }
+
         $this->model = $model;
         foreach ($this->additionalAttributes as $attribute) {
             if ((isset($this->actionParams->get[$attribute])) && ($value = $this->actionParams->get[$attribute])) {
@@ -128,10 +131,15 @@ class Edit extends Form
         return $response;
     }
 
+    protected function getHeading() {
+        return 'Редактирование 2';
+    }
+
     public function getDefaultViewRendererConfig() {
         return [
             'class' => DetailView::className(),
             'uniqueId' => $this->uniqueId,
+            'heading' => $this->getHeading(),
         ];
     }
 }
