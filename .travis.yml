@@ -5,10 +5,6 @@ php:
   - 7.0
   - hhvm
 
-matrix:
-  #allow_failures:
-    #- php: 7.0
-
 # Disable x-debug to speed up things
 before_install: phpenv config-rm xdebug.ini
 
@@ -27,4 +23,4 @@ script:
 cache:
     directories:
         - vendor
-- $HOME/.composer/cache
+        - $HOME/.composer/cache
