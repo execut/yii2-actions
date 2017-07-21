@@ -297,8 +297,7 @@ JS
      */
     protected function getAttributeFromRelation($relationName)
     {
-        $getter = 'get' . ucfirst($relationName);
-        $relation = $this->$getter();
+        $relation = $this->getRelation($relationName);
         $attribute = current($relation->link);
         return $attribute;
     }

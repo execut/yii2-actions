@@ -24,43 +24,17 @@ class Edit extends Form
     public $scenario = null;
     public $createFormLabel = 'Создание';
     public $editFormLabel = 'Редактирование';
+    public $mode = 'view';
     protected function _run() {
         $class = $this->modelClass;
         $actionParams = $this->actionParams;
         if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
-            if (!empty($actionParams->get['id'])) {
-                $id = $actionParams->get['id'];
-            } else {
-                $id = $actionParams->post['id'];
-            }
-
-            $mode = 'view';
-//            $modelInstance = new $class;
-            if (!empty($this->filesAttributes)) {
-//                $selectAttributes = $modelInstance->attributes();
-//                foreach ($this->filesAttributes as $fileAttribute => $uploadAttribute) {
-//                    if (false !== ($fileAttributeKey = array_search($fileAttribute, $selectAttributes))) {
-//                        unset($selectAttributes[$fileAttributeKey]);
-//                    }
-//
-//                    if (false !== ($fileAttributeKey = array_search($uploadAttribute, $selectAttributes))) {
-//                        unset($selectAttributes[$fileAttributeKey]);
-//                    }
-//                }
-//
-//                $selectAttributes = array_values($selectAttributes);
-                $selectAttributes = '*';
-            } else {
-                $selectAttributes = '*';
-            }
-
-            $model = $class::find()->andWhere([
-                'id' => $id
-            ])->one();
+            $mode = $this->mode;
         } else {
-            $model = new $class;
             $mode = 'edit';
         }
+
+        $model = $this->getModel();
 
 //        foreach ($this->relations as $relation) {
 //            var_dump($model->getRelation($relation));
@@ -105,12 +79,6 @@ class Edit extends Form
                 $params[$attribute] = $model->$attribute;
             }
 
-            if (\yii::$app->has('db') && $t = \yii::$app->db->transaction) {
-                while ($t->getIsActive()) {
-                    $t->commit();
-                }
-            }
-
             $result = \yii::$app->response->redirect($params);
         } else {
             if (!empty($model->errors)) {
@@ -123,6 +91,12 @@ class Edit extends Form
             ];
         }
 
+        if (\yii::$app->has('db') && $t = \yii::$app->db->transaction) {
+            while ($t->getIsActive()) {
+                $t->commit();
+            }
+        }
+
         $response = $this->getResponse([
             'flashes' => $flashes,
             'content' => $result,
@@ -131,8 +105,46 @@ class Edit extends Form
         return $response;
     }
 
+    protected $_model = null;
+    public function getModel() {
+        if ($this->_model !== null) {
+            return $this->_model;
+        }
+
+        $class = $this->modelClass;
+        $actionParams = $this->actionParams;
+        if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
+            if (!empty($actionParams->get['id'])) {
+                $id = $actionParams->get['id'];
+            } else {
+                $id = $actionParams->post['id'];
+            }
+
+            $model = $class::find()->andWhere([
+                'id' => $id
+            ])->one();
+        } else {
+            $model = new $class;
+        }
+
+        return $this->_model = $model;
+    }
+
     protected function getHeading() {
-        return 'Редактирование 2';
+        if ($this->model->isNewRecord) {
+            return $this->createFormLabel;
+        } else {
+            return $this->getEditFormLabel($this->model);
+        }
+    }
+
+    protected function getEditFormLabel() {
+        $editFormLabel = $this->editFormLabel;
+        if (is_callable($editFormLabel)) {
+            return $editFormLabel($this->model);
+        }
+
+        return $editFormLabel;
     }
 
     public function getDefaultViewRendererConfig() {

@@ -13,6 +13,7 @@ use execut\actions\action\adapter\viewRenderer\DynaGrid;
 use execut\yii\helpers\Html;
 use yii\base\Model;
 use yii\data\ArrayDataProvider;
+use yii\db\ActiveRecord;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -27,6 +28,8 @@ class GridView extends \execut\actions\action\adapter\Form
         'id',
         'text' => 'name',
     ];
+
+    public $scenario = ActiveRecord::SCENARIO_DEFAULT;
 
     protected $handlers = [];
 
@@ -45,8 +48,12 @@ class GridView extends \execut\actions\action\adapter\Form
     }
 
     protected function _run() {
-        parent::_run();
         $filter = $this->model;
+        if ($this->scenario !== ActiveRecord::SCENARIO_DEFAULT) {
+            $filter->scenario = $this->scenario;
+        }
+
+        parent::_run();
 
         /**
          * @var ArrayDataProvider $dataProvider
@@ -86,8 +93,14 @@ class GridView extends \execut\actions\action\adapter\Form
                 $result[] = $res;
             }
 
+            if (isset($this->actionParams->get['depdrop_parents'])) {
+                $key = 'output';
+            } else {
+                $key = 'results';
+            }
+
             $response->content = [
-                'results' => $result
+                $key => $result
             ];
 
             $response->format = Response::FORMAT_JSON;

@@ -117,7 +117,7 @@ class DynaGrid extends Widget
                     '{export}',
                 ],
                 'panel' => [
-                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . $ucfirstTitle . ' ' . \yii::t('execut.actions', 'list') . '</h3>',
+                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . \yii::t('execut.actions', 'List') . ' ' . $this->lcfirst($this->title) . '</h3>',
                 ],
                 'dataProvider' => $this->dataProvider,
                 'options' => [
@@ -169,6 +169,13 @@ class DynaGrid extends Widget
         $out .= "\n</div>";
 
         return $out;
+    }
+
+    protected function lcfirst($string, $encoding = "UTF-8")
+    {
+        $first = mb_convert_case(mb_substr($string, 0, 1, $encoding), MB_CASE_LOWER, $encoding);
+
+        return $first . mb_substr($string, 1, null, $encoding);
     }
 
     public function getUniqueId() {

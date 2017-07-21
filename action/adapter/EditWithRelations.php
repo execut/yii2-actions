@@ -18,22 +18,22 @@ use yii\web\Response;
 class EditWithRelations extends Adapter
 {
     public $relations = [];
-    public $modelClass = null;
     public $editAdapterConfig = [];
-
     public $relationAdapterConfig = [];
-
-
     public function getDefaultEditAdapterConfig() {
         return [
             'class' => Edit::className(),
             'requestType' => 'post',
-            'modelClass' => $this->modelClass,
+//            'modelClass' => $this->modelClass,
+//            'scenario' => $this->scenario,
+//            'editFormLabel' => $this->editFormLabel,
+//            'createFormLabel' => $this->createFormLabel,
+//            'mode' => $this->mode,
             //                    'findAttribute' => 'id',
-            'view' => [
-                'class' => DetailView::className(),
-                'uniqueId' => $this->uniqueId,
-            ],
+//            'view' => [
+//                'class' => DetailView::className(),
+//                'uniqueId' => $this->uniqueId,
+//            ],
         ];
     }
 
@@ -48,7 +48,6 @@ class EditWithRelations extends Adapter
             'class' => \execut\actions\action\adapter\GridView::className(),
             'view' => [
                 'class' => DynaGrid::className(),
-                'title' => '',
             ],
         ];
 
@@ -78,18 +77,39 @@ class EditWithRelations extends Adapter
         return $config;
     }
 
-    public function run() {
+    protected $_model = null;
+    public function getModel() {
+        if ($this->_model === null) {
+            $edit = $this->getEditAdapter();
+            $this->_model = $edit->getModel();
+        }
+
+        return $this->_model;
+    }
+
+    protected $_editAdapter = null;
+    public function getEditAdapter() {
+        if ($this->_editAdapter !== null) {
+            return $this->_editAdapter;
+        }
+
         $editConfig = $this->getEditAdapterConfig();
         $editAdapterClass = $editConfig['class'];
         unset($editConfig['class']);
-        $edit = $editAdapterClass::createFromAdapter($this, $editConfig);
+        $this->_editAdapter = $editAdapterClass::createFromAdapter($this, $editConfig);
+
+        return $this->_editAdapter;
+    }
+
+    public function run() {
+        $edit = $this->getEditAdapter();
         $result = $edit->run();
         $result->flashes = ArrayHelper::merge($this->flashes, ArrayHelper::merge($edit->flashes, $result->flashes));
         if ($result->content instanceof Response) {
             return $result;
         }
 
-        $model = $edit->model;
+        $model = $this->getModel();
         foreach ($this->relations as $relation => $relationParams) {
             if (is_int($relation)) {
                 $relation = $relationParams;
@@ -122,7 +142,7 @@ class EditWithRelations extends Adapter
                     $relationFilter = $relationQuery;
                 }
 
-                $relationConfig = $this->getRelationAdapterConfig($relationFilter, $relation);
+                $relationConfig = ArrayHelper::merge($this->getRelationAdapterConfig($relationFilter, $relation), $relationParams);
                 $relationGridClass = $relationConfig['class'];
                 unset($relationConfig['class']);
                 $relationGrid = $relationGridClass::createFromAdapter($this, $relationConfig);
