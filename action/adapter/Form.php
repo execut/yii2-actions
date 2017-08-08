@@ -11,6 +11,7 @@ namespace execut\actions\action\adapter;
 use execut\actions\action\Adapter;
 use execut\actions\action\adapter\helper\FormLoader;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -23,6 +24,7 @@ class Form extends Adapter
 {
     const POST = 'post';
     const GET = 'get';
+    const MIXED = 'mixed';
     /**
      * @var Model
      */
@@ -100,6 +102,10 @@ class Form extends Adapter
     public function getData() {
         if (!$this->actionParams) {
             return;
+        }
+
+        if ($this->requestType === self::MIXED) {
+            return ArrayHelper::merge($this->actionParams->get, $this->actionParams->post);
         }
 
         if ($this->requestType === self::GET) {

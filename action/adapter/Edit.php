@@ -11,7 +11,9 @@ namespace execut\actions\action\adapter;
 use execut\actions\action\Adapter;
 use execut\actions\action\adapter\viewRenderer\DetailView;
 use execut\actions\action\Response;
+use yii\base\Event;
 use yii\bootstrap\Html;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 
@@ -24,6 +26,9 @@ class Edit extends Form
     public $scenario = null;
     public $createFormLabel = 'Создание';
     public $editFormLabel = 'Редактирование';
+    public $urlParamsForRedirectAfterSave = [];
+
+    public $isTrySaveFromGet = false;
     public $mode = 'view';
     protected function _run() {
         $class = $this->modelClass;
@@ -35,24 +40,12 @@ class Edit extends Form
         }
 
         $model = $this->getModel();
-
-//        foreach ($this->relations as $relation) {
-//            var_dump($model->getRelation($relation));
-//            exit;
-//        }
         if ($this->scenario !== null) {
             $model->setScenario($this->scenario);
         }
 
         $this->model = $model;
-        foreach ($this->additionalAttributes as $attribute) {
-            if ((isset($this->actionParams->get[$attribute])) && ($value = $this->actionParams->get[$attribute])) {
-                $model->$attribute = $value;
-            }
-        }
-
         $result = parent::loadAndValidateForm();
-
         if (is_array($result)) {
             return $this->getResponse([
                 'content' => $result
@@ -70,16 +63,15 @@ class Edit extends Form
             $model->save();
             $flashes['kv-detail-success'] = 'Record #' . $model->id . ' successfully ' .  $operation;
 
-            $params = [
-                $this->actionParams->uniqueId,
-                'id' => $model->id
-            ];
-
-            foreach ($this->additionalAttributes as $attribute) {
-                $params[$attribute] = $model->$attribute;
+            $result = $this->redirectAfterSave();
+            if ($result === false) {
+                if ($this->actionParams->isAjax) {
+                    return $this->getResponse([
+                        'format' => \yii\web\Response::FORMAT_JSON,
+                        'content' => [],
+                    ]);
+                }
             }
-
-            $result = \yii::$app->response->redirect($params);
         } else {
             if (!empty($model->errors)) {
                 $flashes['error'] = Html::errorSummary($model);
@@ -152,6 +144,57 @@ class Edit extends Form
             'class' => DetailView::className(),
             'uniqueId' => $this->uniqueId,
             'heading' => $this->getHeading(),
+            'action' => $this->getFormAction(),
         ];
+    }
+
+    protected function getFormAction() {
+        $params = $this->getUrlParams();
+
+        return $params;
+    }
+
+    /**
+     * @param $model
+     */
+    protected function redirectAfterSave()
+    {
+        if ($this->urlParamsForRedirectAfterSave === false) {
+            return false;
+        }
+
+        $params = $this->getUrlParams();
+
+        if (is_callable($this->urlParamsForRedirectAfterSave)) {
+            $urlParamsForRedirectAfterSave = $this->urlParamsForRedirectAfterSave;
+            $params = $urlParamsForRedirectAfterSave($params);
+        } else {
+            $params = ArrayHelper::merge($this->urlParamsForRedirectAfterSave, $params);
+            if (!empty($params[1])) {
+                unset($params[1]);
+            }
+        }
+
+        $result = \yii::$app->response->redirect($params);
+
+        return $result;
+    }
+
+    /**
+     * @param $model
+     * @return array
+     */
+    protected function getUrlParams(): array
+    {
+        $model = $this->model;
+        $params = [
+            $this->actionParams->uniqueId,
+            'id' => $model->id
+        ];
+
+        foreach ($this->additionalAttributes as $attribute) {
+            $params[$attribute] = $model->$attribute;
+        }
+        return $params;
     }
 }

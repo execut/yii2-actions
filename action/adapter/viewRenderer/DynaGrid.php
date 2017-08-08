@@ -68,7 +68,7 @@ class DynaGrid extends Widget
 
         $columns = $this->filter->getGridColumns();
 //        $flash = '<aasd';
-//        $alertBlock = $this->renderAlertBlock();
+        $alertBlock = $this->renderAlertBlock();
         $fullExportMenu = ExportMenu::widget([
             'dataProvider' => $this->dataProvider,
 //            'dataProvider' => $dataProvider,
@@ -84,9 +84,14 @@ class DynaGrid extends Widget
 
         return [
             'class' => \kartik\dynagrid\DynaGrid::className(),
-//            'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
+            'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
 //            'pageSize' => 100000,
             'gridOptions' => [
+//                'floatHeader' => true,
+//                'floatHeaderOptions' => [
+//                    'top' => 0,
+//                    'zIndex' => 10000,
+//                ],
                 'export' => [
                     'fontAwesome' => true,
                     'itemsAfter'=> [
@@ -186,6 +191,23 @@ class DynaGrid extends Widget
         }
     }
 
+    protected function getUrlAttributes() {
+        if (empty($this->urlAttributes)) {
+            $filterAttributes = $this->filter->attributes;
+            $formName = $this->filter->formName();
+            $result = [$formName => []];
+            foreach ($filterAttributes as $attribute => $value) {
+                if (!empty($value)) {
+                    $result[$formName][$attribute] = $value;
+                }
+            }
+
+            return $result;
+        }
+
+        return $this->urlAttributes;
+    }
+
     /**
      * @return array
      */
@@ -195,7 +217,7 @@ class DynaGrid extends Widget
             $lcfirstTitle = $this->title;
             return Html::a('<i class="glyphicon glyphicon-plus"></i>', Url::to(array_merge([
                     '/' . $this->getUniqueId() . '/update',
-                ], $this->urlAttributes)), [
+                ], $this->getUrlAttributes())), [
                     'type' => 'button',
                     'data-pjax' => 0,
                     'title' => \yii::t('execut.actions', 'Add') . ' ' . $lcfirstTitle,

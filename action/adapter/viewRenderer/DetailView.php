@@ -16,6 +16,7 @@ class DetailView extends Widget
     public $model = null;
     public $mode = null;
     public $heading = 'Редактирование';
+    public $action = null;
 
     public function getDefaultWidgetOptions()
     {
@@ -49,6 +50,7 @@ class DetailView extends Widget
             ],
 //                        'container' => ['id'=>'kv-demo'],
             'formOptions' => [
+                'action' => $this->action,
                 'options' => [
                     'enctype'=>'multipart/form-data',
                 ],
