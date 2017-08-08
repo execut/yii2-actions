@@ -24,8 +24,8 @@ class Edit extends Form
     public $additionalAttributes = [];
     public $requestType = self::POST;
     public $scenario = null;
-    public $createFormLabel = 'Создание';
-    public $editFormLabel = 'Редактирование';
+    public $createFormLabel = 'Create';
+    public $editFormLabel = 'Edit';
     public $urlParamsForRedirectAfterSave = [];
 
     public $isTrySaveFromGet = false;
@@ -60,8 +60,10 @@ class Edit extends Form
                 $operation = 'updated';
             }
 
+            $operation = $this->translate($operation);
+
             $model->save();
-            $flashes['kv-detail-success'] = 'Record #' . $model->id . ' successfully ' .  $operation;
+            $flashes['kv-detail-success'] = $this->translate('Record') . ' #' . $model->id . ' ' . $this->translate('successfully') . ' ' .  $operation;
 
             $result = $this->redirectAfterSave();
             if ($result === false) {
@@ -124,10 +126,17 @@ class Edit extends Form
 
     protected function getHeading() {
         if ($this->model->isNewRecord) {
-            return $this->createFormLabel;
+            return $this->getCreateFormLabel();
         } else {
             return $this->getEditFormLabel($this->model);
         }
+    }
+
+    protected function getCreateFormLabel() {
+        $m  = $this->createFormLabel;
+        $t = $this->translate($m);
+
+        return $t;
     }
 
     protected function getEditFormLabel() {
@@ -136,7 +145,7 @@ class Edit extends Form
             return $editFormLabel($this->model);
         }
 
-        return $editFormLabel;
+        return \yii::t('execut.actions', $editFormLabel);
     }
 
     public function getDefaultViewRendererConfig() {
@@ -196,5 +205,15 @@ class Edit extends Form
             $params[$attribute] = $model->$attribute;
         }
         return $params;
+    }
+
+    /**
+     * @param $m
+     * @return string
+     */
+    protected function translate($m): string
+    {
+        $t = \yii::t('execut.actions', $m);
+        return $t;
     }
 }
