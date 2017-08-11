@@ -21,12 +21,14 @@ class Delete extends Adapter
         $model->delete();
         if ($this->isRedirect) {
             $response = \yii::$app->response->redirect(\Yii::$app->request->referrer);
+            $flashes = ['kv-detail-success' => 'Record #' . $model->id . ' is successfully deleted'];
         } else {
+            $flashes = [];
             $response = '';
         }
 
         $response = $this->getResponse([
-            'flashes' => ['kv-detail-success' => 'Record #' . $model->id . ' is successfully deleted'],
+            'flashes' => $flashes,
             'content' => $response,
         ]);
 
