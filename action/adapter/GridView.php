@@ -99,8 +99,12 @@ class GridView extends \execut\actions\action\adapter\Form
                 $key = 'results';
             }
 
+            $pagination = $dataProvider->pagination;
             $response->content = [
-                $key => $result
+                $key => $result,
+                'pagination' => [
+                    'more' => $pagination->page < $pagination->pageCount - 1,
+                ],
             ];
 
             $response->format = Response::FORMAT_JSON;
