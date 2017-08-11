@@ -10,6 +10,7 @@ namespace execut\actions\action\adapter;
 
 use execut\actions\action\Adapter;
 use execut\actions\action\adapter\viewRenderer\DetailView;
+use execut\actions\action\ModelsFinder;
 use execut\actions\action\Response;
 use yii\base\Event;
 use yii\bootstrap\Html;
@@ -31,7 +32,6 @@ class Edit extends Form
     public $isTrySaveFromGet = false;
     public $mode = 'view';
     protected function _run() {
-        $class = $this->modelClass;
         $actionParams = $this->actionParams;
         if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
             $mode = $this->mode;
@@ -44,7 +44,6 @@ class Edit extends Form
             $model->setScenario($this->scenario);
         }
 
-        $this->model = $model;
         $result = parent::loadAndValidateForm();
         if (is_array($result)) {
             return $this->getResponse([
@@ -97,31 +96,6 @@ class Edit extends Form
         ]);
 
         return $response;
-    }
-
-    protected $_model = null;
-    public function getModel() {
-        if ($this->_model !== null) {
-            return $this->_model;
-        }
-
-        $class = $this->modelClass;
-        $actionParams = $this->actionParams;
-        if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
-            if (!empty($actionParams->get['id'])) {
-                $id = $actionParams->get['id'];
-            } else {
-                $id = $actionParams->post['id'];
-            }
-
-            $model = $class::find()->andWhere([
-                'id' => $id
-            ])->one();
-        } else {
-            $model = new $class;
-        }
-
-        return $this->_model = $model;
     }
 
     protected function getHeading() {
@@ -213,7 +187,10 @@ class Edit extends Form
      */
     protected function translate($m): string
     {
-        $t = \yii::t('execut.actions', $m);
-        return $t;
+        if (YII_ENV !== 'test') {
+            $m = \yii::t('execut.actions', $m);
+        }
+
+        return $m;
     }
 }

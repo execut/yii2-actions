@@ -14,34 +14,22 @@ use execut\actions\action\Response;
 class Delete extends Adapter
 {
     public $modelClass = null;
-    public $model = null;
+    public $isRedirect = false;
     protected function _run()
     {
-        $model = $this->initModel();
+        $model = $this->getModel();
         $model->delete();
+        if ($this->isRedirect) {
+            $response = \yii::$app->response->redirect(\Yii::$app->request->referrer);
+        } else {
+            $response = '';
+        }
+
         $response = $this->getResponse([
             'flashes' => ['kv-detail-success' => 'Record #' . $model->id . ' is successfully deleted'],
-            'content' => \yii::$app->response->redirect(\Yii::$app->request->referrer),
+            'content' => $response,
         ]);
 
         return $response;
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function initModel()
-    {
-        if ($this->model !== null) {
-            return $this->model;
-        }
-
-        $id = $this->actionParams->get['id'];
-        $modelClass = $this->modelClass;
-        $model = $modelClass::find()->andWhere([
-            'id' => $id
-        ])->one();
-
-        return $this->model = $model;
     }
 }

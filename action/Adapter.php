@@ -120,4 +120,62 @@ abstract class Adapter extends Component
     public function getUniqueId() {
         return $this->actionParams->getUniqueId();
     }
+
+    /**
+     * @TODO Block for extraction
+     */
+    public function setModelsFinder($finder) {
+        $this->_finder = $finder;
+
+        return $this;
+    }
+
+    protected $_finder = null;
+    public function getModelsFinder() {
+        $finder = $this->_finder;
+        if ($finder === null) {
+            $finder = [];
+        }
+
+        if (is_array($finder)) {
+            $finder = ArrayHelper::merge([
+                'class' => ModelsFinder::class,
+                'modelClass' => $this->modelClass,
+                'actionParams' => $this->actionParams,
+            ], $finder);
+
+            $finder = \yii::createObject($finder);
+            $this->_finder = $finder;
+        }
+
+        return $this->_finder;
+    }
+
+    protected $_model = null;
+    public function setModel($model) {
+        if (is_string($model)) {
+            $model = ['class' => $model];
+        }
+
+        if (is_array($model)) {
+            $model = \yii::createObject($model);
+        }
+
+        $this->_model = $model;
+    }
+
+    public function getModel() {
+        if ($this->_model !== null) {
+            return $this->_model;
+        }
+
+        $model = $this->modelsFinder->find();
+
+        return $this->_model = $model;
+    }
+
+
+    /**
+     * end bock for extraction
+     */
 }

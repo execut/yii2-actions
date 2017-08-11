@@ -25,10 +25,6 @@ class Form extends Adapter
     const POST = 'post';
     const GET = 'get';
     const MIXED = 'mixed';
-    /**
-     * @var Model
-     */
-    protected $_model = null;
     public $requestType = 'get';
     public $isDisableAjax = false;
     public $filesAttributes = [];
@@ -57,27 +53,6 @@ class Form extends Adapter
         }
 
         return $response;
-    }
-
-    public function setModel($model) {
-        if (is_string($model)) {
-            $model = [
-                'class' => $model,
-            ];
-        }
-
-        if (is_array($model)) {
-            $model = \Yii::createObject($model);
-        }
-
-        $this->_model = $model;
-    }
-
-    /**
-     * @return Model
-     */
-    public function getModel() {
-        return $this->_model;
     }
 
     /**
