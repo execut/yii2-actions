@@ -110,7 +110,7 @@ class DynaGrid extends Widget
 //                    ],
                 ],
                 'filterModel' => $this->filter,
-//                'afterHeader' => $alertBlock,
+                'afterHeader' => $alertBlock,
                 'toolbar' => [
                     ['content' => $this->renderMassEditButton()],
                     ['content' => $this->renderVisibleButtons()],

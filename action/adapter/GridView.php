@@ -80,7 +80,6 @@ class GridView extends \execut\actions\action\adapter\Form
                 if ($row instanceof Model) {
                     $row = $row->getAttributes($modelAttributes);
                 }
-
                 $res = [];
                 foreach ($this->attributes as $targetKey => $attribute) {
                     if (is_int($targetKey)) {

@@ -7,6 +7,7 @@ return [
     'Edit' => 'Редактирование',
     'created' => 'создана',
     'updated' => 'обновлена',
+    'deleted' => 'удалена',
     'Record' => 'Запись',
-    'successfully' => 'успешно',
+    'is successfully' => 'успешно',
 ];

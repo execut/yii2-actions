@@ -62,7 +62,7 @@ class Edit extends Form
             $operation = $this->translate($operation);
 
             $model->save();
-            $flashes['kv-detail-success'] = $this->translate('Record') . ' #' . $model->id . ' ' . $this->translate('successfully') . ' ' .  $operation;
+            $flashes['kv-detail-success'] = $this->translate('Record') . ' #' . $model->id . ' ' . $this->translate('is successfully') . ' ' .  $operation;
 
             $result = $this->redirectAfterSave();
             if ($result === false) {
