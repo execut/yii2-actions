@@ -32,5 +32,23 @@ class Bootstrap implements BootstrapInterface
                 'class' => '\kartik\grid\Module',
             ]);
         }
+
+        $this->initI18N();
+    }
+
+
+
+    public function initI18N() {
+        \yii::setAlias('@execut', '@vendor/execut');
+        if (\Yii::$app->i18n) {
+            \Yii::$app->i18n->translations['execut.actions'] = [
+                'class' => 'yii\i18n\PhpMessageSource',
+                'sourceLanguage' => 'en-US',
+                'basePath' => '@execut/yii2-actions/messages',
+                'fileMap' => [
+                    'execut.actions' => 'actions.php',
+                ],
+            ];
+        }
     }
 }

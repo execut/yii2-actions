@@ -187,9 +187,7 @@ class Edit extends Form
      */
     protected function translate($m): string
     {
-        if (YII_ENV !== 'test') {
-            $m = \yii::t('execut.actions', $m);
-        }
+        $m = \yii::t('execut.actions', $m);
 
         return $m;
     }

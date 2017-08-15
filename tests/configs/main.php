@@ -8,7 +8,7 @@ defined('YII_ENV') or define('YII_ENV', 'test');
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', \execut\actions\Bootstrap::class],
     'modules' => [],
     'components' => [
         'cache' => [

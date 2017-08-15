@@ -51,7 +51,10 @@ class GridViewTest extends TestCase
                     'id' => 1,
                     'text' => 'test',
                 ]
-            ]
+            ],
+            'pagination' => [
+                'more' => false,
+            ],
         ], $response->content);
     }
 

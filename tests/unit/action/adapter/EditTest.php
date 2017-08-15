@@ -43,7 +43,7 @@ class EditTest extends TestCase
         $this->assertTrue($model->saveIsCalled, 'Check what save is called');
 
         $this->assertEquals([
-            'kv-detail-success' => 'Record #' . $model->id . ' successfully updated',
+            'kv-detail-success' => 'Record #' . $model->id . ' is successfully updated',
         ], $response->flashes);
 
         $this->assertEquals(Url::to([
