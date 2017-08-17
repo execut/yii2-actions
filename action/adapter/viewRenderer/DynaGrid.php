@@ -31,6 +31,7 @@ class DynaGrid extends Widget
     public $isAllowedMassEdit = false;
     public $refreshAttributes = [];
     public $handleButtons = [];
+    public $isRenderFlashes = true;
     public $defaultHandleButtons = [
         'visible' => [
             'icon' => 'eye-open',
@@ -153,6 +154,10 @@ class DynaGrid extends Widget
 
     protected function renderAlertBlock()
     {
+        if (!$this->isRenderFlashes) {
+            return '';
+        }
+
         $session = \Yii::$app->session;
         $flashes = $session->getAllFlashes();
         $alertContainerOptions = [];
