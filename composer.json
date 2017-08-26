@@ -12,6 +12,7 @@
   ],
   "require": {
     "yiisoft/yii2": "@stable",
+    "execut/yii2-base": "@stable",
     "kartik-v/yii2-export": "@stable",
     "kartik-v/yii2-dynagrid": "@stable",
     "kartik-v/yii2-detail-view": "@stable",

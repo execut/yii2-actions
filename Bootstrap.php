@@ -4,34 +4,37 @@
 
 namespace execut\actions;
 
-
-use yii\base\BootstrapInterface;
-
-class Bootstrap implements BootstrapInterface
+class Bootstrap extends \execut\yii\Bootstrap
 {
+    public function getDefaultDepends()
+    {
+        return [
+            'modules' => [
+                'dynagrid' => [
+                    'class' => '\kartik\dynagrid\Module',
+                    'defaultPageSize' => 100,
+                    'maxPageSize' => 500,
+                    'dbSettings' => [
+                        'tableName' => 'dynagrid',
+                    ],
+                    'dbSettingsDtl' => [
+                        'tableName' => 'dynagrid_dtl',
+                    ],
+
+                ],
+                'gridview' => [
+                    'class' => '\kartik\grid\Module',
+                ],
+                'actions' => [
+                    'class' => Module::class,
+                ],
+            ],
+        ];
+    }
+
     public function bootstrap($app)
     {
-        $app = \yii::$app;
-        if (!$app->hasModule('dynagrid')) {
-            \yii::$app->setModule('dynagrid', [
-                'class' => '\kartik\dynagrid\Module',
-                'defaultPageSize' => 100,
-                'maxPageSize' => 500,
-                'dbSettings' => [
-                    'tableName' => 'dynagrid_grids',
-                ],
-                'dbSettingsDtl' => [
-                    'tableName' => 'dynagrid_settings',
-                    'dynaGridIdAttr' => 'dynagrid_grid_id',
-                ],
-            ]);
-        }
-
-        if (!$app->hasModule('gridview')) {
-            \yii::$app->setModule('gridview', [
-                'class' => '\kartik\grid\Module',
-            ]);
-        }
+        parent::bootstrap($app);
 
         $this->initI18N();
     }
