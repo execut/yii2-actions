@@ -28,11 +28,23 @@ class Form extends Adapter
     public $requestType = 'get';
     public $isDisableAjax = false;
     public $filesAttributes = [];
-    public $isValidate = true;
     public $attributes = [
         'id',
         'text' => 'name',
     ];
+
+    protected $_isValidate = true;
+
+    public function setIsValidate($isValidate) {
+        $this->_isValidate = $isValidate;
+
+        return $this;
+    }
+
+    public function getIsValidate() {
+        return $this->_isValidate;
+    }
+
     protected function _run() {
         $response = $this->getResponse();
         if ($this->actionParams->isAjax && !$this->actionParams->isPjax && !$this->isDisableAjax) {
@@ -62,7 +74,7 @@ class Form extends Adapter
     {
         $model = $this->getModel();
         $helper = new FormLoader();
-        $helper->isValidate = $this->isValidate;
+        $helper->isValidate = $this->getIsValidate();
         $helper->data = $this->getData();
         $helper->model = $model;
         $helper->filesAttributes = $this->filesAttributes;
