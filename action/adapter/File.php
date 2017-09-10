@@ -23,12 +23,13 @@ class File extends Adapter
     public $modelClass = null;
     public $model = null;
     public $dataAttribute = 'data';
+    public $extensionIsRequired = true;
     protected function _run() {
         $attributes = $this->actionParams->get;
         $class = $this->modelClass;
         unset($attributes['r']);
 
-        if (empty($attributes['extension'])) {
+        if ($this->extensionIsRequired && empty($attributes['extension'])) {
             throw new NotFoundHttpException('Extension required');
         }
 
@@ -48,7 +49,7 @@ class File extends Adapter
             throw new NotFoundHttpException('File by url "' . \yii::$app->request->getUrl() . '" not found');
         }
 
-        if (strtolower($result->extension) !== $attributes['extension']) {
+        if ($this->extensionIsRequired && strtolower($result->extension) !== $attributes['extension']) {
             throw new NotFoundHttpException('File extension is wrong');
         }
 
