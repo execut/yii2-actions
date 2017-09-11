@@ -88,6 +88,7 @@ class DynaGrid extends Widget
             'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
 //            'pageSize' => 100000,
             'gridOptions' => [
+//                'layout' => "{summary}" . $alertBlock . "\n{items}\n{pager}",
 //                'floatHeader' => true,
 //                'floatHeaderOptions' => [
 //                    'top' => 0,
@@ -111,7 +112,6 @@ class DynaGrid extends Widget
 //                    ],
                 ],
                 'filterModel' => $this->filter,
-                'afterHeader' => $alertBlock,
                 'toolbar' => [
                     ['content' => $this->renderMassEditButton()],
                     ['content' => $this->renderVisibleButtons()],
@@ -124,6 +124,7 @@ class DynaGrid extends Widget
                 ],
                 'panel' => [
                     'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . \yii::t('execut.actions', 'List') . ' ' . $this->lcfirst($this->title) . '</h3>',
+                    'before' => $alertBlock,
                 ],
                 'dataProvider' => $this->dataProvider,
                 'options' => [
@@ -160,7 +161,9 @@ class DynaGrid extends Widget
 
         $session = \Yii::$app->session;
         $flashes = $session->getAllFlashes();
-        $alertContainerOptions = [];
+        $alertContainerOptions = [
+            'style' => 'max-width:400px'
+        ];
         if (count($flashes) === 0) {
             Html::addCssStyle($alertContainerOptions, 'display:none;');
         }

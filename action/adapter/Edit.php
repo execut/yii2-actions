@@ -16,6 +16,7 @@ use yii\base\Event;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use yii\web\Session;
 use yii\web\UploadedFile;
 
 class Edit extends Form
@@ -72,10 +73,17 @@ class Edit extends Form
                         'content' => [],
                     ]);
                 }
+
+                $result = [
+                    'mode' => $mode,
+                    'model' => $model
+                ];
             }
         } else {
+            $session = \Yii::$app->session;
             if (!empty($model->errors)) {
-                $flashes['error'] = Html::errorSummary($model);
+                $session->setFlash('kv-detail-error', Html::errorSummary($model));
+//                $flashes['kv-detail-danger'] = Html::errorSummary($model);
             }
 
             $result = [
@@ -107,7 +115,7 @@ class Edit extends Form
         $get = $this->actionParams->get;
         unset($get['id']);
 
-        return $this->isTrySaveFromGet == !empty($get);
+        return $this->isTrySaveFromGet == empty($get);
     }
 
     protected function getHeading() {
@@ -158,6 +166,7 @@ class Edit extends Form
             return false;
         }
 
+        $data = $this->actionParams->getData();
         $params = $this->getUrlParams();
 
         if (is_callable($this->urlParamsForRedirectAfterSave)) {
@@ -168,6 +177,12 @@ class Edit extends Form
             if (!empty($params[1])) {
                 unset($params[1]);
             }
+        }
+
+        if (!empty($data['save'])) {
+            $params = [
+                str_replace('/update', '/index', $this->getUniqueId()),
+            ];
         }
 
         $result = \yii::$app->response->redirect($params);
