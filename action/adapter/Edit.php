@@ -90,7 +90,9 @@ class Edit extends Form
         } else {
             $session = \Yii::$app->session;
             if (!empty($model->errors)) {
-                $session->setFlash('kv-detail-error', Html::errorSummary($model));
+                $session->setFlash('kv-detail-error', Html::errorSummary($model, [
+                    'encode' => false,
+                ]));
 //                $flashes['kv-detail-danger'] = Html::errorSummary($model);
             }
 
