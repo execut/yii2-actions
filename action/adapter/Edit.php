@@ -31,7 +31,8 @@ class Edit extends Form
     public $urlParamsForRedirectAfterSave = [];
 
     public $isTrySaveFromGet = false;
-    public $mode = 'view';
+    public $templateSuccessMessage = null;
+    public $mode = 'edit';
     protected function _run() {
         $actionParams = $this->actionParams;
         if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
@@ -63,7 +64,14 @@ class Edit extends Form
             $operation = $this->translate($operation);
 
             $model->save();
-            $flashes['kv-detail-success'] = $this->translate('Record') . ' #' . $model->id . ' ' . $this->translate('is successfully') . ' ' .  $operation;
+            $parts = [
+                '{id}' => $model->id,
+                '{operation}' => $operation,
+            ];
+
+            $template = $this->getTemplateSuccessMessage();
+
+            $flashes['kv-detail-success'] = strtr($template, $parts);
 
             $result = $this->redirectAfterSave();
             if ($result === false) {
@@ -115,7 +123,7 @@ class Edit extends Form
         $get = $this->actionParams->get;
         unset($get['id']);
 
-        return $this->isTrySaveFromGet == empty($get);
+        return (!empty($get) && $this->isTrySaveFromGet) || (!$this->isTrySaveFromGet);
     }
 
     protected function getHeading() {
@@ -177,12 +185,12 @@ class Edit extends Form
             if (!empty($params[1])) {
                 unset($params[1]);
             }
-        }
 
-        if (!empty($data['save'])) {
-            $params = [
-                str_replace('/update', '/index', $this->getUniqueId()),
-            ];
+            if (!empty($data['save'])) {
+                $params = [
+                    str_replace('/update', '/index', $this->getUniqueId()),
+                ];
+            }
         }
 
         $result = \yii::$app->response->redirect($params);
@@ -217,5 +225,19 @@ class Edit extends Form
         $m = \yii::t('execut.actions', $m);
 
         return $m;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTemplateSuccessMessage(): string
+    {
+        if ($this->templateSuccessMessage !== null) {
+            return $this->templateSuccessMessage;
+        }
+
+        $template = $this->translate('Record') . ' #{id} ' . $this->translate('is successfully') . ' {operation}';
+
+        return $template;
     }
 }

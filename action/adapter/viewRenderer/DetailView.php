@@ -20,7 +20,6 @@ class DetailView extends Widget
 
     public function getDefaultWidgetOptions()
     {
-        $cancelUrl = Url::to([str_replace('/update', '/index', $this->uniqueId)]);
         return [
             'class' => \kartik\detail\DetailView::className(),
             'panel'=>[
@@ -35,7 +34,7 @@ class DetailView extends Widget
                 ],
             ],
             'buttons1' => '',
-            'buttons2' => '<input type="submit" name="save" value="Сохранить" class="btn btn-success" href="" title="Сохранить и вернуться к списку"></input>&nbsp;&nbsp;<input type="submit" name="apply" value="Применить" class="btn btn-success" href="" title="Сохранить изменения"></input>&nbsp;&nbsp;<a class="btn btn-default" href="' . $cancelUrl . '">Отмена</a>',
+            'buttons2' => $this->renderButtons(),
             'deleteOptions' => [
                 'url' => Url::to([
                     $this->uniqueId . '/delete',
@@ -66,5 +65,16 @@ class DetailView extends Widget
             ],
             'attributes' => $this->model->getFormFields(),
         ];
+    }
+
+    /**
+     * @param $cancelUrl
+     * @return string
+     */
+    public function renderButtons()
+    {
+        $cancelUrl = Url::to([str_replace('/update', '/index', $this->uniqueId)]);
+
+        return '<input type="submit" name="save" value="Сохранить" class="btn btn-success" href="" title="Сохранить и вернуться к списку">&nbsp;&nbsp;<input type="submit" name="apply" value="Применить" class="btn btn-success" href="" title="Сохранить изменения">&nbsp;&nbsp;<a class="btn btn-default" href="' . $cancelUrl . '">Отмена</a>';
     }
 }
