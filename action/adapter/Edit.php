@@ -64,14 +64,15 @@ class Edit extends Form
             $operation = $this->translate($operation);
 
             $model->save();
-            $parts = [
-                '{id}' => $model->id,
-                '{operation}' => $operation,
-            ];
+            if ($this->templateSuccessMessage !== false) {
+                $parts = [
+                    '{id}' => $model->id,
+                    '{operation}' => $operation,
+                ];
 
-            $template = $this->getTemplateSuccessMessage();
-
-            $flashes['kv-detail-success'] = strtr($template, $parts);
+                $template = $this->getTemplateSuccessMessage();
+                $flashes['kv-detail-success'] = strtr($template, $parts);
+            }
 
             $result = $this->redirectAfterSave();
             if ($result === false) {

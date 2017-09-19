@@ -111,7 +111,11 @@ class EditWithRelations extends Adapter
 
         $model = $this->getModel();
         foreach ($this->relations as $relation => $relationParams) {
-            if (is_int($relation)) {
+            if ($relationParams === null) {
+                continue;
+            }
+
+            if (is_int($relation) || is_string($relationParams)) {
                 $relation = $relationParams;
                 $relationParams = [];
             }

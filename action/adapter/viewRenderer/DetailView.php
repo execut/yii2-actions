@@ -17,6 +17,10 @@ class DetailView extends Widget
     public $mode = null;
     public $heading = 'Редактирование';
     public $action = null;
+    public $buttonsTemplate = '{save}&nbsp;&nbsp;{apply}&nbsp;&nbsp;{cancel}';
+    public $saveButton = '<input type="submit" name="save" value="Сохранить" class="btn btn-success" href="" title="Сохранить и вернуться">';
+    public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-success" href="" title="Сохранить изменения">';
+    public $cancelButton = '<a class="btn btn-default" href="./">Вернуться к списку</a>';
 
     public function getDefaultWidgetOptions()
     {
@@ -73,8 +77,10 @@ class DetailView extends Widget
      */
     public function renderButtons()
     {
-        $cancelUrl = Url::to([str_replace('/update', '/index', $this->uniqueId)]);
-
-        return '<input type="submit" name="save" value="Сохранить" class="btn btn-success" href="" title="Сохранить и вернуться к списку">&nbsp;&nbsp;<input type="submit" name="apply" value="Применить" class="btn btn-success" href="" title="Сохранить изменения">&nbsp;&nbsp;<a class="btn btn-default" href="' . $cancelUrl . '">Отмена</a>';
+        return strtr($this->buttonsTemplate, [
+            '{save}' => $this->saveButton,
+            '{apply}' => $this->applyButton,
+            '{cancel}' => $this->cancelButton,
+        ]);
     }
 }
