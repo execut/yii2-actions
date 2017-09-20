@@ -18,6 +18,7 @@ class Model extends Handler
     public $attributes = null;
     public $method = 'updateAll';
     public $successMessage = '# records has been updated';
+    public $asArray = true;
     public function run() {
         $dataProvider = $this->dataProvider;
         $class = $this->modelClass;
@@ -30,9 +31,12 @@ class Model extends Handler
         /**
          * @var ActiveQuery
          */
-        $q = $dataProvider->query;
-        $q->limit(65535);
-        $ids = $q->select('id')->createCommand()->queryColumn('id');
+        $q = $dataProvider->query->select($class::tableName() . '.id');
+        if ($this->asArray) {
+            $ids = $q->limit(65535)->createCommand()->queryColumn();
+        } else {
+            $ids = $q;
+        }
         $arguments[] = ['id' => $ids];
         $count = $class::$method(...$arguments);
 
