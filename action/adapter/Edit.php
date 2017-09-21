@@ -28,7 +28,9 @@ class Edit extends Form
     public $scenario = null;
     public $createFormLabel = 'Create';
     public $editFormLabel = 'Edit';
+    public $labelTemplate = '{label}{closeButton}';
     public $urlParamsForRedirectAfterSave = [];
+    public $closeButton = '<a href="./" class="pull-right btn btn-xs btn-primary glyphicon glyphicon-remove"></a>';
 
     public $isTrySaveFromGet = false;
     public $templateSuccessMessage = null;
@@ -131,14 +133,22 @@ class Edit extends Form
 
     protected function getHeading() {
         if ($this->model->isNewRecord) {
-            return $this->getCreateFormLabel();
+            $editFormLabel = $this->getCreateFormLabel();
         } else {
-            return $this->getEditFormLabel($this->model);
+            $editFormLabel = $this->getEditFormLabel($this->model);
         }
+
+        $editFormLabel  = strtr($this->labelTemplate, [
+            '{label}' => $editFormLabel,
+            '{closeButton}' => $this->closeButton,
+        ]);
+
+        return $editFormLabel;
     }
 
     protected function getCreateFormLabel() {
         $m  = $this->createFormLabel;
+
         $t = $this->translate($m);
 
         return $t;
@@ -147,10 +157,12 @@ class Edit extends Form
     protected function getEditFormLabel() {
         $editFormLabel = $this->editFormLabel;
         if (is_callable($editFormLabel)) {
-            return $editFormLabel($this->model);
+            $editFormLabel = $editFormLabel($this->model);
+        } else {
+            $editFormLabel = \yii::t('execut.actions', $editFormLabel);
         }
 
-        return \yii::t('execut.actions', $editFormLabel);
+        return $editFormLabel;
     }
 
     public function getDefaultViewRendererConfig() {
