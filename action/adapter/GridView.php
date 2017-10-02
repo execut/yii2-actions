@@ -29,6 +29,8 @@ class GridView extends \execut\actions\action\adapter\Form
         'text' => 'name',
     ];
 
+    protected $_isValidate = false;
+
     public $scenario = ActiveRecord::SCENARIO_DEFAULT;
 
     protected $handlers = [];

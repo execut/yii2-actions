@@ -55,7 +55,7 @@ class DynaGrid extends Widget
     ];
     public function getDefaultWidgetOptions()
     {
-        $ucfirstTitle = $title = $this->title;
+        $title = $this->title;
 
         $refreshUrlParams = [
             $this->adapter->uniqueId,

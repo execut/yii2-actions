@@ -23,6 +23,7 @@ class File extends Adapter
     public $modelClass = null;
     public $model = null;
     public $dataAttribute = 'data';
+    public $nameAttribute = 'name';
     public $extensionIsRequired = true;
     protected function _run() {
         $attributes = $this->actionParams->get;
@@ -41,6 +42,7 @@ class File extends Adapter
         }
 
         $selectedAttributes = array_merge([
+            $this->nameAttribute,
             $dataAttribute,
             'mime_type',
         ], array_keys($attributes));
@@ -59,7 +61,7 @@ class File extends Adapter
         if (strpos($result->mime_type, 'image/') === 0) {
             $response->headers->set('Content-Type', $result->mime_type);
         } else {
-            $response->setDownloadHeaders($result->name, $result->mime_type);
+            $response->setDownloadHeaders($result->{$this->nameAttribute}, $result->mime_type);
         }
 
         $response = $this->getResponse([
