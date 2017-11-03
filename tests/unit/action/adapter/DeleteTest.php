@@ -60,6 +60,13 @@ class DeleteTestModel extends ActiveRecord {
     public $isDeleteCalled = false;
     public $pk = null;
     public $id = 1;
+    public $primaryKey = 1;
+
+    public static function primaryKey()
+    {
+        return 'id';
+    }
+
     public static function find() {
         $model = new self;
 

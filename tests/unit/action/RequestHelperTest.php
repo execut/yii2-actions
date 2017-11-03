@@ -15,12 +15,16 @@ class RequestHelperTest extends TestCase
     }
 
     public function testGetPost() {
-        $helper = new RequestHelper();
-        $_POST = [
-            '_method' => 'post',
-            'postKey' => 'postValue',
-        ];
+        $request = $this->getMock('\yii\web\Request', ['post']);
 
+        $request->expects($this->any())
+            ->method('post')
+            ->will($this->returnValue([
+                'postKey' => 'postValue',
+            ]));
+        \Yii::$app->set('request', $request);
+
+        $helper = new RequestHelper();
         $this->assertEquals([
             'postKey' => 'postValue',
         ], $helper->getPost());
@@ -55,8 +59,12 @@ class RequestHelperTest extends TestCase
 
     public function testGetIsPjax() {
         $helper = new RequestHelper();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $_SERVER['HTTP_X_PJAX'] = 'asdasd';
+
+        $request = $this->getMock('\yii\web\Request', ['getIsPjax']);
+        $request->expects($this->any())
+            ->method('getIsPjax')
+            ->will($this->returnValue(true));
+        \Yii::$app->set('request', $request);
 
         $this->assertTrue($helper->isPjax());
     }

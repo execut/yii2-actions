@@ -21,7 +21,7 @@ class Delete extends Adapter
         $model->delete();
         if ($this->isRedirect) {
             $response = \yii::$app->response->redirect(\Yii::$app->request->referrer);
-            $flashes = ['kv-detail-success' => $this->translate('Record') . ' #' . $model->id . ' ' . $this->translate('is successfully') . ' ' . $this->translate('deleted')];
+            $flashes = ['kv-detail-success' => $this->translate('Record') . ' #' . $model->primaryKey . ' ' . $this->translate('is successfully') . ' ' . $this->translate('deleted')];
         } else {
             $flashes = [];
             $response = '';

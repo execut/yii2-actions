@@ -24,16 +24,26 @@ use yii\widgets\ActiveForm;
  */
 class GridView extends \execut\actions\action\adapter\Form
 {
-    public $attributes = [
-        'id',
-        'text' => 'name',
-    ];
+    public $attributes = null;
 
     protected $_isValidate = false;
 
     public $scenario = ActiveRecord::SCENARIO_DEFAULT;
 
     protected $handlers = [];
+
+    protected function getAttributes() {
+        $attributes = $this->attributes;
+        if ($attributes === null) {
+            $class = $this->model->className();
+            $attributes = [
+                'id' => current($class::primaryKey()),
+                'text' => 'name',
+            ];
+        }
+
+        return $attributes;
+    }
 
     public function setHandlers($handlers) {
         foreach ($handlers as $key => $handler) {
@@ -50,7 +60,14 @@ class GridView extends \execut\actions\action\adapter\Form
     }
 
     protected function _run() {
+        /**
+         * @var ActiveRecord $filter
+         */
         $filter = $this->model;
+//        if ($filter->getBehavior('relationsSaver')) {
+//            $filter->detachBehavior('relationsSaver');
+//        }
+
         if ($this->scenario !== ActiveRecord::SCENARIO_DEFAULT) {
             $filter->scenario = $this->scenario;
         }
@@ -78,12 +95,13 @@ class GridView extends \execut\actions\action\adapter\Form
         if ($actionParams->isAjax && !$actionParams->isPjax && !$this->isDisableAjax && $dataProvider) {
             $result = [];
             foreach ($dataProvider->models as $row) {
-                $modelAttributes = array_values($this->attributes);
+                $attributes = $this->getAttributes();
+                $modelAttributes = array_values($attributes);
                 if ($row instanceof Model) {
                     $row = $row->getAttributes($modelAttributes);
                 }
                 $res = [];
-                foreach ($this->attributes as $targetKey => $attribute) {
+                foreach ($attributes as $targetKey => $attribute) {
                     if (is_int($targetKey)) {
                         $targetKey = $attribute;
                     }

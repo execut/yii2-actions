@@ -6,6 +6,7 @@
  */
 
 namespace execut\actions\action\adapter;
+use execut\actions\Bootstrap;
 use execut\actions\TestCase;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
@@ -27,6 +28,7 @@ class EditTest extends TestCase
     }
 
     public function testCreateNewRecord() {
+        Bootstrap::initI18N();
         $action = $this->getMockBuilder(Edit::className())->setMethods(['getDefaultViewRendererConfig'])->getMock();
         $action->method('getDefaultViewRendererConfig')->willReturn([]);
         $action->modelClass = TestModel::className();
@@ -117,11 +119,17 @@ class TestModel extends ActiveRecord {
     public $addinalAttribute = null;
     public $content = null;
     public $isNewRecord = false;
+    public $primaryKey = 1;
     public function rules() {
         return [
             [['savedAttribute'], 'required'],
             [['content', 'addinalAttribute'], 'safe'],
         ];
+    }
+
+    public static function primaryKey()
+    {
+        return 'id';
     }
 
     public function attributes()

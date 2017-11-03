@@ -8,6 +8,7 @@
 namespace execut\actions\action\adapter\viewRenderer;
 
 
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use kartik\export\ExportMenu;
@@ -24,6 +25,10 @@ class DynaGrid extends Widget
      * @var BaseDataProvider
      */
     public $dataProvider = null;
+
+    /**
+     * @var ActiveRecord
+     */
     public $filter = null;
     public $uniqueId = null;
     public $urlAttributes = [];
@@ -55,21 +60,8 @@ class DynaGrid extends Widget
     ];
     public function getDefaultWidgetOptions()
     {
-        $title = $this->title;
-
-        $refreshUrlParams = [
-            $this->adapter->uniqueId,
-        ];
-
-        foreach ($this->refreshAttributes as $key) {
-            if (!empty($this->adapter->actionParams->get[$key])) {
-                $refreshUrlParams[$key] = $this->adapter->actionParams->get[$key];
-            }
-        }
-
         $columns = $this->filter->getGridColumns();
 //        $flash = '<aasd';
-        $alertBlock = $this->renderAlertBlock();
         $fullExportMenu = ExportMenu::widget([
             'dataProvider' => $this->dataProvider,
 //            'dataProvider' => $dataProvider,
@@ -88,7 +80,8 @@ class DynaGrid extends Widget
             'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
 //            'pageSize' => 100000,
             'gridOptions' => [
-//                'layout' => "{summary}" . $alertBlock . "\n{items}\n{pager}",
+                'panel' => false,
+                'layout' => '<div class="row"><div class="col-md-12"><div class="pull-left pagination">{summary}</div><div class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;{pager}</div><div class="pull-right pagination">{toolbar}</div></div></div>{items}',
 //                'floatHeader' => true,
 //                'floatHeaderOptions' => [
 //                    'top' => 0,
@@ -112,20 +105,11 @@ class DynaGrid extends Widget
 //                    ],
                 ],
                 'filterModel' => $this->filter,
-                'toolbar' => [
-                    ['content' => $this->renderMassEditButton()],
-                    ['content' => $this->renderVisibleButtons()],
-                    ['content' => $this->renderAddButton() .
-                        Html::a('<i class="glyphicon glyphicon-repeat"></i>', $refreshUrlParams, ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid'])
-                    ],
-                    ['content' => '{dynagridFilter}{dynagridSort}{dynagrid}'],
-                    '{toggleData}',
-                    '{export}',
-                ],
-                'panel' => [
-                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . \yii::t('execut.actions', 'List') . ' ' . $this->lcfirst($this->title) . '</h3>',
-                    'before' => $alertBlock,
-                ],
+                'toolbar' => $this->getToolbarConfig(),
+//                'panel' => [
+//                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . \yii::t('execut.actions', 'List') . ' ' . $this->lcfirst($this->title) . '</h3>',
+//                    'before' => $alertBlock,
+//                ],
                 'dataProvider' => $this->dataProvider,
                 'options' => [
                     'id' => $this->getGridId(),
@@ -140,7 +124,7 @@ class DynaGrid extends Widget
 
     protected function getDynaGridId() {
         $m = $this->modelClass;
-        $tableName = trim($m::tableName(), '}{%');
+        $tableName = str_replace('\\', '_', $m) . '1';
         $userId = '';
         if (\yii::$app->user) {
             $userId .= \yii::$app->user->id;
@@ -179,9 +163,41 @@ class DynaGrid extends Widget
             $session->removeFlash($type);
         }
 
-        $out .= "\n</div>";
+        $out .= "\n</div><br><br>";
 
         return $out;
+    }
+
+    /**
+     * @param $refreshUrlParams
+     * @return array
+     */
+    public function getToolbarConfig(): array
+    {
+        $refreshUrlParams = [
+            $this->adapter->uniqueId,
+        ];
+
+        foreach ($this->refreshAttributes as $key) {
+            if (!empty($this->adapter->actionParams->get[$key])) {
+                $refreshUrlParams[$key] = $this->adapter->actionParams->get[$key];
+            }
+        }
+
+        return [
+            'alertBlock' => [
+                'content' => $this->renderAlertBlock(),
+            ],
+            'massEdit' => ['content' => $this->renderMassEditButton()],
+            'massVisible' => ['content' => $this->renderVisibleButtons()],
+            'add' => ['content' => $this->renderAddButton()],
+            'refresh' => [
+                'content' => Html::a('<i class="glyphicon glyphicon-repeat"></i>', $refreshUrlParams, ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid']),
+            ],
+            'dynaParams' => ['content' => '{dynagridFilter}{dynagridSort}{dynagrid}'],
+            'toggleData' => '{toggleData}',
+            'export' => '{export}',
+        ];
     }
 
     protected function lcfirst($string, $encoding = "UTF-8")
@@ -200,8 +216,32 @@ class DynaGrid extends Widget
     }
 
     protected function getUrlAttributes() {
+
         if (empty($this->urlAttributes)) {
             $filterAttributes = $this->filter->attributes;
+            foreach ($this->filter->getRelatedRecords() as $relation => $records) {
+                if (empty($records)) {
+                    continue;
+                }
+
+                if (!is_array($records)) {
+                    $filterAttributes[$relation] = $records;
+                    continue;
+                }
+
+                $relationAttributes = [];
+                foreach ($records as $key => $record) {
+                    $recordAttributes = array_filter($record->attributes);
+                    if (!empty($recordAttributes)) {
+                        $relationAttributes[$key] = $recordAttributes;
+                    }
+                }
+
+                if (!empty($relationAttributes)) {
+                    $filterAttributes[$relation] = $relationAttributes;
+                }
+            }
+
             $formName = $this->filter->formName();
             $result = [$formName => []];
             foreach ($filterAttributes as $attribute => $value) {
@@ -217,13 +257,13 @@ class DynaGrid extends Widget
     }
 
     /**
-     * @return array
+     * @return string
      */
     protected function renderAddButton()
     {
         if ($this->isAllowedAdding) {
             $lcfirstTitle = $this->title;
-            return Html::a('<i class="glyphicon glyphicon-plus"></i>', Url::to(array_merge([
+            return Html::a(\yii::t('execut.actions', 'Add'), Url::to(array_merge([
                     '/' . $this->getUniqueId() . '/update',
                 ], $this->getUrlAttributes())), [
                     'type' => 'button',
@@ -235,7 +275,7 @@ class DynaGrid extends Widget
     }
 
     /**
-     * @return array
+     * @return string
      */
     protected function renderMassEditButton()
     {

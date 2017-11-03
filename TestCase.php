@@ -4,7 +4,6 @@
 
 namespace execut\actions;
 
-
-class TestCase extends \Codeception\Test\Unit
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
 }

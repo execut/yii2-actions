@@ -8,17 +8,9 @@
 namespace execut\actions\action\adapter;
 
 
-use execut\actions\action\Adapter;
 use execut\actions\action\adapter\viewRenderer\DetailView;
-use execut\actions\action\ModelsFinder;
-use execut\actions\action\Response;
-use yii\base\Event;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
-use yii\web\Session;
-use yii\web\UploadedFile;
-
 class Edit extends Form
 {
     public $modelClass = null;
@@ -50,9 +42,14 @@ class Edit extends Form
 
         $result = parent::loadAndValidateForm();
         if (is_array($result)) {
-            return $this->getResponse([
+            $response = $this->getResponse([
                 'content' => $result
             ]);
+            if ($this->actionParams->isAjax) {
+                $response->format = \yii\web\Response::FORMAT_JSON;
+            }
+
+            return $response;
         }
 
         $flashes = [];
@@ -68,7 +65,7 @@ class Edit extends Form
             $model->save();
             if ($this->templateSuccessMessage !== false) {
                 $parts = [
-                    '{id}' => $model->id,
+                    '{id}' => $model->primaryKey,
                     '{operation}' => $operation,
                 ];
 
@@ -128,7 +125,7 @@ class Edit extends Form
         $get = $this->actionParams->get;
         unset($get['id']);
 
-        return (!empty($get) && $this->isTrySaveFromGet) || (!$this->isTrySaveFromGet);
+        return (!empty($get) && $this->isTrySaveFromGet || !empty($this->actionParams->post));
     }
 
     protected function getHeading() {
@@ -174,10 +171,20 @@ class Edit extends Form
         ];
     }
 
-    protected function getFormAction() {
-        $params = $this->getUrlParams();
+    protected $_formAction = null;
 
-        return $params;
+    public function setFormAction($action) {
+        $this->_formAction = $action;
+
+        return $this;
+    }
+
+    protected function getFormAction() {
+        if ($this->_formAction === null) {
+            return $this->getUrlParams();
+        }
+
+        return $this->_formAction;
     }
 
     /**
@@ -191,7 +198,6 @@ class Edit extends Form
 
         $data = $this->actionParams->getData();
         $params = $this->getUrlParams();
-
         if (is_callable($this->urlParamsForRedirectAfterSave)) {
             $urlParamsForRedirectAfterSave = $this->urlParamsForRedirectAfterSave;
             $params = $urlParamsForRedirectAfterSave($params);
@@ -222,7 +228,7 @@ class Edit extends Form
         $model = $this->model;
         $params = [
             $this->actionParams->uniqueId,
-            'id' => $model->id
+            'id' => $model->primaryKey,
         ];
 
         foreach ($this->additionalAttributes as $attribute) {

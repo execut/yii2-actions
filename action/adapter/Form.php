@@ -28,11 +28,6 @@ class Form extends Adapter
     public $requestType = 'get';
     public $isDisableAjax = false;
     public $filesAttributes = [];
-    public $attributes = [
-        'id',
-        'text' => 'name',
-    ];
-
     protected $_isValidate = true;
 
     public function setIsValidate($isValidate) {

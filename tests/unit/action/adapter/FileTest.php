@@ -28,17 +28,21 @@ class FileTest extends TestCase
     }
 
     public function testRenderFile() {
-        $action = new File();
+        $action = new File([
+            'dataAttribute' => 'content',
+        ]);
         $action->modelClass = FileTestModel::className();
         $action->setActionParams([
             'get' => [
                 'r' => 'test',
                 'name' => 'test',
+                'extension' => 'txt',
             ],
         ]);
         $result = $action->run();
         $this->assertEquals([
             'name' => 'test',
+            'extension' => 'txt',
         ], $action->model->findAttributes);
         $headers = \yii::$app->response->headers;
         $this->assertEquals('attachment; filename="test.txt"', $headers->get('content-disposition'));
@@ -51,6 +55,9 @@ class FileTest extends TestCase
 class FileTestModel extends ActiveRecord {
     public function __get($name) {
         switch ($name) {
+            case 'extension':
+                return 'txt';
+            break;
             case 'name':
                 return 'test.txt';
             break;
@@ -63,8 +70,12 @@ class FileTestModel extends ActiveRecord {
         }
     }
 
+    public function select() {
+        return $this;
+    }
+
     public $findAttributes = [];
-    public function byAttributes($attributes) {
+    public function andWhere($attributes) {
         $this->findAttributes = $attributes;
         return $this;
     }

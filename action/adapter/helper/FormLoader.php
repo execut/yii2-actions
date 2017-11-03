@@ -23,7 +23,7 @@ class FormLoader extends Helper
          * @var ActiveRecord $filter
          */
         $filter = $this->model;
-        if ($filter->load($this->data)) {
+        if ($filter->load($this->getFilteredData())) {
             if (!empty($this->filesAttributes)) {
                 foreach ($this->filesAttributes as $contentAttribute => $attribute) {
                     $file = UploadedFile::getInstance($filter, $attribute);
@@ -40,5 +40,25 @@ class FormLoader extends Helper
                 return false;
             }
         }
+    }
+
+    public function getFilteredData($data = null) {
+        if (is_string($data)) {
+            if (empty($data)) {
+                return null;
+            } else {
+                return $data;
+            }
+        }
+
+        if ($data === null) {
+            $data = $this->data;
+        }
+
+        foreach ($data as $key => &$value) {
+            $value = $this->getFilteredData($value);
+        }
+
+        return $data;
     }
 }

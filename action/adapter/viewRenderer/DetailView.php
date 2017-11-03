@@ -8,6 +8,9 @@
 namespace execut\actions\action\adapter\viewRenderer;
 
 
+use execut\yii\helpers\ArrayHelper;
+use execut\yii\helpers\Html;
+use kartik\alert\Alert;
 use yii\helpers\Url;
 
 class DetailView extends Widget
@@ -25,18 +28,19 @@ class DetailView extends Widget
     public function getDefaultWidgetOptions()
     {
         return [
-            'class' => \kartik\detail\DetailView::className(),
-            'panel'=>[
-                'heading'=> $this->heading,
-                'footer' => '&nbsp;{buttons}',
-                'type'=>\kartik\detail\DetailView::TYPE_PRIMARY,
-                'headingOptions' => [
-                    'template' => '{title}'
-                ],
-                'footerOptions' => [
-                    'style' => 'height: 31px',
-                ],
-            ],
+            'class' => \kartik\detail\DetailView::class,
+            'panel'=> false,
+//            [
+//                'heading'=> '',
+//                'footer' => '&nbsp;{buttons}',
+////                'type'=>\kartik\detail\DetailView::TYPE_PRIMARY,
+//                'headingOptions' => [
+//                    'template' => ''
+//                ],
+//                'footerOptions' => [
+//                    'style' => 'height: 31px',
+//                ],
+//            ],
             'buttons1' => '',
             'buttons2' => $this->renderButtons(),
             'deleteOptions' => [
@@ -44,8 +48,9 @@ class DetailView extends Widget
                     $this->uniqueId . '/delete',
                     'id' => '{id}',
                 ]),
+                'kvdelete' => true
             ],
-            'mainTemplate' => '{detail}',
+            'mainTemplate' => $this->renderAlertBlock() . '{detail}{buttons}',
             'model' => $this->model,
             'mode' => $this->mode,
             'bordered' => true,
@@ -57,9 +62,6 @@ class DetailView extends Widget
 //                        'hAlign'=> true,
 //                        'vAlign'=> true,
 //                        'fadeDelay'=> 2000,
-            'deleteOptions' => [ // your ajax delete parameters
-                'params' => ['id' => 1000, 'kvdelete'=>true],
-            ],
 //                        'container' => ['id'=>'kv-demo'],
             'formOptions' => [
                 'action' => $this->action,
@@ -69,6 +71,36 @@ class DetailView extends Widget
             ],
             'attributes' => $this->model->getFormFields(),
         ];
+    }
+
+    /**
+     * Initializes and renders alert container block
+     */
+    protected function renderAlertBlock()
+    {
+        $session = \Yii::$app->session;
+        $flashes = $session->getAllFlashes();
+        $alertContainerOptions = [
+            'style' => 'max-width:400px'
+        ];
+        if (count($flashes) === 0) {
+            Html::addCssStyle($alertContainerOptions, 'display:none;');
+        }
+        $out = Html::beginTag('div', $alertContainerOptions);
+        foreach ($flashes as $type => $message) {
+            $alertWidgetOptions = [];
+            $alertWidgetOptions['body'] = $message;
+            $alertWidgetOptions['options'] = [
+                'class' => ['alert', 'alert-success'],
+                'style' => 'padding-left:10px;padding-right:10px;'
+            ];
+            $out .= "\n" . Alert::widget($alertWidgetOptions);
+            $session->removeFlash($type);
+        }
+
+        $out .= "\n</div>";
+
+        return $out;
     }
 
     /**

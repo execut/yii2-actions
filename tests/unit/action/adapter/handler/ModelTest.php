@@ -29,11 +29,12 @@ class ModelTest extends TestCase
 
     public function testRun() {
         $query = $this->getMockBuilder(ActiveRecord::className())->setMethods(['select', 'queryAttribute', 'limit', 'createCommand'])->getMock();
-        $query->method('select')->with('id')->willReturn($query);
+        $query->method('select')->with('{{%test_model}}.id')->willReturn($query);
+
         $command = $this->getMockBuilder(Command::class)->setMethods(['queryColumn'])->getMock();
         $command->method('queryColumn')->willReturn([1, 2]);
         $query->method('createCommand')->willReturn($command);
-        $query->expects($this->once())->method('limit')->with(65535);
+        $query->expects($this->once())->method('limit')->with(65535)->willReturn($query);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

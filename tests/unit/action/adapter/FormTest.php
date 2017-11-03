@@ -51,7 +51,6 @@ class FormTest extends TestCase
         ];
 
         $adapter = new Form();
-        $adapter->attributes = [];
         $adapter->setActionParams([
             'get' => $formValue,
         ]);

@@ -36,12 +36,12 @@ class Bootstrap extends \execut\yii\Bootstrap
     {
         parent::bootstrap($app);
 
-        $this->initI18N();
+        self::initI18N();
     }
 
 
 
-    public function initI18N() {
+    public static function initI18N() {
         \yii::setAlias('@execut', '@vendor/execut');
         if (\Yii::$app->i18n) {
             \Yii::$app->i18n->translations['execut.actions'] = [

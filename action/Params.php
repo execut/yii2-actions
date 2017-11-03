@@ -12,8 +12,8 @@ use yii\base\Object;
 
 class Params extends Object
 {
-    public $post;
-    public $get;
+    public $post = [];
+    public $get = [];
     public $files;
     public $isAjax;
     public $isPjax;
