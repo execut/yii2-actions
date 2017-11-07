@@ -88,6 +88,10 @@ class DetailView extends Widget
         }
         $out = Html::beginTag('div', $alertContainerOptions);
         foreach ($flashes as $type => $message) {
+            if (is_array($message)) {
+                $message = implode('<br>', $message);
+            }
+
             $alertWidgetOptions = [];
             $alertWidgetOptions['body'] = $message;
             $alertWidgetOptions['options'] = [

@@ -52,7 +52,6 @@ class Edit extends Form
             return $response;
         }
 
-        $flashes = [];
         if ($result === true && $this->isSave()) {
             if ($model->isNewRecord) {
                 $operation = 'created';
@@ -70,7 +69,8 @@ class Edit extends Form
                 ];
 
                 $template = $this->getTemplateSuccessMessage();
-                $flashes['kv-detail-success'] = strtr($template, $parts);
+
+                $this->setFlash(strtr($template, $parts));
             }
 
             $result = $this->redirectAfterSave();
@@ -88,11 +88,12 @@ class Edit extends Form
                 ];
             }
         } else {
-            $session = \Yii::$app->session;
             if (!empty($model->errors)) {
-                $session->setFlash('kv-detail-error', Html::errorSummary($model, [
+                $flash = Html::errorSummary($model, [
                     'encode' => false,
-                ]));
+                ]);
+
+                $this->setFlash($flash, 'danger');
 //                $flashes['kv-detail-danger'] = Html::errorSummary($model);
             }
 
@@ -109,7 +110,6 @@ class Edit extends Form
         }
 
         $response = $this->getResponse([
-            'flashes' => $flashes,
             'content' => $result,
         ]);
 
@@ -260,5 +260,14 @@ class Edit extends Form
         $template = $this->translate('Record') . ' #{id} ' . $this->translate('is successfully') . ' {operation}';
 
         return $template;
+    }
+
+    /**
+     * @param $flash
+     */
+    protected function setFlash($flash, $type = 'success'): void
+    {
+        $session = \Yii::$app->session;
+        $session->addFlash('kv-detail-' . $type, $flash);
     }
 }
