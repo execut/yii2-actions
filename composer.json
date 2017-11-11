@@ -16,7 +16,8 @@
     "kartik-v/yii2-export": "@stable",
     "kartik-v/yii2-dynagrid": "@stable",
     "kartik-v/yii2-detail-view": "@stable",
-    "kartik-v/yii2-mpdf": "@stable"
+    "kartik-v/yii2-mpdf": "@stable",
+    "kartik-v/yii2-widget-alert": "@stable"
   },
   "require-dev": {
     "codeception/codeception": "@dev"
