@@ -31,12 +31,13 @@ class DynaGrid extends Widget
      */
     public $filter = null;
     public $uniqueId = null;
-    public $urlAttributes = [];
+    public $urlAttributes = null;
     public $isAllowedAdding = true;
     public $isAllowedMassEdit = false;
     public $refreshAttributes = [];
     public $handleButtons = [];
     public $isRenderFlashes = true;
+    public $urlAttributesExcluded = [];
     public $defaultHandleButtons = [
         'visible' => [
             'icon' => 'eye-open',
@@ -76,12 +77,12 @@ class DynaGrid extends Widget
         ]);
 
         return [
-            'class' => \kartik\dynagrid\DynaGrid::className(),
+            'class' => \execut\actions\widgets\DynaGrid::class,
             'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
 //            'pageSize' => 100000,
             'gridOptions' => [
                 'panel' => false,
-                'layout' => '<div class="row"><div class="col-md-12"><div class="pull-left pagination">{summary}</div><div class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;{pager}</div><div class="pull-right pagination">{toolbar}</div></div></div>{items}',
+                'layout' => $this->renderAlertBlock() . '<div class="dyna-grid-footer">{summary}{pager}<div class="dyna-grid-toolbar">{toolbar}</div></div>{items}',
 //                'floatHeader' => true,
 //                'floatHeaderOptions' => [
 //                    'top' => 0,
@@ -167,7 +168,7 @@ class DynaGrid extends Widget
             $session->removeFlash($type);
         }
 
-        $out .= "\n</div><br><br>";
+        $out .= "\n</div>";
 
         return $out;
     }
@@ -189,9 +190,6 @@ class DynaGrid extends Widget
         }
 
         return [
-            'alertBlock' => [
-                'content' => $this->renderAlertBlock(),
-            ],
             'massEdit' => ['content' => $this->renderMassEditButton()],
             'massVisible' => ['content' => $this->renderVisibleButtons()],
             'add' => ['content' => $this->renderAddButton()],
@@ -221,7 +219,7 @@ class DynaGrid extends Widget
 
     protected function getUrlAttributes() {
 
-        if (empty($this->urlAttributes)) {
+        if ($this->urlAttributes === null) {
             $filterAttributes = $this->filter->attributes;
             foreach ($this->filter->getRelatedRecords() as $relation => $records) {
                 if (empty($records)) {
@@ -249,6 +247,9 @@ class DynaGrid extends Widget
             $formName = $this->filter->formName();
             $result = [$formName => []];
             foreach ($filterAttributes as $attribute => $value) {
+                if (in_array($attribute, $this->urlAttributesExcluded)) {
+                    continue;
+                }
                 if (!empty($value)) {
                     $result[$formName][$attribute] = $value;
                 }

@@ -1,0 +1,17 @@
+.dyna-grid .alert.alert-success {
+  margin-bottom: 10px;
+}
+.dyna-grid .dyna-grid-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.dyna-grid .dyna-grid-footer .dyna-grid-toolbar .btn-group {
+  padding-left: 5px;
+}
+.dyna-grid .dyna-grid-footer .summary {
+  padding-top: 6px;
+}
+.dyna-grid .dyna-grid-footer .pagination {
+  margin: 0;
+}

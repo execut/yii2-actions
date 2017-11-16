@@ -27,6 +27,8 @@ class Edit extends Form
     public $isTrySaveFromGet = false;
     public $templateSuccessMessage = null;
     public $mode = 'edit';
+
+    const EVENT_AFTER_FIND = 'afterFind';
     protected function _run() {
         $actionParams = $this->actionParams;
         if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
@@ -36,6 +38,7 @@ class Edit extends Form
         }
 
         $model = $this->getModel();
+        $this->trigger(self::EVENT_AFTER_FIND);
         if ($this->scenario !== null) {
             $model->setScenario($this->scenario);
         }
