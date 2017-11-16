@@ -10,7 +10,8 @@
   padding-left: 5px;
 }
 .dyna-grid .dyna-grid-footer .summary {
-  padding-top: 6px;
+  max-width: 135px;
+  margin-top: -4px;
 }
 .dyna-grid .dyna-grid-footer .pagination {
   margin: 0;
