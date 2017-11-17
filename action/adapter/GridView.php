@@ -93,6 +93,13 @@ class GridView extends \execut\actions\action\adapter\Form
         $actionParams = $this->actionParams;
         $response = $this->getResponse();
         if ($actionParams->isAjax && !$actionParams->isPjax && !$this->isDisableAjax && $dataProvider) {
+            if (isset($this->actionParams->get['depdrop_parents'])) {
+                $key = 'output';
+                $dataProvider->pagination = false;
+            } else {
+                $key = 'results';
+            }
+
             $result = [];
             foreach ($dataProvider->models as $row) {
                 $attributes = $this->getAttributes();
@@ -112,17 +119,11 @@ class GridView extends \execut\actions\action\adapter\Form
                 $result[] = $res;
             }
 
-            if (isset($this->actionParams->get['depdrop_parents'])) {
-                $key = 'output';
-            } else {
-                $key = 'results';
-            }
-
             $pagination = $dataProvider->pagination;
             $response->content = [
                 $key => $result,
                 'pagination' => [
-                    'more' => $pagination->page < $pagination->pageCount - 1,
+                    'more' => $pagination ? ($pagination->page < $pagination->pageCount - 1) : false,
                 ],
             ];
 
