@@ -222,6 +222,21 @@ class Edit extends Form
         return $result;
     }
 
+    public function getData() {
+        $data = parent::getData();
+        if (empty($data[$this->getModel()->formName()])) {
+            $data[$this->getModel()->formName()] = [];
+        }
+
+        foreach ($this->additionalAttributes as $attribute) {
+            if (!empty($data[$attribute])) {
+                $data[$this->getModel()->formName()][$attribute] = $data[$attribute];
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * @param $model
      * @return array
