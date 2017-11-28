@@ -44,7 +44,7 @@ class FormLoader extends Helper
 
     public function getFilteredData($data = null) {
         if (is_string($data)) {
-            if (empty($data)) {
+            if ($data === '') {
                 return null;
             } else {
                 return $data;
