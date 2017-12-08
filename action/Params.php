@@ -8,9 +8,9 @@
 namespace execut\actions\action;
 
 
-use yii\base\Object;
+use yii\base\BaseObject;
 
-class Params extends Object
+class Params extends BaseObject
 {
     public $post = [];
     public $get = [];
