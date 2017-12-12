@@ -73,26 +73,6 @@ class ActionTest extends \execut\actions\TestCase
         $this->assertInstanceOf($adapter->className(), $action->adapter);
     }
 
-    public function testAddFlashes() {
-        $action = $this->getAction();
-
-        $response = new \execut\actions\action\Response([
-            'flashes' => ['test'],
-        ]);
-        $adapter = $this->getMockForAbstractClass(Adapter::className());
-        $adapter->method('_run')->will($this->returnCallback(function () use ($response) {
-            return $response;
-        }));
-        $action->adapter = $adapter;
-
-        $session = $this->getMockBuilder(Session::className())->setMethods([
-            'setFlash',
-        ])->getMock();
-        $session->expects($this->once())->method('setFlash')->with(0, 'test');
-        \yii::$app->set('session', $session);
-        $action->run();
-    }
-
     public function testRenderWithResponse() {
         $action = $this->getAction();
 

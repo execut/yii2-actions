@@ -11,6 +11,8 @@ namespace execut\actions\action\adapter;
 use execut\actions\action\adapter\viewRenderer\DetailView;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
+use yii\web\Application;
+
 class Edit extends Form
 {
     public $modelClass = null;
@@ -27,6 +29,7 @@ class Edit extends Form
     public $isTrySaveFromGet = false;
     public $templateSuccessMessage = null;
     public $mode = 'edit';
+    public $session = null;
 
     const EVENT_AFTER_FIND = 'afterFind';
     protected function _run() {
@@ -117,6 +120,14 @@ class Edit extends Form
         ]);
 
         return $response;
+    }
+
+    protected function getSession() {
+        if ($this->session === null && (YII_ENV !== 'test')) {
+            return \yii::$app->session;
+        }
+
+        return $this->session;
     }
 
     public function getIsValidate()
@@ -285,7 +296,8 @@ class Edit extends Form
      */
     protected function setFlash($flash, $type = 'success'): void
     {
-        $session = \Yii::$app->session;
-        $session->addFlash('kv-detail-' . $type, $flash);
+        if ($session = $this->getSession()) {
+            $session->addFlash('kv-detail-' . $type, $flash);
+        }
     }
 }

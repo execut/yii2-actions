@@ -11,6 +11,7 @@ use execut\actions\TestCase;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
 use yii\web\Response;
+use yii\web\Session;
 use yii\web\UploadedFile;
 
 class EditTest extends TestCase
@@ -30,6 +31,11 @@ class EditTest extends TestCase
     public function testCreateNewRecord() {
         Bootstrap::initI18N();
         $action = $this->getMockBuilder(Edit::className())->setMethods(['getDefaultViewRendererConfig'])->getMock();
+        $session = $this->getMockBuilder(Session::class)->setMethods(['addFlash'])->getMock();
+        $session->expects($this->once())->method('addFlash')
+            ->with('kv-detail-success', 'Record #1 is successfully updated');
+
+        $action->session = $session;
         $action->method('getDefaultViewRendererConfig')->willReturn([]);
         $action->modelClass = TestModel::className();
         $action->setActionParams([
@@ -44,10 +50,6 @@ class EditTest extends TestCase
         $model = $action->model;
         $this->assertTrue($model->saveIsCalled, 'Check what save is called');
 
-        $this->assertEquals([
-            'kv-detail-success' => 'Record #' . $model->id . ' is successfully updated',
-        ], $response->flashes);
-
         $this->assertEquals(Url::to([
             $action->actionParams->uniqueId,
             'id' => $model->id,
@@ -60,7 +62,7 @@ class EditTest extends TestCase
         $action->modelClass = TestModel::className();
         $action->setActionParams([
             'get' => [
-                'id' => 1,
+                'id' => '1',
             ]
         ]);
 //        $action->filesAttributes = [
