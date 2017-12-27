@@ -81,6 +81,11 @@ class DynaGrid extends Widget
             'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
 //            'pageSize' => 100000,
             'gridOptions' => [
+                'rowOptions' => function ($row) {
+                    if (method_exists($row, 'getRowOptions')) {
+                        return $row->getRowOptions();
+                    }
+                },
                 'panel' => false,
                 'layout' => $this->renderAlertBlock() . '<div class="dyna-grid-footer">{summary}{pager}<div class="dyna-grid-toolbar">{toolbar}</div></div>{items}',
 //                'floatHeader' => true,
