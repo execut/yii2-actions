@@ -71,7 +71,7 @@ trait ModelHelper
         }
     }
 
-    public function getStandardFields($columns = []) {
+    public function getStandardFieldsOld($columns = []) {
         $standardColumns = [
             'id' => [
                 'displayOnly' => true,

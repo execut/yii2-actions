@@ -46,6 +46,7 @@ class Edit extends Form
             $model->setScenario($this->scenario);
         }
 
+        $isNewRecord = $model->isNewRecord;
         $result = parent::loadAndValidateForm();
         if (is_array($result)) {
             $response = $this->getResponse([
@@ -58,33 +59,19 @@ class Edit extends Form
             return $response;
         }
 
-        if ($result === true && $this->isSave()) {
-            if ($model->isNewRecord) {
-                $operation = 'created';
-            } else {
-                $operation = 'updated';
-            }
-
-            $operation = $this->translate($operation);
-
+        if ($result === true && $this->isSave() && $this->isSubmitted()) {
             $model->save();
-            if ($this->templateSuccessMessage !== false) {
-                $parts = [
-                    '{id}' => $model->primaryKey,
-                    '{operation}' => $operation,
-                ];
-
-                $template = $this->getTemplateSuccessMessage();
-
-                $this->setFlash(strtr($template, $parts));
-            }
+            $successMessage = $this->getSuccessMessage($isNewRecord);
+            $this->setFlash($successMessage);
 
             $result = $this->redirectAfterSave();
             if ($result === false) {
                 if ($this->actionParams->isAjax) {
                     return $this->getResponse([
                         'format' => \yii\web\Response::FORMAT_JSON,
-                        'content' => [],
+                        'content' => [
+                            'message' => $this->getSuccessMessage($isNewRecord),
+                        ],
                     ]);
                 }
 
@@ -94,13 +81,21 @@ class Edit extends Form
                 ];
             }
         } else {
+            if ($this->actionParams->isAjax) {
+                return $this->getResponse([
+                    'format' => \yii\web\Response::FORMAT_JSON,
+                    'content' => [
+                        'success' => true,
+                    ],
+                ]);
+            }
+
             if (!empty($model->errors)) {
                 $flash = Html::errorSummary($model, [
                     'encode' => false,
                 ]);
 
                 $this->setFlash($flash, 'danger');
-//                $flashes['kv-detail-danger'] = Html::errorSummary($model);
             }
 
             $result = [
@@ -140,6 +135,11 @@ class Edit extends Form
         unset($get['id']);
 
         return (!empty($get) && $this->isTrySaveFromGet || !empty($this->actionParams->post));
+    }
+
+    protected function isSubmitted() {
+        $data = $this->actionParams->getData();
+        return !empty($data['apply']) || !empty($data['save']);
     }
 
     protected function getHeading() {
@@ -298,6 +298,35 @@ class Edit extends Form
     {
         if ($session = $this->getSession()) {
             $session->addFlash('kv-detail-' . $type, $flash);
+        }
+    }
+
+    /**
+     * @param $model
+     * @return string
+     */
+    protected function getSuccessMessage($isNewRecord)
+    {
+        $model = $this->getModel();
+        if ($this->templateSuccessMessage !== false) {
+            if ($isNewRecord) {
+                $operation = 'created';
+            } else {
+                $operation = 'updated';
+            }
+
+            $operation = $this->translate($operation);
+
+            $parts = [
+                '{id}' => $model->primaryKey,
+                '{operation}' => $operation,
+            ];
+
+            $template = $this->getTemplateSuccessMessage();
+
+            $successMessage = strtr($template, $parts);
+
+            return $successMessage;
         }
     }
 }

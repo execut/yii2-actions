@@ -131,6 +131,10 @@ abstract class Adapter extends Component
     }
 
     protected $_finder = null;
+
+    /**
+     * @return ModelsFinder
+     */
     public function getModelsFinder() {
         $finder = $this->_finder;
         if ($finder === null) {

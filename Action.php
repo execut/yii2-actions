@@ -86,6 +86,10 @@ class Action extends \yii\base\Action
 
         $this->trigger('beforeRender');
         if ($adapter) {
+            if ($this->getParams()->isAjax) {
+                \yii::$app->layout = false;
+            }
+
             if ($response->format === Response::FORMAT_HTML) {
                 if ($view = $this->view) {
                     $result = $this->controller->render($view, $response->content);
