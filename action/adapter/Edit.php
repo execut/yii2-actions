@@ -63,18 +63,17 @@ class Edit extends Form
             $model->save();
             $successMessage = $this->getSuccessMessage($isNewRecord);
             $this->setFlash($successMessage);
+            if ($this->actionParams->isAjax) {
+                return $this->getResponse([
+                    'format' => \yii\web\Response::FORMAT_JSON,
+                    'content' => [
+                        'message' => $this->getSuccessMessage($isNewRecord),
+                    ],
+                ]);
+            }
 
             $result = $this->redirectAfterSave();
             if ($result === false) {
-                if ($this->actionParams->isAjax) {
-                    return $this->getResponse([
-                        'format' => \yii\web\Response::FORMAT_JSON,
-                        'content' => [
-                            'message' => $this->getSuccessMessage($isNewRecord),
-                        ],
-                    ]);
-                }
-
                 $result = [
                     'mode' => $mode,
                     'model' => $model
