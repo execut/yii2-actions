@@ -23,7 +23,7 @@ class DetailView extends Widget
     public $buttonsTemplate = '{save}&nbsp;&nbsp;{apply}&nbsp;&nbsp;{cancel}';
     public $saveButton = '<input type="submit" name="save" value="Сохранить" class="btn btn-success" href="" title="Сохранить и вернуться">';
     public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-success" href="" title="Сохранить изменения">';
-    public $cancelButton = '<a class="btn btn-default" href="./">Вернуться к списку</a>';
+    public $cancelButton = '<a class="btn btn-default" href="{backUrl}">Вернуться к списку</a>';
     public function getDefaultWidgetOptions()
     {
         return [

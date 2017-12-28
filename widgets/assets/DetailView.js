@@ -8,8 +8,8 @@
         _initElements: function () {
             var t = this;
             t.formEl = t.element.parent();
-            console.debug(t.formEl);
         },
+        isSaved: false,
         _initEvents: function () {
             var t = this;
             t.formEl.on('ajaxBeforeSend', function (e, xhr, options) {
