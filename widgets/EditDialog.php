@@ -40,6 +40,10 @@ class EditDialog extends Widget
             'buttonsTemplate' => '{save}',
             'uniqueId' => $this->uniqueId,
             'model' => $this->model,
+            'formOptions' => [
+                'enableAjaxValidation' => true,
+                'validateOnSubmit' => true,
+            ],
         ]);
 
         Modal::end();

@@ -24,7 +24,8 @@ class DetailView extends \kartik\detail\DetailView
     public $buttonsTemplate = '{save}&nbsp;&nbsp;{apply}&nbsp;&nbsp;{cancel}';
     public $saveButton = '<input type="submit" name="save" value="Сохранить" class="btn btn-success" href="" title="Сохранить и вернуться">';
     public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-success" href="" title="Сохранить изменения">';
-    public $cancelButton = '<a class="btn btn-default" href="./">Вернуться к списку</a>';
+    public $cancelButton = '<a class="btn btn-default" href="{backUrl}">Вернуться к списку</a>';
+    public $backUrl = null;
 
     public function __construct($config = [])
     {
@@ -57,9 +58,9 @@ class DetailView extends \kartik\detail\DetailView
 //                        'fadeDelay'=> 2000,
 //                        'container' => ['id'=>'kv-demo'],
             'formOptions' => [
-                'enableAjaxValidation' => true,
+                'enableAjaxValidation' => false,
                 'validateOnChange' => false,
-                'validateOnSubmit' => true,
+                'validateOnSubmit' => false,
                 'validateOnBlur' => false,
                 'options' => [
                     'enctype'=>'multipart/form-data',
@@ -150,10 +151,25 @@ class DetailView extends \kartik\detail\DetailView
      */
     public function renderSubmitButtons()
     {
+        $cancelButton = $this->cancelButton;
+        $backUrl = $this->backUrl;
+        if ($backUrl === null) {
+            $backUrlParts = explode('/', $this->uniqueId);
+            unset($backUrlParts[count($backUrlParts) - 1]);
+            $backUrl = [implode('/', $backUrlParts)];
+        }
+        if (is_array($backUrl)) {
+            $backUrl = Url::to($backUrl);
+        }
+
+        $cancelButton = strtr($cancelButton, [
+            '{backUrl}' => $backUrl,
+        ]);
+
         return strtr($this->buttonsTemplate, [
             '{save}' => $this->saveButton,
             '{apply}' => $this->applyButton,
-            '{cancel}' => $this->cancelButton,
+            '{cancel}' => $cancelButton,
         ]);
     }
 }
