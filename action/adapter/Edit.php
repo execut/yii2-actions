@@ -52,7 +52,7 @@ class Edit extends Form
             $response = $this->getResponse([
                 'content' => $result
             ]);
-            if ($this->actionParams->isAjax) {
+            if ($this->actionParams->isAjax && !$this->actionParams->isPjax) {
                 $response->format = \yii\web\Response::FORMAT_JSON;
             }
 
@@ -63,7 +63,7 @@ class Edit extends Form
             $model->save();
             $successMessage = $this->getSuccessMessage($isNewRecord);
             $this->setFlash($successMessage);
-            if ($this->actionParams->isAjax) {
+            if ($this->actionParams->isAjax && !$this->actionParams->isPjax) {
                 return $this->getResponse([
                     'format' => \yii\web\Response::FORMAT_JSON,
                     'content' => [
@@ -80,7 +80,7 @@ class Edit extends Form
                 ];
             }
         } else {
-            if ($this->actionParams->isAjax) {
+            if ($this->actionParams->isAjax && !$this->actionParams->isPjax) {
                 return $this->getResponse([
                     'format' => \yii\web\Response::FORMAT_JSON,
                     'content' => [
