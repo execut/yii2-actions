@@ -91,7 +91,7 @@ class DetailView extends \kartik\detail\DetailView
         $this->deleteOptions = [
             'url' => Url::to([
                 $this->uniqueId . '/delete',
-                'id' => $this->model->id,
+                'id' => $this->model->primaryKey,
             ]),
             'kvdelete' => true
         ];
@@ -107,7 +107,7 @@ class DetailView extends \kartik\detail\DetailView
 
         return Url::to([
             $this->uniqueId . '/update',
-            'id' => $this->model->id,
+            'id' => $this->model->primaryKey,
         ]);
     }
 
