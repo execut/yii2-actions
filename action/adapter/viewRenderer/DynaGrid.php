@@ -82,6 +82,7 @@ class DynaGrid extends Widget
 //            'pageSize' => 100000,
             'gridOptions' => [
                 'responsive' => false,
+                'responsiveWrap' => false,
                 'rowOptions' => function ($row) {
                     if (method_exists($row, 'getRowOptions')) {
                         return $row->getRowOptions();
