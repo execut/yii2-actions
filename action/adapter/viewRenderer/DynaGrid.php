@@ -81,6 +81,7 @@ class DynaGrid extends Widget
             'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
 //            'pageSize' => 100000,
             'gridOptions' => [
+                'responsive' => false,
                 'rowOptions' => function ($row) {
                     if (method_exists($row, 'getRowOptions')) {
                         return $row->getRowOptions();
