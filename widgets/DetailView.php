@@ -50,7 +50,7 @@ class DetailView extends \kartik\detail\DetailView
             'bordered' => true,
             'striped' => true,
             'condensed' => true,
-            'responsive' => true,
+            'responsive' => false,
             'hideIfEmpty' => true,
             'hover' => true,
 //                        'hAlign'=> true,
