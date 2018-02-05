@@ -22,7 +22,7 @@ class DetailView extends \kartik\detail\DetailView
     public $uniqueId = null;
     public $action = null;
     public $buttonsTemplate = '{save}&nbsp;&nbsp;{apply}&nbsp;&nbsp;{cancel}';
-    public $saveButton = '<input type="submit" name="save" value="Сохранить" class="btn btn-success" href="" title="Сохранить и вернуться">';
+    public $saveButton = '<input type="submit" name="save" value="Отправить" class="btn btn-success" href="" title="Сохранить и вернуться">';
     public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-success" href="" title="Сохранить изменения">';
     public $cancelButton = '<a class="btn btn-default" href="{backUrl}">Вернуться к списку</a>';
     public $backUrl = null;
@@ -45,6 +45,7 @@ class DetailView extends \kartik\detail\DetailView
             'buttons1' => '',
             'buttonContainer' => [
                 'class' => 'pull-right',
+                'style' => 'margin-right: 8px;margin-top: -9px;',
             ],
             'mainTemplate' => $this->renderAlertBlock() . '{detail}<div style="height:28px;width:0px;display: inline-block"></div>{buttons}',
             'bordered' => true,
