@@ -275,6 +275,8 @@ class DynaGrid extends Widget
     {
         if ($this->isAllowedAdding) {
             $lcfirstTitle = $this->title;
+//            var_dump($lcfirstTitle);
+//            exit;
             return Html::a(\yii::t('execut.actions', 'Add') . ' ' . $lcfirstTitle, Url::to(array_merge([
                     '/' . $this->getUniqueId() . '/update',
                 ], $this->getUrlAttributes())), [
