@@ -89,7 +89,7 @@ class DynaGrid extends Widget
                     }
                 },
                 'panel' => false,
-                'layout' => $this->renderAlertBlock() . '<div class="dyna-grid-footer">{summary}{pager}<div class="dyna-grid-toolbar">{toolbar}</div></div>{items}',
+                'layout' => '{alertBlock}<div class="dyna-grid-footer">{summary}{pager}<div class="dyna-grid-toolbar">{toolbar}</div></div>{items}',
 //                'floatHeader' => true,
 //                'floatHeaderOptions' => [
 //                    'top' => 0,
@@ -128,6 +128,18 @@ class DynaGrid extends Widget
             ],
             'columns' => $columns,
         ];
+    }
+
+    public function getWidgetOptions()
+    {
+        $options = parent::getWidgetOptions();
+        if (!empty($options['gridOptions']['layout'])) {
+            $options['gridOptions']['layout'] = strtr($options['gridOptions']['layout'], [
+                '{alertBlock}' => $this->renderAlertBlock(),
+            ]);
+        }
+
+        return $options;
     }
 
     protected function getDynaGridId() {
