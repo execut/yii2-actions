@@ -61,6 +61,13 @@ class Edit extends Form
 
         if ($result === true && $this->isSave() && $this->isSubmitted()) {
             $model->save();
+            $this->trigger('afterSave');
+            if ($isNewRecord) {
+                $this->trigger('afterCreate');
+            } else {
+                $this->trigger('afterUpdate');
+            }
+
             $successMessage = $this->getSuccessMessage($isNewRecord);
             $this->setFlash($successMessage);
             if ($this->actionParams->isAjax && !$this->actionParams->isPjax) {
