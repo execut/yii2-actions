@@ -66,6 +66,9 @@ class GridView extends \kartik\grid\GridView
      */
     public function getToolbarConfig(): array
     {
+        if ($this->toolbar === false) {
+            return [];
+        }
 //        $refreshUrlParams = [
 //            $this->adapter->uniqueId,
 //        ];
