@@ -61,64 +61,17 @@ class DynaGrid extends Widget
     ];
     public function getDefaultWidgetOptions()
     {
-        $columns = $this->filter->getGridColumns();
-//        $flash = '<aasd';
-        $fullExportMenu = ExportMenu::widget([
-            'dataProvider' => $this->dataProvider,
-//            'dataProvider' => $dataProvider,
-            'columns' => $columns,
-            'target' => ExportMenu::TARGET_BLANK,
-            'batchSize' => 1000,
-            'fontAwesome' => true,
-            'asDropdown' => false, // this is important for this case so we just need to get a HTML list
-            'dropdownOptions' => [
-                'label' => '<i class="glyphicon glyphicon-export"></i> Full'
-            ],
-        ]);
-
         return [
             'class' => \execut\actions\widgets\DynaGrid::class,
-            'storage' => \kartik\dynagrid\DynaGrid::TYPE_DB,
-//            'pageSize' => 100000,
+            'filter' => $this->filter,
+            'dataProvider' => $this->dataProvider,
             'gridOptions' => [
-                'responsive' => false,
-                'responsiveWrap' => false,
-                'rowOptions' => function ($row) {
-                    if (method_exists($row, 'getRowOptions')) {
-                        return $row->getRowOptions();
-                    }
-                },
-                'panel' => false,
                 'layout' => '{alertBlock}<div class="dyna-grid-footer">{summary}{pager}<div class="dyna-grid-toolbar">{toolbar}</div></div>{items}',
-//                'floatHeader' => true,
-//                'floatHeaderOptions' => [
-//                    'top' => 0,
-//                    'zIndex' => 10000,
-//                ],
-                'export' => [
-                    'fontAwesome' => true,
-                    'itemsAfter'=> [
-                        '<li role="presentation" class="divider"></li>',
-                        '<li class="dropdown-header">Export All Data</li>',
-                        $fullExportMenu
-                    ]
-                ],
-                'toggleDataOptions' => [
-                    'maxCount' => 100000,
-//                    'all' => [
-//                       'icon' => 'resize-full',
-//                       'label' => 'All',
-//                       'class' => 'btn btn-default',
-//                       'title' => 'Show all data'
-//                    ],
-                ],
-                'filterModel' => $this->filter,
                 'toolbar' => $this->getToolbarConfig(),
 //                'panel' => [
 //                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . \yii::t('execut.actions', 'List') . ' ' . $this->lcfirst($this->title) . '</h3>',
 //                    'before' => $alertBlock,
 //                ],
-                'dataProvider' => $this->dataProvider,
                 'options' => [
                     'id' => $this->getGridId(),
                 ],
@@ -126,7 +79,6 @@ class DynaGrid extends Widget
             'options' => [
                 'id' => $this->getDynaGridId(),
             ],
-            'columns' => $columns,
         ];
     }
 

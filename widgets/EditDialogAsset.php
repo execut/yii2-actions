@@ -10,7 +10,11 @@ namespace execut\actions\widgets;
 
 
 use execut\yii\web\AssetBundle;
+use yii\jui\JuiAsset;
 
 class EditDialogAsset extends AssetBundle
 {
+    public $depends = [
+        JuiAsset::class,
+    ];
 }

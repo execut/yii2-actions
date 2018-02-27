@@ -12,6 +12,7 @@ namespace execut\actions\widgets;
 use execut\yii\jui\Widget;
 use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 class EditDialog extends Widget
 {
@@ -25,6 +26,11 @@ class EditDialog extends Widget
         $this->clientOptions['alertId'] = $this->alertId;
         $this->registerWidget();
 
+        echo $this->renderToggleButton();
+        if (!\yii::$app->request->isPjax) {
+            $this->view->beginBlock('modalContainer');
+        }
+
         echo $this->_beginContainer();
         Modal::begin(ArrayHelper::merge([
             'id' => $this->id . '-modal',
@@ -32,7 +38,6 @@ class EditDialog extends Widget
             'options' => [
                 'class' => 'pull-left'
             ],
-            'toggleButton' => $this->getToggleButton(),
         ], $this->modalOptions));
         echo \execut\actions\widgets\DetailView::widget([
             'id' => $this->id . '-detail-view',
@@ -48,11 +53,34 @@ class EditDialog extends Widget
 
         Modal::end();
         echo $this->_endContainer();
+
+        if (!\yii::$app->request->isPjax) {
+            $this->view->endBlock('modalContainer');
+        }
     }
 
     public $header = null;
     public function getHeader() {
         return $this->header;
+    }
+
+    /**
+     * Renders the toggle button.
+     * @return string the rendering result
+     */
+    protected function renderToggleButton()
+    {
+        if (($toggleButton = $this->getToggleButton()) === false) {
+            return;
+        }
+
+        $tag = ArrayHelper::remove($toggleButton, 'tag', 'button');
+        $label = ArrayHelper::remove($toggleButton, 'label', 'Show');
+        if ($tag === 'button' && !isset($toggleButton['type'])) {
+            $toggleButton['type'] = 'button';
+        }
+
+        return Html::tag($tag, $label, $toggleButton);
     }
 
     public function getToggleButton() {
@@ -61,6 +89,7 @@ class EditDialog extends Widget
         }
 
         return ArrayHelper::merge([
+            'id' => $this->id . '-add-button',
             'label' => $this->getHeader(),
             'class' => 'btn btn-default',
         ], $this->toggleButtonOptions);
