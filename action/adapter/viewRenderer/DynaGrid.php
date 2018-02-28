@@ -66,6 +66,7 @@ class DynaGrid extends Widget
             'filter' => $this->filter,
             'dataProvider' => $this->dataProvider,
             'gridOptions' => [
+                'updateUrl' => $this->getUpdateUrlParams(),
                 'layout' => '{alertBlock}<div class="dyna-grid-footer">{summary}{pager}<div class="dyna-grid-toolbar">{toolbar}</div></div>{items}',
                 'toolbar' => $this->getToolbarConfig(),
 //                'panel' => [
@@ -241,9 +242,7 @@ class DynaGrid extends Widget
             $lcfirstTitle = $this->title;
 //            var_dump($lcfirstTitle);
 //            exit;
-            return Html::a(\yii::t('execut.actions', 'Add') . ' ' . $lcfirstTitle, Url::to(array_merge([
-                    '/' . $this->getUniqueId() . '/update',
-                ], $this->getUrlAttributes())), [
+            return Html::a(\yii::t('execut.actions', 'Add') . ' ' . $lcfirstTitle, Url::to($this->getUpdateUrlParams()), [
                     'type' => 'button',
                     'data-pjax' => 0,
                     'title' => \yii::t('execut.actions', 'Add') . ' ' . $lcfirstTitle,
@@ -322,5 +321,15 @@ JS
         }
 
         return $buttons;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUpdateUrlParams(): array
+    {
+        return array_merge([
+            '/' . trim($this->getUniqueId(), '/') . '/update',
+        ], $this->getUrlAttributes());
     }
 }

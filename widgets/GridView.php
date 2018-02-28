@@ -9,7 +9,9 @@
 namespace execut\actions\widgets;
 
 
+use execut\yii\jui\WidgetTrait;
 use kartik\alert\Alert;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
@@ -18,16 +20,20 @@ use kartik\base\Config;
 
 class GridView extends \kartik\grid\GridView
 {
+    use WidgetTrait;
     public $addButtonUrl = null;
+    public $updateUrl = null;
     public $title = null;
     public $isAjaxCrud = false;
     public $formModel = null;
     public $uniqueId = null;
+    public $hover = true;
     public function init()
     {
         $this->toolbar = $this->getToolbarConfig();
         $this->rowOptions = function ($row) {
             return [
+                'data-id' => $row->primaryKey,
                 'attributes' => Json::encode($row->attributes),
             ];
         };
@@ -35,8 +41,44 @@ class GridView extends \kartik\grid\GridView
         return parent::init();
     }
 
+    protected function getUpdateUrl() {
+        if ($this->updateUrl !== null) {
+            return $this->updateUrl;
+        }
+
+        return $this->addButtonUrl;
+    }
+
+    /**
+     * Registers a specific jQuery UI widget options
+     * @param string $name the name of the jQuery UI widget
+     * @param string $id the ID of the widget
+     */
+    protected function registerWidget($name = null, $id = null)
+    {
+
+        if ($name === null) {
+            $name = $this->getDefaultJsWidgetName();
+        }
+
+        $this->_registerBundle();
+
+        if (!$this->isAjaxCrud) {
+            if ($id === null) {
+                $id = $this->options['id'];
+            }
+
+            $options = empty($this->clientOptions) ? '' : Json::htmlEncode([
+                'updateUrl' => Url::to($this->getUpdateUrl())
+            ]);
+            $js = "jQuery('#$id').$name($options);";
+            $this->getView()->registerJs($js);
+        }
+    }
+
     public function run()
     {
+        $this->registerWidget();
         $this->initToggleData();
         $this->initExport();
         if ($this->export !== false && isset($this->exportConfig[self::PDF])) {
@@ -78,8 +120,15 @@ class GridView extends \kartik\grid\GridView
 //                $refreshUrlParams[$key] = $this->adapter->actionParams->get[$key];
 //            }
 //        }
+        if (!is_array($this->toolbar)) {
+            if (empty($this->toolbar)) {
+                $this->toolbar = [];
+            } else {
+                $this->toolbar = [$this->toolbar];
+            }
+        }
 
-        return [
+        return ArrayHelper::merge($this->toolbar, [
 //            'massEdit' => ['content' => $this->renderMassEditButton()],
 //            'massVisible' => ['content' => $this->renderVisibleButtons()],
             'add' => ['content' => $this->renderAddButton()],
@@ -90,7 +139,7 @@ class GridView extends \kartik\grid\GridView
 //            'dynaParams' => ['content' => '{dynagridFilter}{dynagridSort}{dynagrid}'],
 //            'toggleData' => '{toggleData}',
 //            'export' => '{export}',
-        ];
+        ]);
     }
 
     public function beginPjax() {
@@ -114,8 +163,7 @@ class GridView extends \kartik\grid\GridView
                 'alertId' => $this->id . '-alert',
                 'clientOptions' => [
                     'inputsPrefix' => str_replace('-', '', Inflector::camel2id($model->formName())),
-                    'attributesElement' => 'tr:first',
-                    'editButtons' => '.btn.update',
+                    'editButtons' => 'tr[data-key]',
                     'gridId' => $gridId,
                 ],
                 'toggleButtonOptions' => false,
@@ -131,7 +179,7 @@ class GridView extends \kartik\grid\GridView
         $alertWidgetOptions['body'] = '<span></span>';
         $alertWidgetOptions['options'] = [
             'class' => ['alert', 'alert-success'],
-            'style' => 'padding-left:10px;padding-right:10px;'
+            'style' => 'padding-left:10px;padding-right:10px;display:none;'
         ];
 
         return Alert::widget($alertWidgetOptions);
