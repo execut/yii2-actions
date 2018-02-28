@@ -48,9 +48,21 @@
             });
 
             if (typeof t.options.editButtons !== 'undefined') {
-                t.editButtons.click(function () {
+                t.editButtons.click(function (e) {
                     var curButton = $(this),
-                        attributes = JSON.parse(curButton.parents(t.options.attributesElement).attr('attributes'));
+                        attributes;
+                    if (typeof t.options.attributesElement === 'undefined') {
+                        targetEl = $(e.target);
+                        if (targetEl.parents('a').length || targetEl.is('a')) {
+                            return true;
+                        }
+
+                        attributes = curButton.attr('attributes');
+                    } else {
+                        attributes = curButton.parents(t.options.attributesElement).attr('attributes');
+                    }
+
+                    attributes = JSON.parse(attributes);
                     t.values(attributes).open();
 
                     return false;

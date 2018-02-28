@@ -39,6 +39,7 @@ class DynaGrid extends KartikDynaGrid
         $this->columns = $columns;
 
         $this->gridOptions = ArrayHelper::merge([
+            'class' => GridView::class,
             'responsive' => false,
             'responsiveWrap' => false,
             'rowOptions' => function ($row) {
@@ -74,11 +75,14 @@ class DynaGrid extends KartikDynaGrid
         return $this->id . '-grid';
     }
 
+    /**
+     * @inheritdoc
+     */
     public function run()
     {
         Html::addCssClass($this->options, $this->getDefaultCssClass());
         $this->_registerBundle();
 
-        return parent::run();
+        echo Html::tag('div', GridView::widget($this->gridOptions), $this->options);
     }
 }
