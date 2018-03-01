@@ -67,6 +67,7 @@ class DynaGrid extends Widget
             'dataProvider' => $this->dataProvider,
             'gridOptions' => [
                 'updateUrl' => $this->getUpdateUrlParams(),
+                'addButtonUrl' => $this->getAddUrlParams(),
                 'layout' => '{alertBlock}<div class="dyna-grid-footer">{summary}{pager}<div class="dyna-grid-toolbar">{toolbar}</div></div>{items}',
                 'toolbar' => $this->getToolbarConfig(),
 //                'panel' => [
@@ -328,8 +329,16 @@ JS
      */
     protected function getUpdateUrlParams(): array
     {
-        return array_merge([
+        return [
             '/' . trim($this->getUniqueId(), '/') . '/update',
-        ], $this->getUrlAttributes());
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAddUrlParams(): array
+    {
+        return array_merge($this->getUpdateUrlParams(), $this->getUrlAttributes());
     }
 }

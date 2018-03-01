@@ -22,8 +22,8 @@ class DetailView extends \kartik\detail\DetailView
     public $uniqueId = null;
     public $action = null;
     public $buttonsTemplate = '{save}&nbsp;&nbsp;{apply}&nbsp;&nbsp;{cancel}';
-    public $saveButton = '<input type="submit" name="save" value="Отправить" class="btn btn-success" href="" title="Сохранить и вернуться">';
-    public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-success" href="" title="Сохранить изменения">';
+    public $saveButton = '<input type="submit" name="save" value="Отправить" class="btn btn-primary" href="" title="Сохранить и вернуться">';
+    public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Сохранить изменения">';
     public $cancelButton = '<a class="btn btn-default" href="{backUrl}">Вернуться к списку</a>';
     public $backUrl = null;
 
@@ -166,6 +166,11 @@ class DetailView extends \kartik\detail\DetailView
         $cancelButton = strtr($cancelButton, [
             '{backUrl}' => $backUrl,
         ]);
+
+
+        if (is_callable($this->buttonsTemplate)) {
+            $this->buttonsTemplate = call_user_func($this->buttonsTemplate, $this->model);
+        }
 
         return strtr($this->buttonsTemplate, [
             '{save}' => $this->saveButton,
