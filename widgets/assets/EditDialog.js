@@ -53,7 +53,7 @@
                         attributes;
                     if (typeof t.options.attributesElement === 'undefined') {
                         targetEl = $(e.target);
-                        if (targetEl.parents('a').length || targetEl.is('a')) {
+                        if (targetEl.parents('a').length || targetEl.is('a') || targetEl.is(':button')) {
                             return true;
                         }
 
