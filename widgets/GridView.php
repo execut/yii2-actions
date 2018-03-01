@@ -63,7 +63,7 @@ class GridView extends \kartik\grid\GridView
 
         $this->_registerBundle();
 
-        if (!$this->isAjaxCrud) {
+        if (!$this->isAjaxCrud && $this->getUpdateUrl()) {
             if ($id === null) {
                 $id = $this->options['id'];
             }
@@ -128,7 +128,7 @@ class GridView extends \kartik\grid\GridView
             }
         }
 
-        return ArrayHelper::merge($this->toolbar, [
+        return ArrayHelper::merge([
 //            'massEdit' => ['content' => $this->renderMassEditButton()],
 //            'massVisible' => ['content' => $this->renderVisibleButtons()],
             'add' => ['content' => $this->renderAddButton()],
@@ -139,7 +139,7 @@ class GridView extends \kartik\grid\GridView
 //            'dynaParams' => ['content' => '{dynagridFilter}{dynagridSort}{dynagrid}'],
 //            'toggleData' => '{toggleData}',
 //            'export' => '{export}',
-        ]);
+        ], $this->toolbar);
     }
 
     public function beginPjax() {
