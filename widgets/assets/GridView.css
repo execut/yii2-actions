@@ -1,6 +1,6 @@
-.kv-grid-table tr:hover {
+.kv-grid-table tr.link-row:hover {
   cursor: pointer;
 }
-.kv-grid-table tr:hover td {
+.kv-grid-table tr.link-row:hover td {
   color: #289939;
 }

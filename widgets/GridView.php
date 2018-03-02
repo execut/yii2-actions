@@ -33,6 +33,7 @@ class GridView extends \kartik\grid\GridView
         $this->toolbar = $this->getToolbarConfig();
         $this->rowOptions = function ($row) {
             return [
+                'class' => 'link-row',
                 'data-id' => $row->primaryKey,
                 'attributes' => Json::encode($row->attributes),
             ];
