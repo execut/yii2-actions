@@ -16,7 +16,7 @@
                         var id = trEl.attr('data-id'),
                             url = t.options.updateUrl,
                             delimiter = null;
-                        if (url.search('\\?') !== 0) {
+                        if (url.search('\\?') !== -1) {
                             delimiter = '&';
                         } else {
                             delimiter = '?';
