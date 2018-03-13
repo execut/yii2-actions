@@ -14,8 +14,15 @@
                         targetEl = $(e.target);
                     if (!(targetEl.parents('a').length || targetEl.is('a'))) {
                         var id = trEl.attr('data-id'),
-                            url = t.options.updateUrl;
-                        location.href = url + '?id=' + id;
+                            url = t.options.updateUrl,
+                            delimiter = null;
+                        if (url.search('\\?') !== 0) {
+                            delimiter = '&';
+                        } else {
+                            delimiter = '?';
+                        }
+
+                        location.href = url + delimiter + 'id=' + id;
                     }
                 });
             }
