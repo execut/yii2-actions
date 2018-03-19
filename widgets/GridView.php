@@ -28,6 +28,7 @@ class GridView extends \kartik\grid\GridView
     public $formModel = null;
     public $uniqueId = null;
     public $hover = true;
+    public $responsiveWrap = false;
     public function init()
     {
         $this->toolbar = $this->getToolbarConfig();
