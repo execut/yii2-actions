@@ -10,10 +10,6 @@
             var t = this,
                 el = t.element;
             if (typeof t.options.updateUrl !== 'undefined') {
-                el.find('tr[data-id]').mousemove(function (e) {
-                    t._moveStarted = true;
-                });
-
                 el.find('tr[data-id]').mousedown(function (e) {
                     if (e.originalEvent.button == 0) {
                         t._moveStarted = false;
@@ -35,7 +31,7 @@
                 });
 
                 el.find('tr[data-id]').click(function (e) {
-                    if (t._moveStarted) {
+                    if (window.getSelection().toString().length) {
                         return false;
                     }
 
