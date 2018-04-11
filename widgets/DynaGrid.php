@@ -76,7 +76,10 @@ class DynaGrid extends KartikDynaGrid
      */
     public function run()
     {
-        $this->initWidget();
+        if (method_exists($this, 'initWidget')) {
+            $this->initWidget();
+        }
+
         $this->gridOptions['options']['id'] = $this->id;
 
         Html::addCssClass($this->options, $this->getDefaultCssClass());
