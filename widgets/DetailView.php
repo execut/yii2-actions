@@ -9,7 +9,7 @@
 namespace execut\actions\widgets;
 
 
-use execut\widgets\LoadingOverlay;
+use execut\loadingOverlay\LoadingOverlay;
 use execut\yii\jui\WidgetTrait;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
