@@ -124,7 +124,7 @@ class Edit extends Form
     }
 
     protected function getSession() {
-        if ($this->session === null && (YII_ENV !== 'test')) {
+        if ($this->session === null) {
             return \yii::$app->session;
         }
 
