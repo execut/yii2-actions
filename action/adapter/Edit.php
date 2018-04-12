@@ -40,6 +40,10 @@ class Edit extends Form
             $mode = 'edit';
         }
 
+        if (!empty($this->getData()['view'])) {
+            $mode = 'view';
+        }
+
         $model = $this->getModel();
         $this->trigger(self::EVENT_AFTER_FIND);
         if ($this->scenario !== null) {
