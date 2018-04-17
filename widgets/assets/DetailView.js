@@ -12,12 +12,17 @@
         isSaved: false,
         _initEvents: function () {
             var t = this;
-            t.formEl.on('ajaxBeforeSend', function (e, xhr, options) {
+            t.formEl.on('beforeValidate', function (e, xhr, options) {
                 t.element.loadingOverlay({
                     loadingText: 'Загрузка..'
                 });
             });
-            t.formEl.on('ajaxComplete', function (e, xhr, options) {
+            t.formEl.on('submit', function (e, xhr, options) {
+                t.element.loadingOverlay({
+                    loadingText: 'Загрузка..'
+                });
+            });
+            t.formEl.on('afterValidate', function (e, xhr, options) {
                 t.element.loadingOverlay('remove');
             });
         }
