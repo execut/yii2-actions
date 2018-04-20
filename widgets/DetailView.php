@@ -19,10 +19,13 @@ use kartik\alert\Alert;
 class DetailView extends \kartik\detail\DetailView
 {
     use WidgetTrait;
+    const DEFAULT_BUTTONS_TEMPLATE = '{save}&nbsp;&nbsp;{apply}&nbsp;&nbsp;{cancel}';
+    const All_BUTTONS_TEMPLATE = '{check}&nbsp;&nbsp;{save}&nbsp;&nbsp;{apply}&nbsp;&nbsp;{cancel}';
     public $uniqueId = null;
     public $action = null;
-    public $buttonsTemplate = '{save}&nbsp;&nbsp;{apply}&nbsp;&nbsp;{cancel}';
+    public $buttonsTemplate = self::DEFAULT_BUTTONS_TEMPLATE;
     public $saveButton = '<input type="submit" name="save" value="Отправить" class="btn btn-primary" href="" title="Сохранить и вернуться">';
+    public $checkButton = '<input type="submit" name="check" value="Проверить" class="btn btn-info" href="" title="Проверить">';
     public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Сохранить изменения">';
     public $cancelButton = '<a class="btn btn-default" href="{backUrl}">Вернуться к списку</a>';
     public $backUrl = null;
@@ -173,6 +176,7 @@ class DetailView extends \kartik\detail\DetailView
         }
 
         return strtr($this->buttonsTemplate, [
+            '{check}' => $this->checkButton,
             '{save}' => $this->saveButton,
             '{apply}' => $this->applyButton,
             '{cancel}' => $cancelButton,

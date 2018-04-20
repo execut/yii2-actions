@@ -12,6 +12,7 @@ use execut\actions\action\adapter\viewRenderer\DetailView;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use yii\web\Application;
+use yii\web\NotFoundHttpException;
 
 class Edit extends Form
 {
@@ -45,6 +46,10 @@ class Edit extends Form
         }
 
         $model = $this->getModel();
+        if (!$model) {
+            throw new NotFoundHttpException('Record not founded');
+        }
+
         $this->trigger(self::EVENT_AFTER_FIND);
         if ($this->scenario !== null) {
             $model->setScenario($this->scenario);
@@ -144,7 +149,7 @@ class Edit extends Form
         $get = $this->actionParams->get;
         unset($get['id']);
 
-        return (!empty($get) && $this->isTrySaveFromGet || !empty($this->actionParams->post));
+        return (!empty($get) && $this->isTrySaveFromGet || (!empty($this->actionParams->post) && empty($this->actionParams->post['check'])));
     }
 
     protected function isSubmitted() {
@@ -245,7 +250,12 @@ class Edit extends Form
 
     public function getData() {
         $data = parent::getData();
-        if (empty($data[$this->getModel()->formName()])) {
+        $model = $this->getModel();
+        if (!$model) {
+            return $data;
+        }
+
+        if (empty($data[$model->formName()])) {
             $data[$this->getModel()->formName()] = [];
         }
 
