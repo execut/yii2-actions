@@ -25,7 +25,7 @@
         _initEvents: function () {
             var t = this;
             t.formEl.on('ajaxComplete', function (e, resp) {
-                if (typeof resp.responseJSON.message !== 'undefined') {
+                if (typeof resp !== 'undefined' && typeof resp.responseJSON.message !== 'undefined') {
                     t.message = resp.responseJSON.message;
                     t.alertEl.show().find('span').html(t.message);
                     setTimeout(function () {
