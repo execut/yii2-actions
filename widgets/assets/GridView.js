@@ -50,7 +50,7 @@
         _getHrefFromTr: function (trEl, e) {
             var t = this,
                 targetEl = $(e.target);
-            if (!(targetEl.parents('a').length || targetEl.is('a'))) {
+            if (!(targetEl.parents('a,button,input').length || targetEl.is('a,button,input'))) {
                 var id = trEl.attr('data-id'),
                     url = t.options.updateUrl,
                     delimiter = null;
