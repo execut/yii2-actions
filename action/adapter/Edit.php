@@ -78,7 +78,10 @@ class Edit extends Form
             }
 
             $successMessage = $this->getSuccessMessage($isNewRecord);
-            $this->setFlash($successMessage);
+            if ($successMessage) {
+                $this->setFlash($successMessage);
+            }
+
             if ($this->actionParams->isAjax && !$this->actionParams->isPjax) {
                 return $this->getResponse([
                     'format' => \yii\web\Response::FORMAT_JSON,
