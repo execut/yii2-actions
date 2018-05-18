@@ -38,7 +38,7 @@
                     var trEl = $(this),
                         href = false;
                     if (href = t._getHrefFromTr(trEl, e)) {
-                        if (e.originalEvent.ctrlKey) {
+                        if (typeof e.originalEvent !== 'undefined' && e.originalEvent.ctrlKey) {
                             window.open(href, '_blank');
                         } else {
                             location.href = href;
