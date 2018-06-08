@@ -74,6 +74,7 @@ class GridView extends \execut\actions\action\adapter\Form
 
         parent::_run();
 
+        $filter->validate();
         /**
          * @var ArrayDataProvider $dataProvider
          */

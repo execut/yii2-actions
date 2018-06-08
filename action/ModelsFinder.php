@@ -10,6 +10,7 @@ namespace execut\actions\action;
 
 
 use yii\base\BaseObject;
+use yii\db\ActiveRecord;
 
 class ModelsFinder extends BaseObject
 {
@@ -57,6 +58,17 @@ class ModelsFinder extends BaseObject
     public function find() {
         $class = $this->modelClass;
         if ($where = $this->getWhereParams()) {
+            $model = new $class;
+            if ($model instanceof ActiveRecord) {
+                foreach ($where as $attribute => $value) {
+                    $column = $model->getTableSchema()->getColumn($attribute);
+                    if ($column) {
+                        $value = $column->phpTypecast($value);
+                        $where[$attribute] = $value;
+                    }
+                }
+            }
+
             $model = $class::find()->andWhere($where)->one();
         } else {
             $model = new $class;
