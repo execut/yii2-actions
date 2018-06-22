@@ -96,7 +96,7 @@ class GridView extends \execut\actions\action\adapter\Form
         if ($actionParams->isAjax && !$actionParams->isPjax && !$this->isDisableAjax && $dataProvider) {
             if (isset($this->actionParams->get['depdrop_parents'])) {
                 $key = 'output';
-                $dataProvider->pagination = false;
+                $dataProvider->pagination->pageSize = 500;
             } else {
                 $key = 'results';
             }
