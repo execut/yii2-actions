@@ -24,6 +24,8 @@ class File extends Adapter
     public $model = null;
     public $dataAttribute = 'data';
     public $nameAttribute = 'name';
+    public $mimeTypeAttribute = 'mime_type';
+    public $extensionAttribute = 'extension';
     public $extensionIsRequired = true;
     protected function _run() {
         $attributes = $this->actionParams->get;
@@ -41,27 +43,39 @@ class File extends Adapter
             $dataAttribute = $this->dataAttribute;
         }
 
-        $selectedAttributes = array_merge([
+        $extensionAttribute = $this->extensionAttribute;
+        $selectedAttributes = [
             $this->nameAttribute,
             $dataAttribute,
-            'mime_type',
-        ], array_keys($attributes));
+            $extensionAttribute,
+            $this->mimeTypeAttribute,
+        ];
+
+        $selectedAttributes = array_filter($selectedAttributes);
+        $attributes = [
+            $extensionAttribute => $attributes['extension'],
+            'id' => $attributes['id'],
+        ];
         $result = $class::find()->select($selectedAttributes)->andWhere($attributes)->one();
         if (!$result) {
             throw new NotFoundHttpException('File by url "' . \yii::$app->request->getUrl() . '" not found');
         }
 
-        if ($this->extensionIsRequired && strtolower($result->extension) !== $attributes['extension']) {
+        if ($this->extensionIsRequired && strtolower($result->$extensionAttribute) !== $attributes[$extensionAttribute]) {
             throw new NotFoundHttpException('File extension is wrong');
         }
 
         $this->model = $result;
 
         $response = \Yii::$app->getResponse();
-        if (strpos($result->mime_type, 'image/') === 0) {
-            $response->headers->set('Content-Type', $result->mime_type);
+        if ($this->mimeTypeAttribute) {
+            if (strpos($result->mime_type, 'image/') === 0) {
+                $response->headers->set('Content-Type', $result->mime_type);
+            } else {
+                $response->setDownloadHeaders($result->{$this->nameAttribute}, $result->mime_type);
+            }
         } else {
-            $response->setDownloadHeaders($result->{$this->nameAttribute}, $result->mime_type);
+            $response->headers->set('Content-Type', 'image/jpeg');
         }
 
         $response = $this->getResponse([

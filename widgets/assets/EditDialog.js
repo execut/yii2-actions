@@ -9,6 +9,11 @@
             var t = this;
             t._initElements();
             t._initEvents();
+            // $.ajaxSetup({
+            //     cache: false,
+            //     contentType: false,
+            //     processData: false
+            // });
         },
         _initElements: function () {
             var t = this;
@@ -78,7 +83,13 @@
 
             var realAction = t._sourceAction;
             if (typeof attributes.id !== 'undefined') {
-                realAction += '?id=' + attributes.id;
+                if (realAction.search('\\?') !== 0) {
+                    realAction += '&'
+                } else {
+                    realAction += '?'
+                }
+
+                realAction += 'id=' + attributes.id;
             }
 
             t.formEl.attr('action', realAction)
