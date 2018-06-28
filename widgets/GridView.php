@@ -58,7 +58,6 @@ class GridView extends \kartik\grid\GridView
      */
     protected function registerWidget($name = null, $id = null)
     {
-
         if ($name === null) {
             $name = $this->getDefaultJsWidgetName();
         }
@@ -147,10 +146,7 @@ class GridView extends \kartik\grid\GridView
     public function beginPjax() {
         parent::beginPjax();
         if ($this->isAjaxCrud) {
-            $model = $this->formModel;
-            if (is_callable($model)) {
-                $model = $model();
-            }
+            $model = $this->getFormModel();
 
             if ($this->pjax) {
                 $gridId = $this->id . '-pjax';
@@ -193,12 +189,30 @@ class GridView extends \kartik\grid\GridView
     protected function renderAddButton()
     {
         $title = \yii::t('execut.actions', 'Add') . ' ' . $this->title;
-        return Html::a($title, Url::to($this->addButtonUrl), [
+        $url = $this->addButtonUrl;
+        if (!is_array($url)) {
+            $url = [$url];
+        }
+
+
+        return Html::a($title, Url::to($url), [
                 'id' => $this->id . '-edit-add-button',
                 'type' => 'button',
                 'data-pjax' => 0,
                 'title' => $title,
                 'class' => 'btn btn-success'
             ]);
+    }
+
+    /**
+     * @return null
+     */
+    protected function getFormModel()
+    {
+        $model = $this->formModel;
+        if (is_callable($model)) {
+            $model = $model();
+        }
+        return $model;
     }
 }
