@@ -32,13 +32,32 @@ class GridView extends \kartik\grid\GridView
     public function init()
     {
         $this->toolbar = $this->getToolbarConfig();
-        $this->rowOptions = function ($row) {
+        $rowOptions = function ($row) {
             return [
                 'class' => 'link-row',
                 'data-id' => $row->primaryKey,
                 'attributes' => Json::encode($row->attributes),
             ];
         };
+
+        if (is_callable($this->rowOptions)) {
+            $oldRowOptions = $this->rowOptions;
+            $this->rowOptions = function ($row) use ($oldRowOptions, $rowOptions) {
+                $oldData = $oldRowOptions($row);
+                if ($oldData === null) {
+                    $oldData = [];
+                }
+
+                return ArrayHelper::merge($rowOptions($row), $oldData);
+            };
+        } else if (is_array($this->rowOptions)) {
+            $oldRowOptions = $this->rowOptions;
+            $this->rowOptions = function ($row) use ($oldRowOptions, $rowOptions) {
+                return ArrayHelper::merge($rowOptions($row), $oldRowOptions);
+            };
+        } else {
+            $this->rowOptions = $rowOptions;
+        }
 
         return parent::init();
     }

@@ -8,6 +8,7 @@
 
 namespace execut\actions\widgets;
 
+use execut\actions\action\adapter\viewRenderer\DynaGridRow;
 use execut\yii\jui\WidgetTrait;
 use kartik\export\ExportMenu;
 use yii\helpers\ArrayHelper;
@@ -43,7 +44,7 @@ class DynaGrid extends KartikDynaGrid
             'responsive' => false,
             'responsiveWrap' => false,
             'rowOptions' => function ($row) {
-                if (method_exists($row, 'getRowOptions')) {
+                if ($row instanceof DynaGridRow) {
                     return $row->getRowOptions();
                 }
             },
