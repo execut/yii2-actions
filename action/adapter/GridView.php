@@ -74,11 +74,15 @@ class GridView extends \execut\actions\action\adapter\Form
 
         parent::_run();
 
-        $filter->validate();
+        $isValid = $filter->validate();
         /**
          * @var ArrayDataProvider $dataProvider
          */
         $dataProvider = $filter->search();
+        if (!$isValid) {
+            $dataProvider->query->andWhere('false');
+        }
+
         if (!empty($this->actionParams->get['handle'])) {
             $handlerKey = $this->actionParams->get['handle'];
             $handlers = $this->handlers;

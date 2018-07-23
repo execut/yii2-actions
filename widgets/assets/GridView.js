@@ -43,7 +43,11 @@
                         } else {
                             location.href = href;
                         }
+
+                        return;
                     }
+
+                    return true;
                 });
             }
         },
