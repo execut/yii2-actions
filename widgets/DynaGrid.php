@@ -29,6 +29,10 @@ class DynaGrid extends KartikDynaGrid
 //            unset($column['visible']);
 //        }
 
+        if (\yii::$app->request->post('exportFull_' . $this->id)) {
+            ini_set('max_execution_time', 1200);
+        }
+
         $fullExportMenu = ExportMenu::widget([
             'dataProvider' => $this->dataProvider,
             'columns' => $columns,
