@@ -25,13 +25,23 @@ class DynaGrid extends KartikDynaGrid
     public function init()
     {
         $columns = $this->filter->getGridColumns();
+//        foreach ($exportColumns as &$column) {
+//            unset($column['visible']);
+//        }
+
         $fullExportMenu = ExportMenu::widget([
             'dataProvider' => $this->dataProvider,
             'columns' => $columns,
+            'showColumnSelector' => true,
             'target' => ExportMenu::TARGET_BLANK,
             'batchSize' => 1000,
             'fontAwesome' => true,
             'asDropdown' => false,
+            'dynagrid' => true,
+            'dynagridOptions' => [
+                'options' => ['id' => $this->options['id']],
+//                'columns' => $columns,
+            ],
             'dropdownOptions' => [
                 'label' => '<i class="glyphicon glyphicon-export"></i> Full'
             ],
