@@ -45,6 +45,7 @@
 
             t.addButton.click(function () {
                 t.open();
+                return false;
             });
 
             t.formEl.on('beforeSubmit', function (event) {
