@@ -47,21 +47,28 @@ class File extends Adapter
         $selectedAttributes = [
             $this->nameAttribute,
             $dataAttribute,
-            $extensionAttribute,
             $this->mimeTypeAttribute,
         ];
 
+        if ($this->extensionIsRequired) {
+            $selectedAttributes[] = $this->extensionAttribute;
+        }
+
         $selectedAttributes = array_filter($selectedAttributes);
-        $attributes = [
-            $extensionAttribute => $attributes['extension'],
+        $findAttributes = [
             'id' => $attributes['id'],
         ];
-        $result = $class::find()->select($selectedAttributes)->andWhere($attributes)->one();
+
+        if ($this->extensionIsRequired) {
+            $findAttributes[$extensionAttribute] = $attributes['extension'];
+        }
+
+        $result = $class::find()->select($selectedAttributes)->andWhere($findAttributes)->one();
         if (!$result) {
             throw new NotFoundHttpException('File by url "' . \yii::$app->request->getUrl() . '" not found');
         }
 
-        if ($this->extensionIsRequired && strtolower($result->$extensionAttribute) !== $attributes[$extensionAttribute]) {
+        if ($this->extensionIsRequired && strtolower($result->$extensionAttribute) !== $findAttributes[$extensionAttribute]) {
             throw new NotFoundHttpException('File extension is wrong');
         }
 
