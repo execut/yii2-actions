@@ -56,7 +56,7 @@ class File extends Adapter
 
         $selectedAttributes = array_filter($selectedAttributes);
         $findAttributes = [
-            'id' => $attributes['id'],
+            'id' => (int) abs($attributes['id']),
         ];
 
         if ($this->extensionIsRequired) {
