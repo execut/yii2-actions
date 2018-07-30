@@ -44,7 +44,9 @@ class DynaGrid extends KartikDynaGrid
             'dynagrid' => true,
             'dynagridOptions' => [
                 'options' => ['id' => $this->options['id']],
-//                'columns' => $columns,
+                'gridOptions' => [
+                    'columns' => $columns,
+                ],
             ],
             'dropdownOptions' => [
                 'label' => '<i class="glyphicon glyphicon-export"></i> Full'
