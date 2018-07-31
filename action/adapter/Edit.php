@@ -224,26 +224,30 @@ class Edit extends Form
      */
     protected function redirectAfterSave()
     {
-        if ($this->urlParamsForRedirectAfterSave === false) {
+        $afterSave = $this->urlParamsForRedirectAfterSave;
+        if ($afterSave === false) {
             return false;
         }
 
         $data = $this->actionParams->getData();
         $params = $this->getUrlParams();
-        if (is_callable($this->urlParamsForRedirectAfterSave)) {
-            $urlParamsForRedirectAfterSave = $this->urlParamsForRedirectAfterSave;
-            $params = $urlParamsForRedirectAfterSave($params);
+        if (is_callable($afterSave)) {
+            $afterSave = $afterSave($params, $this);
+        }
+
+        if ($afterSave === false) {
+            return false;
         } else {
-            $params = ArrayHelper::merge($this->urlParamsForRedirectAfterSave, $params);
+            $params = ArrayHelper::merge($afterSave, $params);
             if (!empty($params[1])) {
                 unset($params[1]);
             }
+        }
 
-            if (!empty($data['save'])) {
-                $params = [
-                    str_replace('/update', '/index', $this->getUniqueId()),
-                ];
-            }
+        if (!empty($data['save'])) {
+            $params = [
+                str_replace('/update', '/index', $this->getUniqueId()),
+            ];
         }
 
         $result = \yii::$app->response->redirect($params);
