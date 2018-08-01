@@ -21,10 +21,10 @@ class DetailView extends Widget
     public $heading = 'Редактирование';
     public $action = null;
     public $buttonsTemplate = \execut\actions\widgets\DetailView::DEFAULT_BUTTONS_TEMPLATE;
-    public $saveButton = '<input type="submit" name="save" value="Отправить" class="btn btn-primary" href="" title="Сохранить и вернуться">';
+    public $saveButton = '<input type="submit" name="save" value="Сохранить" class="btn btn-primary" href="" title="Сохранить и вернуться">';
     public $checkButton = '<input type="submit" name="check" value="Проверить" class="btn btn-primary" href="" title="Проверить">';
-    public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Сохранить изменения">';
-    public $cancelButton = '<a class="btn btn-default" href="{backUrl}">Вернуться к списку</a>';
+    public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Применить изменения">';
+    public $cancelButton = '<a class="btn btn-default" href="{backUrl}">Отмена</a>';
     public function getDefaultWidgetOptions()
     {
         return [
