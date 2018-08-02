@@ -80,7 +80,7 @@ class GridView extends \execut\actions\action\adapter\Form
          */
         $dataProvider = $filter->search();
         if (!$isValid) {
-            $dataProvider->query->andWhere('false');
+            $dataProvider->query->where = 'false';
         }
 
         if (!empty($this->actionParams->get['handle'])) {
