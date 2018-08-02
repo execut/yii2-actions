@@ -1,7 +1,10 @@
+.kv-edit-mode .kv-detail-view {
+  margin-bottom: -18px;
+}
 .kv-edit-mode .buttons-container {
   margin-left: 10px;
   margin-right: 8px;
-  margin-top: -9px;
+  margin-top: 8px;
   text-align: right;
 }
 .kv-edit-mode .buttons-container .alert {
