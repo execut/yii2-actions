@@ -84,10 +84,10 @@
 
             var realAction = t._sourceAction;
             if (typeof attributes.id !== 'undefined') {
-                if (realAction.search('\\?') !== 0) {
-                    realAction += '&'
-                } else {
+                if (realAction.search('\\?') === -1) {
                     realAction += '?'
+                } else {
+                    realAction += '&'
                 }
 
                 realAction += 'id=' + attributes.id;
