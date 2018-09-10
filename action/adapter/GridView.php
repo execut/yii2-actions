@@ -130,6 +130,7 @@ class GridView extends \execut\actions\action\adapter\Form
                 'pagination' => [
                     'more' => $pagination ? ($pagination->page < $pagination->pageCount - 1) : false,
                 ],
+                'totalCount' => $pagination->totalCount,
             ];
 
             $response->format = Response::FORMAT_JSON;

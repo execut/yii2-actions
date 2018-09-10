@@ -24,7 +24,7 @@ class DynaGrid extends KartikDynaGrid
 
     public function init()
     {
-        $columns = $this->filter->getGridColumns();
+        $columns = array_values($this->filter->getGridColumns());
 //        foreach ($exportColumns as &$column) {
 //            unset($column['visible']);
 //        }
