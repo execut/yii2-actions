@@ -33,10 +33,16 @@ class GridView extends \kartik\grid\GridView
     {
         $this->toolbar = $this->getToolbarConfig();
         $rowOptions = function ($row) {
+            if ($this->isAjaxCrud) {
+                $attributes = Json::encode($row->attributes);
+            } else {
+                $attributes = [];
+            }
+
             return [
                 'class' => 'link-row',
                 'data-id' => $row->primaryKey,
-                'attributes' => Json::encode($row->attributes),
+                'attributes' => $attributes,
             ];
         };
 

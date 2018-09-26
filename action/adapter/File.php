@@ -85,6 +85,8 @@ class File extends Adapter
             $response->headers->set('Content-Type', 'image/jpeg');
         }
 
+//        var_dump(stream_get_contents($result->{$dataAttribute}));
+//        exit;
         $response = $this->getResponse([
             'format' => Response::FORMAT_RAW,
             'content' => stream_get_contents($result->{$dataAttribute}),
