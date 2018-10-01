@@ -238,13 +238,14 @@ class Edit extends Form
         if ($afterSave === false) {
             return false;
         } else {
-            $params = ArrayHelper::merge($afterSave, $params);
+            $params = ArrayHelper::merge($params, $afterSave);
             if (!empty($params[1])) {
-                unset($params[1]);
+                unset($params[0]);
+                $params = [$params[1]];
             }
         }
 
-        if (!empty($data['save'])) {
+        if (!empty($data['save']) && empty($afterSave[0])) {
             $params = [
                 str_replace('/update', '/index', $this->getUniqueId()),
             ];
