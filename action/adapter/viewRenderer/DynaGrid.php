@@ -243,7 +243,7 @@ class DynaGrid extends Widget
             $lcfirstTitle = $this->title;
 //            var_dump($lcfirstTitle);
 //            exit;
-            return Html::a(\yii::t('execut.actions', 'Add') . ' ' . $lcfirstTitle, Url::to($this->getUpdateUrlParams()), [
+            return Html::a(\yii::t('execut.actions', 'Add') . ' ' . $lcfirstTitle, Url::to($this->getAddUrlParams()), [
                     'type' => 'button',
                     'data-pjax' => 0,
                     'title' => \yii::t('execut.actions', 'Add') . ' ' . $lcfirstTitle,

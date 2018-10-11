@@ -62,10 +62,13 @@ class EditWithRelations extends Adapter
         }
 
         $actionParams = $this->actionParams;
+        $urlAttributes = [
+            $relationFilter->formName() => $relationFilter->attributes
+        ];
         $config = [
             'model' => $relationFilter,
             'view' => [
-                'urlAttributes' => $relationFilter->attributes,
+                'urlAttributes' => $urlAttributes,
                 'modelClass' => $relationFilter->className(),
                 'uniqueId' => '/' . $actionParams->module . '/' . Inflector::camel2id($relationFilter->formName()),
             ],
