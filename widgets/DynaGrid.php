@@ -69,6 +69,7 @@ class DynaGrid extends KartikDynaGrid
             'floatHeader' => true,
             'floatHeaderOptions' => [
                 'top' => 50,
+                'zIndex' => 989,
                 'autoReflow' => true,
                 'top' => new JsExpression(<<<JS
 function(table) {
