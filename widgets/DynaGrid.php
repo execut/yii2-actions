@@ -14,6 +14,7 @@ use kartik\export\ExportMenu;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use \kartik\dynagrid\DynaGrid as KartikDynaGrid;
+use yii\web\JsExpression;
 
 class DynaGrid extends KartikDynaGrid
 {
@@ -65,6 +66,29 @@ class DynaGrid extends KartikDynaGrid
                 }
             },
             'panel' => false,
+            'floatHeader' => true,
+            'floatHeaderOptions' => [
+                'top' => 50,
+                'autoReflow' => true,
+                'top' => new JsExpression(<<<JS
+function(table) {
+    if ($('.container-logo').length !== 0 && $('.container-logo').css('position') !== 'fixed') {
+        return 0;
+    }
+
+    var menusSelectors = ['.navbar', '#search-tabs', '#header-menu'],
+        result = 0;
+    for (var key = 0; key < menusSelectors.length; key++) {
+        if ($(menusSelectors[key]).length) {
+            result += $(menusSelectors[key]).height();
+        }
+    }
+    
+    return result;
+}
+JS
+                )
+            ],
             'export' => [
                 'fontAwesome' => true,
                 'itemsAfter'=> [
