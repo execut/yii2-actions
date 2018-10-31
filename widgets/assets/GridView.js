@@ -1,6 +1,5 @@
 (function () {
     $.widget("execut.GridView", {
-        _moveStarted: false,
         _create: function () {
             var t = this;
             t._initElements();
@@ -11,8 +10,8 @@
                 el = t.element;
             if (typeof t.options.updateUrl !== 'undefined') {
                 el.find('tr[data-id]').mousedown(function (e) {
+                    t._moveStarted = false;
                     if (e.originalEvent.button == 0) {
-                        t._moveStarted = false;
                     } else {
                         var trEl = $(this),
                             href = false;
@@ -30,8 +29,12 @@
                     }
                 });
 
+                el.mousemove(function () {
+                    t._moveStarted = true;
+                });
+
                 el.find('tr[data-id]').click(function (e) {
-                    if (window.getSelection().toString().length) {
+                    if (window.getSelection().toString().length && t._moveStarted) {
                         return false;
                     }
 
