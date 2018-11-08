@@ -12,6 +12,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use kartik\alert\Alert;
 use yii\helpers\Url;
+use \execut\actions\widgets\DetailView as DetailViewWidget;
 
 class DetailView extends Widget
 {
@@ -21,14 +22,14 @@ class DetailView extends Widget
     public $heading = 'Редактирование';
     public $action = null;
     public $buttonsTemplate = \execut\actions\widgets\DetailView::DEFAULT_BUTTONS_TEMPLATE;
-    public $saveButton = '<input type="submit" name="save" value="Сохранить" class="btn btn-primary" href="" title="Сохранить и вернуться">';
-    public $checkButton = '<input type="submit" name="check" value="Проверить" class="btn btn-primary" href="" title="Проверить">';
-    public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Применить изменения">';
-    public $cancelButton = '<a class="btn btn-default" href="{backUrl}">Отмена</a>';
+    public $saveButton = DetailViewWidget::BUTTON_SAVE;
+    public $checkButton = DetailViewWidget::BUTTON_CHECK;
+    public $applyButton = DetailViewWidget::BUTTON_APPLY;
+    public $cancelButton = DetailViewWidget::BUTTON_CANCEL;
     public function getDefaultWidgetOptions()
     {
         return [
-            'class' => \execut\actions\widgets\DetailView::class,
+            'class' => DetailViewWidget::class,
             'uniqueId' => $this->uniqueId,
             'model' => $this->model,
             'mode' => $this->mode,

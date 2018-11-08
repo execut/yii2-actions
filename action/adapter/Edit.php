@@ -34,6 +34,11 @@ class Edit extends Form
 
     const EVENT_AFTER_FIND = 'afterFind';
     protected function _run() {
+        $request = \yii::$app->request;
+        if ($request->referrer !== null && $request->referrer !== $request->absoluteUrl) {
+            $this->saveRedirectUrl($request->referrer);
+        }
+
         $actionParams = $this->actionParams;
         if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
             $mode = $this->mode;
@@ -68,7 +73,15 @@ class Edit extends Form
             return $response;
         }
 
-        if ($result === true && $this->isSave() && $this->isSubmitted()) {
+        if ($this->isCanceled()) {
+            $result = $this->redirectAfterSave();
+            if ($result === false) {
+                $result = [
+                    'mode' => $mode,
+                    'model' => $model
+                ];
+            }
+        } else if ($result === true && $this->isSave() && $this->isSubmitted()) {
             $model->save();
             $this->trigger('afterSave');
             if ($isNewRecord) {
@@ -135,6 +148,14 @@ class Edit extends Form
         return $response;
     }
 
+    protected function saveRedirectUrl($url) {
+        \yii::$app->cache->set($this->getCacheKey(), $url);
+    }
+
+    protected function loadRedirectUrl() {
+        return \yii::$app->cache->get($this->getCacheKey());
+    }
+
     protected function getSession() {
         if ($this->session === null) {
             return \yii::$app->session;
@@ -153,6 +174,11 @@ class Edit extends Form
         unset($get['id']);
 
         return (!empty($get) && $this->isTrySaveFromGet || (!empty($this->actionParams->post) && empty($this->actionParams->post['check'])));
+    }
+
+    protected function isCanceled() {
+        $data = $this->actionParams->getData();
+        return !empty($data['cancel']);
     }
 
     protected function isSubmitted() {
@@ -233,27 +259,36 @@ class Edit extends Form
         $params = $this->getUrlParams();
         if (is_callable($afterSave)) {
             $afterSave = $afterSave($params, $this);
-        }
-
-        if ($afterSave === false) {
-            return false;
-        } else {
-            $params = ArrayHelper::merge($params, $afterSave);
-            if (!empty($params[1])) {
-                unset($params[0]);
-                $params = [$params[1]];
+            if ($afterSave === false) {
+                return false;
             }
         }
 
-        if (!empty($data['save']) && empty($afterSave[0])) {
-            $params = [
-                str_replace('/update', '/index', $this->getUniqueId()),
-            ];
+        $params = ArrayHelper::merge($params, $afterSave);
+        if (!empty($params[1])) {
+            unset($params[0]);
+            $params = [$params[1]];
+        }
+
+        if ((!empty($data['save']) || !empty($data['cancel'])) && empty($afterSave[0])) {
+            $params = $this->getDefaultRedirectParams();
         }
 
         $result = \yii::$app->response->redirect($params);
 
         return $result;
+    }
+
+    protected function getDefaultRedirectParams() {
+        if ($params = $this->loadRedirectUrl()) {
+            return $params;
+        }
+
+        $params = [
+            str_replace('/update', '/index', $this->getUniqueId()),
+        ];
+
+        return $params;
     }
 
     public function getData() {
@@ -356,5 +391,13 @@ class Edit extends Form
 
             return $successMessage;
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCacheKey(): string
+    {
+        return $this->getUniqueId() . '-' . $this->getModel()->primaryKey;
     }
 }

@@ -24,12 +24,17 @@ class DetailView extends \kartik\detail\DetailView
     public $uniqueId = null;
     public $action = null;
     public $buttonsTemplate = self::DEFAULT_BUTTONS_TEMPLATE;
-    public $saveButton = '<input type="submit" name="save" value="Отправить" class="btn btn-primary" href="" title="Сохранить и вернуться">';
-    public $checkButton = '<input type="submit" name="check" value="Проверить" class="btn btn-info" href="" title="Проверить">';
-    public $applyButton = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Сохранить изменения">';
-    public $cancelButton = '<a class="btn btn-default" href="{backUrl}">Вернуться к списку</a>';
+    public $saveButton = self::BUTTON_SAVE;
+    public $checkButton = self::BUTTON_CHECK;
+    public $applyButton = self::BUTTON_APPLY;
+    public $cancelButton = self::BUTTON_CANCEL;
     public $backUrl = null;
     public $alertBlockAddon = null;
+
+    const BUTTON_CANCEL = '<input type="submit" name="cancel" value="Отмена" class="btn btn-default" title="Отменить">';
+    const BUTTON_APPLY = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Сохранить изменения">';
+    const BUTTON_CHECK = '<input type="submit" name="check" value="Проверить" class="btn btn-info" href="" title="Проверить">';
+    const BUTTON_SAVE = '<input type="submit" name="save" value="Отправить" class="btn btn-primary" href="" title="Сохранить и вернуться">';
 
     public function __construct($config = [])
     {
