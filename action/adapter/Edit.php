@@ -36,8 +36,8 @@ class Edit extends Form
     const EVENT_AFTER_FIND = 'afterFind';
     protected function _run() {
         $request = \yii::$app->request;
-
-        if ($request->referrer !== null) {
+        $actionParams = $this->actionParams;
+        if ($request->referrer !== null && empty($actionParams->get['redirect'])) {
             $url = $request->pathInfo;
             $refererUrl = trim(str_replace([$request->hostInfo, $request->baseUrl], '', explode('?', $request->referrer)[0]), '/');
             if ($refererUrl !== $url) {
@@ -45,7 +45,6 @@ class Edit extends Form
             }
         }
 
-        $actionParams = $this->actionParams;
         if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
             $mode = $this->mode;
         } else {
@@ -288,6 +287,8 @@ class Edit extends Form
     protected function getDefaultRedirectParams() {
         if ($params = $this->loadRedirectUrl()) {
             $model = $this->getModel();
+            $params = $params . (strpos($params, '?') === false ? '?' : '&') . 'redirect=1';
+
             $params = Url::to($params) . '#' . $model->tableName() . '-' . $model->primaryKey;
 
             return $params;
@@ -407,6 +408,6 @@ class Edit extends Form
      */
     protected function getCacheKey(): string
     {
-        return $this->getUniqueId() . '-' . $this->getModel()->className();
+        return $this->getUniqueId() . '-' . $this->modelClass;
     }
 }
