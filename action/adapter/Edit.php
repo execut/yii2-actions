@@ -11,6 +11,7 @@ namespace execut\actions\action\adapter;
 use execut\actions\action\adapter\viewRenderer\DetailView;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\Application;
 use yii\web\NotFoundHttpException;
 
@@ -35,8 +36,13 @@ class Edit extends Form
     const EVENT_AFTER_FIND = 'afterFind';
     protected function _run() {
         $request = \yii::$app->request;
-        if ($request->referrer !== null && $request->referrer !== $request->absoluteUrl) {
-            $this->saveRedirectUrl($request->referrer);
+
+        if ($request->referrer !== null) {
+            $url = $request->pathInfo;
+            $refererUrl = trim(str_replace([$request->hostInfo, $request->baseUrl], '', explode('?', $request->referrer)[0]), '/');
+            if ($refererUrl !== $url) {
+                $this->saveRedirectUrl($request->referrer);
+            }
         }
 
         $actionParams = $this->actionParams;
@@ -281,6 +287,9 @@ class Edit extends Form
 
     protected function getDefaultRedirectParams() {
         if ($params = $this->loadRedirectUrl()) {
+            $model = $this->getModel();
+            $params = Url::to($params) . '#' . $model->tableName() . '-' . $model->primaryKey;
+
             return $params;
         }
 
@@ -398,6 +407,6 @@ class Edit extends Form
      */
     protected function getCacheKey(): string
     {
-        return $this->getUniqueId() . '-' . $this->getModel()->primaryKey;
+        return $this->getUniqueId() . '-' . $this->getModel()->className();
     }
 }

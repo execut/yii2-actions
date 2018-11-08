@@ -41,6 +41,7 @@ class GridView extends \kartik\grid\GridView
 
             return [
                 'class' => 'link-row',
+                'id' => $row->tableName() . '-' . $row->primaryKey,
                 'data-id' => $row->primaryKey,
                 'attributes' => $attributes,
             ];
