@@ -106,27 +106,7 @@ class GridView extends \kartik\grid\GridView
     public function run()
     {
         $this->registerWidget();
-        $this->initToggleData();
-        $this->initExport();
-        if ($this->export !== false && isset($this->exportConfig[self::PDF])) {
-            Config::checkDependency(
-                'mpdf\Pdf',
-                'yii2-mpdf',
-                'for PDF export functionality. To include PDF export, follow the install steps below. If you do not ' .
-                "need PDF export functionality, do not include 'PDF' as a format in the 'export' property. You can " .
-                "otherwise set 'export' to 'false' to disable all export functionality"
-            );
-        }
-        $this->initHeader();
-        $this->initBootstrapStyle();
-        $this->containerOptions['id'] = $this->options['id'] . '-container';
-        Html::addCssClass($this->containerOptions, 'kv-grid-container');
-        $this->registerAssets();
-        $this->renderPanel();
-        $this->beginPjax();
-        $this->initLayout();
         parent::run();
-        $this->endPjax();
     }
 
     /**

@@ -14,6 +14,7 @@ use execut\yii\helpers\Html;
 use yii\base\Model;
 use yii\data\ArrayDataProvider;
 use yii\db\ActiveRecord;
+use yii\log\Logger;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -60,6 +61,7 @@ class GridView extends \execut\actions\action\adapter\Form
     }
 
     protected function _run() {
+        \yii::beginProfile('Run action', 'execut.yii2-actions');
         /**
          * @var ActiveRecord $filter
          */
@@ -140,6 +142,8 @@ class GridView extends \execut\actions\action\adapter\Form
                 'dataProvider' => $dataProvider,
             ];
         }
+
+        \yii::endProfile('Run action', 'execut.yii2-actions');
 
         return $response;
     }

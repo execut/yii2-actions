@@ -19,7 +19,11 @@ abstract class ViewRenderer extends Component
     public $adapter = null;
     public $view = null;
     public function run() {
-        return $this->_run();
+        \yii::beginProfile('Render action', 'execut.yii2-actions');
+        $result = $this->_run();
+        \yii::endProfile('Render action', 'execut.yii2-actions');
+
+        return $result;
     }
     
     abstract protected function _run();
