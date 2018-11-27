@@ -289,7 +289,7 @@ class Edit extends Form
             $model = $this->getModel();
             $params = $params . (strpos($params, '?') === false ? '?' : '&') . 'redirect=1';
 
-            $params = Url::to($params) . '#' . $model->tableName() . '-' . $model->primaryKey;
+            $params = Url::to($params) . '#' . $model->formName() . '-' . $model->primaryKey;
 
             return $params;
         }
