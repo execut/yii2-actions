@@ -31,7 +31,7 @@ class DetailView extends \kartik\detail\DetailView
     public $backUrl = null;
     public $alertBlockAddon = null;
 
-    const BUTTON_CANCEL = '<input type="submit" name="cancel" value="Отмена" class="btn btn-default" title="Отменить">';
+    const BUTTON_CANCEL = '<input type="submit" name="cancel" value="Отмена" class="btn btn-default" title="Отменить" onclick="$(this).parents(\'form\').data(\'yiiActiveForm\').validated = true">';
     const BUTTON_APPLY = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Сохранить изменения">';
     const BUTTON_CHECK = '<input type="submit" name="check" value="Проверить" class="btn btn-info" href="" title="Проверить">';
     const BUTTON_SAVE = '<input type="submit" name="save" value="Отправить" class="btn btn-primary" href="" title="Сохранить и вернуться">';

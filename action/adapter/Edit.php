@@ -34,6 +34,7 @@ class Edit extends Form
     public $session = null;
 
     const EVENT_AFTER_FIND = 'afterFind';
+    const EVENT_BEFORE_SAVE = 'beforeSave';
     protected function _run() {
         $request = \yii::$app->request;
         $actionParams = $this->actionParams;
@@ -66,16 +67,18 @@ class Edit extends Form
         }
 
         $isNewRecord = $model->isNewRecord;
-        $result = parent::loadAndValidateForm();
-        if (is_array($result)) {
-            $response = $this->getResponse([
-                'content' => $result
-            ]);
-            if ($this->actionParams->isAjax && !$this->actionParams->isPjax) {
-                $response->format = \yii\web\Response::FORMAT_JSON;
-            }
+        if (!$this->isCanceled()) {
+            $result = parent::loadAndValidateForm();
+            if (is_array($result)) {
+                $response = $this->getResponse([
+                    'content' => $result
+                ]);
+                if ($this->actionParams->isAjax && !$this->actionParams->isPjax) {
+                    $response->format = \yii\web\Response::FORMAT_JSON;
+                }
 
-            return $response;
+                return $response;
+            }
         }
 
         if ($this->isCanceled()) {
@@ -87,6 +90,7 @@ class Edit extends Form
                 ];
             }
         } else if ($result === true && $this->isSave() && $this->isSubmitted()) {
+            $this->trigger(self::EVENT_BEFORE_SAVE);
             $model->save();
             $this->trigger('afterSave');
             if ($isNewRecord) {
