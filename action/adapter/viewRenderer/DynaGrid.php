@@ -191,7 +191,6 @@ class DynaGrid extends Widget
     }
 
     protected function getUrlAttributes() {
-
         if ($this->urlAttributes === null) {
             $filterAttributes = $this->filter->attributes;
             foreach ($this->filter->getRelatedRecords() as $relation => $records) {
@@ -224,6 +223,10 @@ class DynaGrid extends Widget
                     continue;
                 }
                 if (!empty($value)) {
+                    if (is_array($value) && $this->filter->hasAttribute($attribute)) {
+                        $value = current($value);
+                   }
+
                     $result[$formName][$attribute] = $value;
                 }
             }
