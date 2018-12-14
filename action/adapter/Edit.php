@@ -412,6 +412,6 @@ class Edit extends Form
      */
     protected function getCacheKey(): string
     {
-        return $this->getUniqueId() . '-' . $this->modelClass;
+        return $this->getUniqueId() . '-' . $this->modelClass . '-' . \yii::$app->session->id;
     }
 }
