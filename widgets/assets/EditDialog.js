@@ -1,3 +1,4 @@
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 (function () {
     $.widget("execut.EditDialog", {
         formEl: null,
