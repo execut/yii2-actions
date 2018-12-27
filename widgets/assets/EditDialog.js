@@ -79,7 +79,7 @@
             var t = this,
                 el = t.element;
             for (var key in attributes) {
-                $('#' + t.options.inputsPrefix + '-' + key).val(null).val(attributes[key]).trigger('change.select2');
+                $('#' + t.options.inputsPrefix + '-' + key).val(null).val(attributes[key]).trigger('change.select2').change();
             }
 
             var realAction = t._sourceAction;

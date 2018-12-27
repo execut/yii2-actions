@@ -39,10 +39,15 @@ class GridView extends \kartik\grid\GridView
                 $attributes = [];
             }
 
+            $rowPrimaryKey = $row->primaryKey;
+            if (is_array($rowPrimaryKey)) {
+                $rowPrimaryKey = implode('-', $rowPrimaryKey);
+            }
+
             return [
                 'class' => 'link-row',
-                'id' => $row->formName() . '-' . $row->primaryKey,
-                'data-id' => $row->primaryKey,
+                'id' => $row->formName() . '-' . $rowPrimaryKey,
+                'data-id' => $rowPrimaryKey,
                 'attributes' => $attributes,
             ];
         };
