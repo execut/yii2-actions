@@ -13,6 +13,11 @@
         _initEvents: function () {
             var t = this;
             t.formEl.on('beforeValidate', function (e, xhr, options) {
+                t.formEl.on('ajaxComplete', function () {
+                    t.formEl.unbind('ajaxComplete');
+                    t.element.loadingOverlay('remove');
+                });
+
                 t.element.loadingOverlay({
                     loadingText: 'Загрузка..'
                 });
