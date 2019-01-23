@@ -29,20 +29,21 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {};
             t.addButton = $('#' + t.element.attr('id') + '-add-button');
         },
         _initEvents: function () {
-            var t = this;
-            t.formEl.on('ajaxComplete', function (e, resp) {
-                if (typeof resp !== 'undefined' && typeof resp.responseJSON.message !== 'undefined') {
-                    t.message = resp.responseJSON.message;
-                    t.alertEl.show().find('span').html(t.message);
-                    setTimeout(function () {
-                        t.alertEl.hide(1000);
-                    }, 1000);
-                    t.modalEl.modal('hide');
-                    if (typeof t.options.gridId !== 'undefined') {
-                        $.pjax.reload('#' + t.options.gridId);
+            var t = this,
+                onAjaxComplete = function (e, resp) {
+                    if (typeof resp !== 'undefined' && typeof resp.responseJSON.message !== 'undefined') {
+                        t.message = resp.responseJSON.message;
+                        t.alertEl.show().find('span').html(t.message);
+                        setTimeout(function () {
+                            t.alertEl.hide(1000);
+                        }, 1000);
+                        t.modalEl.modal('hide');
+                        if (typeof t.options.gridId !== 'undefined') {
+                            $.pjax.reload('#' + t.options.gridId);
+                        }
                     }
-                }
-            });
+                };
+            t.formEl.on('ajaxComplete', onAjaxComplete);
 
             t.addButton.click(function () {
                 t.open();
