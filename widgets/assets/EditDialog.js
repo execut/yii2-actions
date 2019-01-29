@@ -21,6 +21,15 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {};
             t.formEl = t.element.find('form');
             t.alertEl = $('#' + t.options.alertId).hide();
             t.modalEl = t.element.find('div').first();
+
+            var defaultAttributes = {};
+            t.formEl.find(':input').each(function (key, el) {
+                el = $(el);
+                if (el.attr('id')) {
+                    defaultAttributes[el.attr('id').replace(t.options.inputsPrefix + '-', '')] = el.val();
+                }
+            });
+            t._defaultAttributes = defaultAttributes;
             t._sourceAction = t.formEl.attr('action');
             if (typeof t.options.editButtons !== 'undefined') {
                 t.editButtons = $(t.options.editButtons);
@@ -46,6 +55,8 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {};
             t.formEl.on('ajaxComplete', onAjaxComplete);
 
             t.addButton.click(function () {
+                t.values(t._defaultAttributes);
+
                 t.open();
                 return false;
             });
@@ -77,6 +88,8 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {};
                 });
             }
         },
+        setDefaultValues: function () {
+        },
         values: function (attributes) {
             var t = this,
                 el = t.element;
@@ -95,10 +108,14 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {};
                 realAction += 'id=' + attributes.id;
             }
 
-            t.formEl.attr('action', realAction)
-                .data('yiiActiveForm').settings.validationUrl = realAction;
+            t._setAction(realAction);
 
             return t;
+        },
+        _setAction: function (realAction) {
+            var t = this;
+            t.formEl.attr('action', realAction)
+                .data('yiiActiveForm').settings.validationUrl = realAction;
         },
         close: function () {
             var t = this,
