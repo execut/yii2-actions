@@ -58,7 +58,7 @@
             var t = this,
                 targetEl = $(e.target);
             if (!(targetEl.parents('a,button,input').length || targetEl.is('a,button,input'))) {
-                var id = trEl.attr('data-id'),
+                var dataId = trEl.attr('data-id'),
                     url = t.options.updateUrl,
                     delimiter = null;
                 if (url.search('\\?') !== -1) {
@@ -67,7 +67,7 @@
                     delimiter = '?';
                 }
 
-                return url + delimiter + 'id=' + id;
+                return url + delimiter + dataId;
             }
         },
         _initEvents: function () {

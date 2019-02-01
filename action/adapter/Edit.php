@@ -46,11 +46,11 @@ class Edit extends Form
             }
         }
 
-        if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
+//        if ($this->actionParams && (!empty($actionParams->get['id']) || !empty($actionParams->post['id']))) {
             $mode = $this->mode;
-        } else {
-            $mode = 'edit';
-        }
+//        } else {
+//            $mode = 'edit';
+//        }
 
         if (!empty($this->getData()['view'])) {
             $mode = 'view';
@@ -293,7 +293,8 @@ class Edit extends Form
             $model = $this->getModel();
             $params = $params . (strpos($params, '?') === false ? '?' : '&') . 'redirect=1';
 
-            $params = Url::to($params) . '#' . $model->formName() . '-' . $model->primaryKey;
+            $hash = $this->getUrlHashFromModel($model);
+            $params = Url::to($params) . '#' . $hash;
 
             return $params;
         }
@@ -334,8 +335,16 @@ class Edit extends Form
         $model = $this->model;
         $params = [
             $this->actionParams->uniqueId,
-            'id' => $model->primaryKey,
         ];
+
+        $pk = $model->primaryKey;
+        if (is_array($pk)) {
+            if (!$model->isNewRecord) {
+                $params = array_merge($params, $pk);
+            }
+        } else {
+            $params['id'] = $pk;
+        }
 
         foreach ($this->additionalAttributes as $attribute) {
             $params[$attribute] = $model->$attribute;
@@ -413,5 +422,20 @@ class Edit extends Form
     protected function getCacheKey(): string
     {
         return $this->getUniqueId() . '-' . $this->modelClass . '-' . \yii::$app->session->id;
+    }
+
+    /**
+     * @param $model
+     * @return string
+     */
+    protected function getUrlHashFromModel($model): string
+    {
+        $primaryKey = $model->primaryKey;
+        if (is_array($primaryKey)) {
+            $primaryKey = implode('-', $primaryKey);
+        }
+
+        $hash = $model->formName() . '-' . $primaryKey;
+        return $hash;
     }
 }

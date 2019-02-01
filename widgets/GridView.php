@@ -41,13 +41,19 @@ class GridView extends \kartik\grid\GridView
 
             $rowPrimaryKey = $row->primaryKey;
             if (is_array($rowPrimaryKey)) {
-                $rowPrimaryKey = implode('-', $rowPrimaryKey);
+                $dataId = $rowPrimaryKey;
+                $rowPrimaryKeyString = implode('-', $rowPrimaryKey);
+            } else {
+                $dataId = [
+                    'id' => $rowPrimaryKey,
+                ];
+                $rowPrimaryKeyString = $rowPrimaryKey;
             }
 
             return [
                 'class' => 'link-row',
-                'id' => $row->formName() . '-' . $rowPrimaryKey,
-                'data-id' => $rowPrimaryKey,
+                'id' => $row->formName() . '-' . $rowPrimaryKeyString,
+                'data-id' => http_build_query($dataId),
                 'attributes' => $attributes,
             ];
         };
