@@ -29,6 +29,7 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {};
                     defaultAttributes[el.attr('id').replace(t.options.inputsPrefix + '-', '')] = el.val();
                 }
             });
+
             t._defaultAttributes = defaultAttributes;
             t._sourceAction = t.formEl.attr('action');
             if (typeof t.options.editButtons !== 'undefined') {
