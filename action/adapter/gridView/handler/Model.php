@@ -38,7 +38,14 @@ class Model extends Handler
             $ids = $q;
         }
         $arguments[] = ['id' => $ids];
-        $count = $class::$method(...$arguments);
+        if (is_array($method)) {
+            $class = $method[0];
+            $count = $class::$method(...$arguments);
+        } else if (is_callable($method)) {
+            $count = $method(...$arguments);
+        } else {
+            $count = $class::$method(...$arguments);
+        }
 
         $response = new \execut\actions\action\Response();
         $flashes = [

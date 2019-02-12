@@ -122,7 +122,9 @@ JS
             $this->initWidget();
         }
 
-        $this->gridOptions['options']['id'] = $this->id;
+        if (empty($this->gridOptions['options']['id'])) {
+            $this->gridOptions['options']['id'] = $this->id;
+        }
 
         Html::addCssClass($this->options, $this->getDefaultCssClass());
         $this->_registerBundle();

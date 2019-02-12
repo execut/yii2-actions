@@ -8,6 +8,8 @@
 namespace execut\actions\action\adapter\viewRenderer;
 
 
+use execut\actions\widgets\HandlersButton;
+use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -66,6 +68,7 @@ class DynaGrid extends Widget
             'filter' => $this->filter,
             'dataProvider' => $this->dataProvider,
             'gridOptions' => [
+                'id' => $this->getGridId(),
                 'updateUrl' => $this->getUpdateUrlParams(),
                 'addButtonUrl' => $this->getAddUrlParams(),
                 'layout' => '{alertBlock}<div class="dyna-grid-footer">{summary}{pager}<div class="dyna-grid-toolbar">{toolbar}</div></div>{items}',
@@ -310,17 +313,32 @@ class DynaGrid extends Widget
             }
 
             $icon = $buttonOptions['icon'];
-            $confirmMessage = strtr($buttonOptions['confirmMessage'], ['#' => (string) $this->dataProvider->getTotalCount()]);
-            $buttons .= Html::a('<i class="glyphicon glyphicon-' . $icon . '"></i>', Url::to($urlParams), [
-                'type' => 'button',
-                'onclick' => new JsExpression(<<<JS
-return confirm('$confirmMessage');
-JS
-),
-                'data-pjax' => 0,
-                'title' => $buttonOptions['label'],
-                'class' => 'btn btn-' . $buttonClass
+            $idAttribute = null;
+            /**
+             * @var Model $model
+             */
+            $model = new $this->modelClass;
+            $idAttribute = $model->formName() . '[id]';
+//            $confirmMessage = strtr($buttonOptions['confirmMessage'], ['#' => (string) $this->dataProvider->getTotalCount()]);
+            $buttons .= HandlersButton::widget([
+                'gridId' => $this->getGridId(),
+                'confirmMessage' => $buttonOptions['confirmMessage'],
+                'icon' => $icon,
+                'idAttribute' => $idAttribute,
+                'url' => $urlParams,
+                'type' => $buttonClass,
+                'totalCount' => $this->dataProvider->getTotalCount(),
             ]);
+//            $buttons .= Html::a('<i class="glyphicon glyphicon-' . $icon . '"></i>', Url::to($urlParams), [
+//                'type' => 'button',
+//                'onclick' => new JsExpression(<<<JS
+//return confirm('$confirmMessage');
+//JS
+//),
+//                'data-pjax' => 0,
+//                'title' => $buttonOptions['label'],
+//                'class' => 'btn btn-' . $buttonClass
+//            ]);
 
         }
 
