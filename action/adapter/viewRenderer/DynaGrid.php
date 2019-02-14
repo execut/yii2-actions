@@ -325,6 +325,7 @@ class DynaGrid extends Widget
                 'confirmMessage' => $buttonOptions['confirmMessage'],
                 'icon' => $icon,
                 'idAttribute' => $idAttribute,
+                'label' => $buttonOptions['label'],
                 'url' => $urlParams,
                 'type' => $buttonClass,
                 'totalCount' => $this->dataProvider->getTotalCount(),
