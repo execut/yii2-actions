@@ -9,6 +9,7 @@
 namespace execut\actions\widgets;
 
 use execut\yii\jui\Widget;
+use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -33,6 +34,11 @@ class HandlersButton extends Widget
             'idAttribute' => $this->idAttribute,
         ];
         $this->registerWidget();
+        Modal::begin([
+            'header' => '<h3 class="modal-title"><i class="glyphicon glyphicon-trash"></i> Исправьте ошибки</h3>',
+            'id' => $this->id . '-modal',
+        ]);
+        Modal::end();
         return Html::tag('i', '', [
             'id' => $this->id,
             'class' => 'btn btn-' . $this->type . ' glyphicon glyphicon-' . $this->icon,

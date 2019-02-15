@@ -10,6 +10,7 @@
             var t = this,
                 el = t.element;
             t._gridEl = $(t.options.gridSelector);
+            t._modalEl = $('#' + el.attr('id') + '-modal');
         },
         _initEvents: function () {
             var t = this,
@@ -28,7 +29,20 @@
                         url += '&' + t.options.idAttribute + '[]=' + selectedIds[key];
                     }
 
-                    $.get(url);
+                    $.get(url, function (r) {
+                        var resultError = [];
+                        for (var modelName in r) {
+                            for (var attribute in r[modelName]) {
+                                for (var errorKey in r[modelName][attribute]) {
+                                    var error = r[modelName][attribute][errorKey];
+                                    resultError[resultError.length] = modelName + ': ' + error;
+                                }
+                            }
+                        }
+
+                        t._modalEl.find('.modal-body').html(resultError.join('<br>'));
+                        t._modalEl.modal('show');
+                    });
                 }
             });
         },

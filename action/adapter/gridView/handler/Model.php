@@ -40,19 +40,25 @@ class Model extends Handler
         $arguments[] = ['id' => $ids];
         if (is_array($method)) {
             $class = $method[0];
-            $count = $class::$method(...$arguments);
+            $result = $class::$method(...$arguments);
         } else if (is_callable($method)) {
-            $count = $method(...$arguments);
+            $result = $method(...$arguments);
         } else {
-            $count = $class::$method(...$arguments);
+            $result = $class::$method(...$arguments);
         }
 
         $response = new \execut\actions\action\Response();
-        $flashes = [
-            'kv-detail-success' => strtr($this->successMessage, ['#' => $count]),
-        ];
-        $response->content = \yii::$app->response->redirect($this->getReferer());
-        $response->flashes = $flashes;
+        if (is_array($result)) {
+            $response->format = 'json';
+            $response->content = $result;
+        } else {
+            $count = $result;
+            $flashes = [
+                'kv-detail-success' => strtr($this->successMessage, ['#' => $count]),
+            ];
+            $response->content = \yii::$app->response->redirect($this->getReferer());
+            $response->flashes = $flashes;
+        }
 
         return $response;
     }
