@@ -16,6 +16,10 @@
             var t = this,
                 el = t.element;
             el.click(function () {
+                if (el.attr('disabled')) {
+                    return false;
+                }
+
                 var selectedIds = t._gridEl.yiiGridView('getSelectedRows'),
                     message = t._getMessage(selectedIds.length || t.options.totalCount);
                 el.attr('disabled', true);
