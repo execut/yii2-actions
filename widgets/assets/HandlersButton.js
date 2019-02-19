@@ -18,7 +18,7 @@
             el.click(function () {
                 var selectedIds = t._gridEl.yiiGridView('getSelectedRows'),
                     message = t._getMessage(selectedIds.length || t.options.totalCount);
-
+                el.attr('disabled', true);
                 if (confirm(message)) {
                     var url = t.options.url;
                     if (url.search('\\?') == -1) {
@@ -42,7 +42,10 @@
 
                         t._modalEl.find('.modal-body').html(resultError.join('<br>'));
                         t._modalEl.modal('show');
+                        el.attr('disabled', false);
                     });
+                } else {
+                    el.attr('disabled', false);
                 }
             });
         },
