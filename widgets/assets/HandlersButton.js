@@ -34,19 +34,30 @@
                     }
 
                     $.get(url, function (r) {
-                        var resultError = [];
-                        for (var modelName in r) {
-                            for (var attribute in r[modelName]) {
-                                for (var errorKey in r[modelName][attribute]) {
-                                    var error = r[modelName][attribute][errorKey];
-                                    resultError[resultError.length] = modelName + ': ' + error;
+                        var content = '';
+                        if (typeof r === 'string') {
+                            content = r;
+                        } else {
+                            var resultError = [];
+                            for (var modelName in r) {
+                                for (var attribute in r[modelName]) {
+                                    for (var errorKey in r[modelName][attribute]) {
+                                        var error = r[modelName][attribute][errorKey];
+                                        resultError[resultError.length] = modelName + ': ' + error;
+                                    }
                                 }
                             }
+
+                            content = resultError.join('<br>');
                         }
 
-                        t._modalEl.find('.modal-body').html(resultError.join('<br>'));
-                        t._modalEl.modal('show');
-                        el.attr('disabled', false);
+                        t._setModalContent(content)
+                    }).fail(function (r) {
+                        if (r.status == 302 || r.status == 301) {
+                            return;
+                        }
+
+                        t._setModalContent('Произошла ошибка №' + r.status + ': ' + r.responseText);
                     });
                 } else {
                     el.attr('disabled', false);
@@ -58,6 +69,13 @@
                 el = t.element;
 
             return t.options.confirmMessage.replace('#', totalCount);
+        },
+        _setModalContent: function (content) {
+            var t = this,
+                el = t.element;
+            t._modalEl.find('.modal-body').html(content);
+            t._modalEl.modal('show');
+            el.attr('disabled', false);
         }
     })
 })();
