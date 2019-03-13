@@ -29,6 +29,13 @@ class MassHandler extends GridView
         $model = new MassDelete([
             'owner' => $this->model
         ]);
+        if (!$model->getCount()) {
+            $redirect = $this->redirectToMainPage();
+
+            $result->content = $redirect;
+            return $result;
+        }
+
         $loader = new FormLoader();
         $loader->model = $model;
         $loader->data = \yii::$app->request->post();
@@ -37,17 +44,29 @@ class MassHandler extends GridView
             $deletedCount = $model->delete();
             if (empty($model->deleteErrors)) {
                 $result->flashes = [
-                    'Успешно удалено ' . $deletedCount . ' записей',
+                    'kv-detail-success' => 'Успешно удалено ' . $deletedCount . ' записей',
                 ];
-                $urlParams = \yii::$app->request->getQueryParams();
-                $urlParams[0] = $this->getUniqueId();
+                $redirect = $this->redirectToMainPage();
+                $result->content = $redirect;
 
-                $result->content = \yii::$app->controller->redirect($urlParams);
+                return $result;
             }
         }
         $result->content['deletedCount'] = $deletedCount;
         $result->content['model'] = $model;
 
         return $result;
+    }
+
+    /**
+     * @return \yii\web\Response
+     */
+    protected function redirectToMainPage(): \yii\web\Response
+    {
+        $urlParams = \yii::$app->request->getQueryParams();
+        $urlParams[0] = str_replace('/mass-delete', '', $this->getUniqueId());
+
+        $redirect = \yii::$app->controller->redirect($urlParams);
+        return $redirect;
     }
 }

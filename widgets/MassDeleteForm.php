@@ -57,13 +57,6 @@ JS
         ];
         $rows = [
             $buttons,
-            [
-                'attributes' => [
-                    'count' => [
-                        'type' => Form::INPUT_STATIC,
-                    ],
-                ]
-            ],
         ];
 
         if ($this->deletedCount) {
@@ -76,6 +69,14 @@ JS
                 ],
             ];
         }
+
+        $rows[] = [
+            'attributes' => [
+                'count' => [
+                    'type' => Form::INPUT_STATIC,
+                ],
+            ]
+        ];
 
         if (!empty($this->model->deleteRelationsModels)) {
             $rows[] = [
