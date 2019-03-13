@@ -39,6 +39,7 @@ class DynaGrid extends Widget
     public $refreshAttributes = [];
     public $handleButtons = [];
     public $isRenderFlashes = true;
+    public $isRenderMassDelete = false;
     public $urlAttributesExcluded = [];
     public $defaultHandleButtons = [
         'visible' => [
@@ -341,6 +342,15 @@ class DynaGrid extends Widget
 //                'class' => 'btn btn-' . $buttonClass
 //            ]);
 
+        }
+
+        if ($this->isRenderMassDelete) {
+            $urlParams = \yii::$app->request->getQueryParams();
+            $urlParams[0] = $this->getUniqueId() . '/mass-delete';
+
+            $buttons .= Html::a('', $urlParams, [
+                'class' => 'btn btn-danger glyphicon glyphicon-trash'
+            ]);
         }
 
         return $buttons;

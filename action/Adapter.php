@@ -26,6 +26,8 @@ abstract class Adapter extends Component
      */
     protected $response = null;
 
+    public $modelClass = null;
+
     /**
      * @var ViewRenderer $view
      */
