@@ -9,6 +9,7 @@ namespace execut\actions\action\adapter\viewRenderer;
 
 
 use execut\actions\widgets\HandlersButton;
+use execut\actions\widgets\MassHandlerButton;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -348,8 +349,10 @@ class DynaGrid extends Widget
             $urlParams = \yii::$app->request->getQueryParams();
             $urlParams[0] = $this->getUniqueId() . '/mass-delete';
 
-            $buttons .= Html::a('', $urlParams, [
-                'class' => 'btn btn-danger glyphicon glyphicon-trash'
+            $buttons .= MassHandlerButton::widget([
+                'url' => $urlParams,
+                'gridId' => $this->getGridId(),
+                'model' => $this->filter,
             ]);
         }
 

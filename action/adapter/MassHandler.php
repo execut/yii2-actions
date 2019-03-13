@@ -65,6 +65,10 @@ class MassHandler extends GridView
     {
         $urlParams = \yii::$app->request->getQueryParams();
         $urlParams[0] = str_replace('/mass-delete', '', $this->getUniqueId());
+        $model = $this->getModel();
+        if (!empty($urlParams[$model->formName()])) {
+            unset($urlParams[$model->formName()][current($model->primaryKey())]);
+        }
 
         $redirect = \yii::$app->controller->redirect($urlParams);
         return $redirect;
