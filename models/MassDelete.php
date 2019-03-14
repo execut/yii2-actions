@@ -225,7 +225,12 @@ class MassDelete extends Model
             return 100;
         }
 
-        return round($this->getDeletedCurrentCount() / $this->getDeletedTotalCount() * 100, 2);
+        $deletedTotalCount = $this->getDeletedTotalCount();
+        if ($deletedTotalCount == 0) {
+            return 0;
+        }
+
+        return round($this->getDeletedCurrentCount() / $deletedTotalCount * 100, 2);
     }
 
     /**

@@ -75,18 +75,17 @@ class MassHandler extends Form
         }
 
         if (!$model->isDeletingInProgress()) {
-            if (!$model->getCount()) {
-                $redirect = $this->redirectToMainPage();
+            if ($model->getCount()) {
+//                $redirect = $this->redirectToMainPage();
+//
+//                $result->content = $redirect;
+//                return $result;
 
-                $result->content = $redirect;
-                return $result;
-            }
-
-            $loader = new FormLoader();
-            $loader->model = $model;
-            $loader->data = \yii::$app->request->post();
-            if ($loader->run()) {
-                $model->delete();
+                $loader = new FormLoader();
+                $loader->model = $model;
+                $loader->data = \yii::$app->request->post();
+                if ($loader->run()) {
+                    $model->delete();
 //                if (empty($model->deleteErrors)) {
 //                    $result->flashes = [
 //                        'kv-detail-success' => 'Успешно удалено ' . $deletedCount . ' записей',
@@ -96,6 +95,7 @@ class MassHandler extends Form
 //
 //                    return $result;
 //                }
+                }
             }
         }
 
