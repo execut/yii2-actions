@@ -11,9 +11,11 @@ namespace execut\actions\action\adapter;
 
 use execut\actions\action\adapter\helper\FormLoader;
 use execut\actions\models\MassDelete;
+use execut\actions\widgets\MassDeleteForm;
 use execut\crudFields\fields\Field;
+use yii\db\ActiveRecord;
 
-class MassHandler extends GridView
+class MassHandler extends Form
 {
     public $scenario = Field::SCENARIO_GRID;
     public function getDefaultViewRendererConfig()
@@ -25,34 +27,78 @@ class MassHandler extends GridView
     }
 
     protected function _run() {
-        $result = parent::_run();
-        $model = new MassDelete([
-            'owner' => $this->model
+        \yii::beginProfile('Run action', 'execut.yii2-actions');
+        /**
+         * @var ActiveRecord $filter
+         */
+        $filter = $this->model;
+        \yii::$app->navigation->addPage([
+            'name' => 'Массовое удаление',
         ]);
-        if (!$model->getCount()) {
-            $redirect = $this->redirectToMainPage();
+//        if ($filter->getBehavior('relationsSaver')) {
+//            $filter->detachBehavior('relationsSaver');
+//        }
 
-            $result->content = $redirect;
-            return $result;
+        if ($this->scenario !== ActiveRecord::SCENARIO_DEFAULT) {
+            $filter->scenario = $this->scenario;
         }
 
-        $loader = new FormLoader();
-        $loader->model = $model;
-        $loader->data = \yii::$app->request->post();
-        $deletedCount = null;
-        if ($loader->run()) {
-            $deletedCount = $model->delete();
-            if (empty($model->deleteErrors)) {
-                $result->flashes = [
-                    'kv-detail-success' => 'Успешно удалено ' . $deletedCount . ' записей',
-                ];
-                $redirect = $this->redirectToMainPage();
-                $result->content = $redirect;
+        $model = new MassDelete([
+            'owner' => $filter
+        ]);
 
+        $data = $this->getData();
+
+        if (\yii::$app->request->post('stop')) {
+            $model->stop();
+        }
+
+        if (!empty($data['getProgress']) && \yii::$app->request->isAjax) {
+            return $this->getResponse([
+                'content' => [
+                    'progress' => $model->getDeletedProgress(),
+                    'errors' => MassDeleteForm::renderErrors($model->getDeleteErrors()),
+                ],
+                'format' => \yii\web\Response::FORMAT_JSON
+            ]);
+        }
+
+        $result = parent::_run();
+
+        $isValid = $filter->validate();
+        /**
+         * @var ArrayDataProvider $dataProvider
+         */
+        $dataProvider = $filter->search();
+        if (!$isValid) {
+            $dataProvider->query->where = 'false';
+        }
+
+        if (!$model->isDeletingInProgress()) {
+            if (!$model->getCount()) {
+                $redirect = $this->redirectToMainPage();
+
+                $result->content = $redirect;
                 return $result;
             }
+
+            $loader = new FormLoader();
+            $loader->model = $model;
+            $loader->data = \yii::$app->request->post();
+            if ($loader->run()) {
+                $model->delete();
+//                if (empty($model->deleteErrors)) {
+//                    $result->flashes = [
+//                        'kv-detail-success' => 'Успешно удалено ' . $deletedCount . ' записей',
+//                    ];
+//                    $redirect = $this->redirectToMainPage();
+//                    $result->content = $redirect;
+//
+//                    return $result;
+//                }
+            }
         }
-        $result->content['deletedCount'] = $deletedCount;
+
         $result->content['model'] = $model;
 
         return $result;

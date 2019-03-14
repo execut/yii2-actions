@@ -13,12 +13,14 @@ use detalika\goods\models\MergeRelation;
 use detalika\goods\models\MergeRelations;
 use execut\crudFields\fields\Field;
 use yii\base\Model;
+use yii\mutex\Mutex;
 
 class MassDelete extends Model
 {
     public $owner = null;
     protected $_deleteRelationsModels = null;
     public $deleteErrors = [];
+    public $isEmulation = false;
 
     public function load($data, $formName = null)
     {
@@ -76,20 +78,68 @@ class MassDelete extends Model
         return [
             'deleteRelationsModels' => 'Удалить связанные записи:',
             'count' => 'Количество удаляемых записей',
+            'isEmulation' => 'Эмуляция удаления',
         ];
     }
 
     public function rules()
     {
         return [
-            ['deleteRelationsModels', 'safe'],
+            [['deleteRelationsModels', 'isEmulation'], 'safe'],
         ];
     }
 
+    public function isDeletingInProgress() {
+        /**
+         * @var Mutex $mutex
+         */
+        $mutex = \yii::$app->mutex;
+        $mutexKey = $this->getMutexKey();
+        if (!$mutex->acquire($mutexKey)) {
+            return true;
+        }
+
+        $mutex->release($mutexKey);
+
+        return false;
+    }
+
+    public function getDeletedTotalCount() {
+        return \yii::$app->cache->get($this->getDeletedTotalCountKey());
+    }
+
+    public function getDeletedCurrentCount() {
+        return \yii::$app->cache->get($this->getDeletedCurrentCountKey());
+    }
+
     public function delete() {
+        \yii::$app->db->close();
+        $pid = pcntl_fork();
+        if ($pid == -1) {
+            return false;
+        } else if ($pid) {
+            return true;
+        }
+
+        ini_set('max_execution_time', 0);
+        /**
+         * @var Mutex $mutex
+         */
+        $mutex = \yii::$app->mutex;
+        $mutexKey = $this->getMutexKey();
+        if (!$mutex->acquire($mutexKey)) {
+            return false;
+        }
+
         $result = 0;
-        foreach ($this->getQuery()->batch(10000) as $models) {
+        $query = $this->getQuery();
+        \yii::$app->cache->set($this->getDeletedTotalCountKey(), $query->count());
+        \yii::$app->cache->delete($this->getStopKey());
+        $currentCount = 0;
+        $this->clearDeleteErrors();
+        foreach ($query->batch(10000) as $models) {
             foreach ($models as $model) {
+                \yii::$app->cache->set($this->getDeletedCurrentCountKey(), $currentCount++);
                 $mergeRelation = new MergeRelations();
                 $mergeRelation->article = $model;
                 $relations = [];
@@ -104,22 +154,94 @@ class MassDelete extends Model
                 if (!$mergeRelation->validate()) {
                     foreach ($mergeRelation->errors as $errors) {
                         foreach ($errors as $error) {
-                            $this->deleteErrors[] = [
-                                'model' => $model,
+                            $this->addDeleteError([
+                                'model' => (string) $model,
                                 'error' => $error
-                            ];
-//                            $this->addError('deleteErrors', $error);
+                            ]);
                         }
                     }
                 } else {
-                    if ($mergeRelation->delete()) {
+                    if ($this->isEmulation || $mergeRelation->delete()) {
                         $result++;
                     }
                 }
+
+                if ($this->isStop()) {
+                    break 2;
+                }
             }
-//            $mergeRelation->delete();
         }
 
+        \yii::$app->cache->set($this->getDeletedCurrentCountKey(), 0);
+        $mutex->release($mutexKey);
+
         return $result;
+    }
+
+    public function addDeleteError($error) {
+        \yii::$app->cache->set('delete-errors-' . self::class, array_merge($this->getDeleteErrors(), [$error]));
+    }
+
+    public function clearDeleteErrors() {
+        return \yii::$app->cache->delete('delete-errors-' . self::class);
+    }
+
+    public function getDeleteErrors() {
+        $errors = \yii::$app->cache->get('delete-errors-' . self::class);
+        if (empty($errors)) {
+            return [];
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDeletedTotalCountKey(): string
+    {
+        return 'deleted-total-count-' . $this->owner->className();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDeletedCurrentCountKey(): string
+    {
+        return 'deleted-current-count-' . $this->owner->className();
+    }
+
+    public function isStop() {
+        return \yii::$app->cache->get($this->getStopKey());
+    }
+
+    public function stop() {
+        \yii::$app->cache->set($this->getStopKey(), 1);
+        return $this;
+    }
+
+    public function getDeletedProgress() {
+        if (!$this->isDeletingInProgress()) {
+            return 100;
+        }
+
+        return round($this->getDeletedCurrentCount() / $this->getDeletedTotalCount() * 100, 2);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMutexKey(): string
+    {
+        $mutexKey = 'mass-delete-3-' . $this->owner->className();
+        return $mutexKey;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getStopKey(): string
+    {
+        return 'delete-stop-' . $this->owner->className();
     }
 }
