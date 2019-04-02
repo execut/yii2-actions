@@ -128,6 +128,9 @@ JS
 
         Html::addCssClass($this->options, $this->getDefaultCssClass());
         $this->_registerBundle();
+        if (!empty($this->filter->errors)) {
+            echo Html::errorSummary($this->filter);
+        }
 
         echo Html::tag('div', GridView::widget($this->gridOptions), $this->options);
     }
