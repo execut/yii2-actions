@@ -81,7 +81,7 @@ class GridView extends \execut\actions\action\adapter\Form
          * @var ArrayDataProvider $dataProvider
          */
         $dataProvider = $filter->search();
-        if (!$isValid) {
+        if (!$isValid && $dataProvider) {
             $dataProvider->query->where = 'false';
         }
 
