@@ -4,8 +4,13 @@
 
 namespace execut\actions;
 
+use iutbay\yii2kcfinder\KCFinder;
+use yii\web\Application;
+
 class Bootstrap extends \execut\yii\Bootstrap
 {
+    public $allowedRole = '@';
+    public $kCFinderOptions = [];
     public function getDefaultDepends()
     {
         return [
@@ -35,6 +40,9 @@ class Bootstrap extends \execut\yii\Bootstrap
     public function bootstrap($app)
     {
         parent::bootstrap($app);
+        if ($app instanceof Application) {
+            $this->registerKCFinderSessionSettings($app);
+        }
 
         self::initI18N();
     }
@@ -53,5 +61,34 @@ class Bootstrap extends \execut\yii\Bootstrap
                 ],
             ];
         }
+    }
+
+    protected function registerKCFinderSessionSettings($app) {
+        $kcfOptions = array_merge(KCFinder::$kcfDefaultOptions, [
+            'uploadURL' => '@web/upload',
+            'access' => [
+                'files' => [
+                    'upload' => true,
+                    'delete' => false,
+                    'copy' => false,
+                    'move' => false,
+                    'rename' => false,
+                ],
+                'dirs' => [
+                    'create' => true,
+                    'delete' => false,
+                    'rename' => false,
+                ],
+            ],
+        ], $this->kCFinderOptions);
+        if ($this->allowedRole !== false) {
+            if (!(!$app->user->isGuest && $this->allowedRole === '@') && !$app->user->can($this->allowedRole)) {
+                $kcfOptions['disabled'] = true;
+            }
+        }
+
+        $kcfOptions['uploadURL'] = \yii::getAlias($kcfOptions['uploadURL']);
+        $app = \yii::$app;
+        $app->session->set('KCFINDER', $kcfOptions);
     }
 }

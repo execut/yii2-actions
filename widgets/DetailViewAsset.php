@@ -9,7 +9,7 @@
 namespace execut\actions\widgets;
 
 
-use execut\widgets\LoadingOverlay;
+use execut\loadingOverlay\LoadingOverlayAsset;
 use execut\yii\web\AssetBundle;
 use yii\jui\JuiAsset;
 
@@ -17,5 +17,6 @@ class DetailViewAsset extends AssetBundle
 {
     public $depends = [
         JuiAsset::class,
+        LoadingOverlayAsset::class,
     ];
 }

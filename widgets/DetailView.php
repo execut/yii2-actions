@@ -80,7 +80,6 @@ class DetailView extends \kartik\detail\DetailView
     }
 
     public function run() {
-        echo LoadingOverlay::widget();
         $this->mainTemplate = $this->renderAlertBlock() . ((!empty($this->attributes) && count($this->attributes) > 8) ? '{buttons}' : '') . '{detail}{buttons}';
 
         $this->_registerBundle();
