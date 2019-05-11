@@ -11,17 +11,17 @@
     }
   ],
   "require": {
-    "yiisoft/yii2": "@stable",
-    "execut/yii2-base": "@stable",
-    "kartik-v/yii2-export": "@stable",
-    "kartik-v/yii2-dynagrid": "@stable",
-    "kartik-v/yii2-detail-view": "@stable",
-    "kartik-v/yii2-mpdf": "@stable",
-    "kartik-v/yii2-widget-alert": "@stable",
+    "yiisoft/yii2": "*",
+    "execut/yii2-base": "*",
+    "kartik-v/yii2-export": "*",
+    "kartik-v/yii2-dynagrid": "*",
+    "kartik-v/yii2-detail-view": "*",
+    "kartik-v/yii2-mpdf": "*",
+    "kartik-v/yii2-widget-alert": "*",
     "kartik-v/yii2-date-range": "*",
-    "unclead/yii2-multiple-input": "dev-master",
-    "execut/yii2-loading-overlay": "@stable",
-    "execut/yii2-kcfinder": "@stable"
+    "unclead/yii2-multiple-input": "*",
+    "execut/yii2-loading-overlay": "*",
+    "execut/yii2-kcfinder": "*"
   },
   "require-dev": {
     "codeception/codeception": "@dev"
