@@ -32,6 +32,9 @@ class MassHandler extends Form
          * @var ActiveRecord $filter
          */
         $filter = $this->model;
+        /**
+         * @TODO Delete
+         */
         \yii::$app->navigation->addPage([
             'name' => 'Массовое удаление',
         ]);
