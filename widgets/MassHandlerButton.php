@@ -9,7 +9,7 @@
 namespace execut\actions\widgets;
 
 
-use execut\yii\helpers\Html;
+use yii\helpers\Html;
 use execut\yii\jui\Widget;
 
 class MassHandlerButton extends Widget
