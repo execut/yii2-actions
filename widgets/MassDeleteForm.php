@@ -39,7 +39,7 @@ class MassDeleteForm extends Widget
                 'attributes' => [
                     'cancel' => [
                         'type' => Form::INPUT_RAW,
-                        'value' => '<div style="text-align: right; margin-bottom: 20px">' . \kartik\helpers\Html::submitButton('Удалить', ['class' => 'btn btn-danger']) . '&nbsp;&nbsp;&nbsp;' . \kartik\helpers\Html::a('Отмена', ['#'], ['class' => 'btn btn-default', 'onclick' => 'javascript:history.back();return false',]) . '</div>',
+                        'value' => '<div style="text-align: right; margin-bottom: 20px">' . \yii\helpers\Html::submitButton('Удалить', ['class' => 'btn btn-danger']) . '&nbsp;&nbsp;&nbsp;' . \yii\helpers\Html::a('Отмена', ['#'], ['class' => 'btn btn-default', 'onclick' => 'javascript:history.back();return false',]) . '</div>',
                     ],
                 ]
             ];
@@ -48,7 +48,7 @@ class MassDeleteForm extends Widget
                 'attributes' => [
                     'cancel' => [
                         'type' => Form::INPUT_RAW,
-                        'value' => '<div style="text-align: right; margin-bottom: 20px">' . \kartik\helpers\Html::input('submit', 'stop', 'Стоп', ['class' => 'btn btn-danger']) . '&nbsp;&nbsp;&nbsp;' . \kartik\helpers\Html::a('Назад', ['#'], ['class' => 'btn btn-default', 'onclick' => 'javascript:history.back();return false',]) . '</div>',
+                        'value' => '<div style="text-align: right; margin-bottom: 20px">' . \yii\helpers\Html::input('submit', 'stop', 'Стоп', ['class' => 'btn btn-danger']) . '&nbsp;&nbsp;&nbsp;' . \yii\helpers\Html::a('Назад', ['#'], ['class' => 'btn btn-default', 'onclick' => 'javascript:history.back();return false',]) . '</div>',
                     ],
                 ]
             ];
