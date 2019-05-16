@@ -163,14 +163,14 @@ abstract class Adapter extends Component
             $model = ['class' => $model];
         }
 
-        if (is_array($model)) {
-            $model = \yii::createObject($model);
-        }
-
         $this->_model = $model;
     }
 
     public function getModel() {
+        if (is_array($this->_model)) {
+            $this->_model = \yii::createObject($this->_model);
+        }
+
         if ($this->_model !== null) {
             return $this->_model;
         }
