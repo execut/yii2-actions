@@ -111,6 +111,13 @@ class GridView extends \kartik\grid\GridView
             ]);
             $js = "jQuery('#$id').$name($options);";
             $this->getView()->registerJs($js);
+            /**
+             * @TODO bug fix
+             */
+            if ($this->floatHeader) {
+                $js = "setTimeout(function () {jQuery('#$id .kv-grid-table:nth-child(2)').floatThead('reflow')}, 2000)";
+                $this->getView()->registerJs($js);
+            }
         }
     }
 
