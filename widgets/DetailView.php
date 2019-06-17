@@ -11,6 +11,7 @@ namespace execut\actions\widgets;
 
 use execut\loadingOverlay\LoadingOverlay;
 use execut\yii\jui\WidgetTrait;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -94,12 +95,20 @@ class DetailView extends \kartik\detail\DetailView
     public function init()
     {
         $this->attributes = $this->model->getFormFields();
-        $this->formOptions['action'] = $this->getAction();
+        if (!array_key_exists('action', $this->formOptions)) {
+            $this->formOptions['action'] = $this->getAction();
+        }
+
+        $urlParams = [
+            $this->uniqueId . '/delete',
+        ];
+
+        if ($this->model instanceof ActiveRecord) {
+            $urlParams['id'] = $this->model->primaryKey;
+        }
+
         $this->deleteOptions = [
-            'url' => Url::to([
-                $this->uniqueId . '/delete',
-                'id' => $this->model->primaryKey,
-            ]),
+            'url' => Url::to($urlParams),
             'kvdelete' => true
         ];
         $this->formOptions['validationUrl'] = $this->getAction();
@@ -112,10 +121,15 @@ class DetailView extends \kartik\detail\DetailView
             return $this->action;
         }
 
-        return Url::to([
+        $urlParams = [
             $this->uniqueId . '/update',
-            'id' => $this->model->primaryKey,
-        ]);
+        ];
+
+        if ($this->model instanceof ActiveRecord) {
+            $urlParams['id'] = $this->model->primaryKey;
+        }
+
+        return Url::to($urlParams);
     }
 
     public function runWidget()

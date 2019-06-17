@@ -8,6 +8,7 @@
 namespace execut\actions\action\adapter\viewRenderer;
 
 
+use execut\actions\widgets\FilterForm;
 use execut\actions\widgets\HandlersButton;
 use execut\actions\widgets\MassHandlerButton;
 use yii\base\Model;
@@ -42,6 +43,7 @@ class DynaGrid extends Widget
     public $isRenderFlashes = true;
     public $isRenderMassDelete = false;
     public $urlAttributesExcluded = [];
+    public $filterForm = null;
     public $defaultHandleButtons = [
         'visible' => [
             'icon' => 'eye-open',
@@ -87,6 +89,17 @@ class DynaGrid extends Widget
                 'id' => $this->getDynaGridId(),
             ],
         ];
+    }
+
+    protected function _run() {
+        $result = '';
+        if ($this->filterForm !== null) {
+            $result .= FilterForm::widget([
+                'model' => $this->filterForm,
+            ]);
+        }
+
+        return $result . parent::_run();
     }
 
     public function getWidgetOptions()
@@ -198,26 +211,28 @@ class DynaGrid extends Widget
     protected function getUrlAttributes() {
         if ($this->urlAttributes === null) {
             $filterAttributes = $this->filter->attributes;
-            foreach ($this->filter->getRelatedRecords() as $relation => $records) {
-                if (empty($records)) {
-                    continue;
-                }
-
-                if (!is_array($records)) {
-                    $filterAttributes[$relation] = $records;
-                    continue;
-                }
-
-                $relationAttributes = [];
-                foreach ($records as $key => $record) {
-                    $recordAttributes = array_filter($record->attributes);
-                    if (!empty($recordAttributes)) {
-                        $relationAttributes[$key] = $recordAttributes;
+            if ($this->filter instanceof ActiveRecord) {
+                foreach ($this->filter->getRelatedRecords() as $relation => $records) {
+                    if (empty($records)) {
+                        continue;
                     }
-                }
 
-                if (!empty($relationAttributes)) {
-                    $filterAttributes[$relation] = $relationAttributes;
+                    if (!is_array($records)) {
+                        $filterAttributes[$relation] = $records;
+                        continue;
+                    }
+
+                    $relationAttributes = [];
+                    foreach ($records as $key => $record) {
+                        $recordAttributes = array_filter($record->attributes);
+                        if (!empty($recordAttributes)) {
+                            $relationAttributes[$key] = $recordAttributes;
+                        }
+                    }
+
+                    if (!empty($relationAttributes)) {
+                        $filterAttributes[$relation] = $relationAttributes;
+                    }
                 }
             }
 

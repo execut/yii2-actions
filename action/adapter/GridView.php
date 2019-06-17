@@ -9,6 +9,7 @@ namespace execut\actions\action\adapter;
 
 
 use execut\actions\action\Adapter;
+use execut\actions\action\adapter\helper\FormLoader;
 use execut\actions\action\adapter\viewRenderer\DynaGrid;
 use yii\helpers\Html;
 use yii\base\Model;
@@ -31,7 +32,49 @@ class GridView extends \execut\actions\action\adapter\Form
 
     public $scenario = ActiveRecord::SCENARIO_DEFAULT;
 
+    protected $_filterForm = null;
+
     protected $handlers = [];
+
+    public function setFilterForm($form) {
+        if (is_string($form)) {
+            $form = ['class' => $form];
+        }
+
+        if (is_array($form)) {
+            $form = \yii::createObject($form);
+        }
+
+        $this->_filterForm = $form;
+
+        return $this;
+    }
+
+    public function getFilterForm() {
+        return $this->_filterForm;
+    }
+
+    /**
+     * @return Model
+     */
+    protected function loadAndValidateFilter()
+    {
+        $model = $this->getFilterForm();
+        if ($model === null) {
+            return;
+        }
+
+        $helper = new FormLoader();
+        $helper->data = $this->getData();
+        $helper->model = $model;
+        $helper->filesAttributes = $this->filesAttributes;
+        $result = $helper->run();
+        if ($result === false && $this->actionParams->isAjax && !$this->actionParams->isPjax && !$this->isDisableAjax) {
+            return ActiveForm::validate($model);
+        }
+
+        return $result;
+    }
 
     protected function getAttributes() {
         $attributes = $this->attributes;
@@ -77,10 +120,11 @@ class GridView extends \execut\actions\action\adapter\Form
         parent::_run();
 
         $isValid = $filter->validate();
+        $this->loadAndValidateFilter();
         /**
          * @var ArrayDataProvider $dataProvider
          */
-        $dataProvider = $filter->search();
+        $dataProvider = $filter->search($this->filterForm);
         if (!$isValid && $dataProvider) {
             $dataProvider->query->where = 'false';
         }
@@ -140,6 +184,7 @@ class GridView extends \execut\actions\action\adapter\Form
             $response->content = [
                 'filter' => $filter,
                 'dataProvider' => $dataProvider,
+                'filterForm' => $this->filterForm,
             ];
         }
 

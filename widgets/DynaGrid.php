@@ -25,13 +25,21 @@ class DynaGrid extends KartikDynaGrid
 
     public function init()
     {
-        $columns = array_values($this->filter->getGridColumns());
+        if ($this->filter !== null) {
+            $columns = array_values($this->filter->getGridColumns());
+        } else {
+            $columns = $this->columns;
+        }
 //        foreach ($exportColumns as &$column) {
 //            unset($column['visible']);
 //        }
 
         if (\yii::$app->request->post('exportFull_' . $this->id)) {
             ini_set('max_execution_time', 1200);
+        }
+
+        if (empty($this->options['id'])) {
+            $this->options['id'] = $this->getId();
         }
 
         $fullExportMenu = ExportMenu::widget([
@@ -132,6 +140,12 @@ JS
             echo Html::errorSummary($this->filter);
         }
 
-        echo Html::tag('div', GridView::widget($this->gridOptions), $this->options);
+        if (!empty($this->gridOptions['class'])) {
+            $widgetClass = $this->gridOptions['class'];
+        } else {
+            $widgetClass = GridView::class;
+        }
+
+        echo Html::tag('div', $widgetClass::widget($this->gridOptions), $this->options);
     }
 }

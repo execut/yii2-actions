@@ -26,12 +26,16 @@ class ModelsFinder extends BaseObject
     public function getFindAttributes() {
         if ($this->findAttributes === null) {
             $class = $this->modelClass;
-            $pk = $class::primaryKey();
-            if (!is_array($pk)) {
-                $pk = [$pk];
-            }
+            if (method_exists($class, 'primaryKey')) {
+                $pk = $class::primaryKey();
+                if (!is_array($pk)) {
+                    $pk = [$pk];
+                }
 
-            $this->findAttributes = $pk;
+                $this->findAttributes = $pk;
+            } else {
+                $this->findAttributes = [];
+            }
         }
 
         return $this->findAttributes;

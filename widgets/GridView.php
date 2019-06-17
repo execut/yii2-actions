@@ -11,6 +11,7 @@ namespace execut\actions\widgets;
 
 use execut\yii\jui\WidgetTrait;
 use kartik\alert\Alert;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
@@ -33,6 +34,10 @@ class GridView extends \kartik\grid\GridView
     {
         $this->toolbar = $this->getToolbarConfig();
         $rowOptions = function ($row) {
+            if (!($row instanceof ActiveRecord)) {
+                return [];
+            }
+
             if ($this->isAjaxCrud) {
                 $attributes = Json::encode($row->attributes);
             } else {
