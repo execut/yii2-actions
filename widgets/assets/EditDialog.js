@@ -89,7 +89,11 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {};
                 });
             }
         },
-        setDefaultValues: function () {
+        setDefaultValue: function (key, value) {
+            var t = this,
+                el = t.element;
+            t._defaultAttributes[key] = value;
+            return t;
         },
         values: function (attributes) {
             var t = this,
