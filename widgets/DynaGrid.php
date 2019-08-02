@@ -27,6 +27,9 @@ class DynaGrid extends KartikDynaGrid
     {
         if ($this->filter !== null) {
             $columns = array_values($this->filter->getGridColumns());
+            if ($this->dataProvider === null) {
+                $this->dataProvider = $this->filter->search();
+            }
         } else {
             $columns = $this->columns;
         }
@@ -63,6 +66,10 @@ class DynaGrid extends KartikDynaGrid
         ]);
 
         $this->columns = $columns;
+
+        if ($this->gridOptions === null) {
+            $this->gridOptions = [];
+        }
 
         $this->gridOptions = ArrayHelper::merge([
             'class' => GridView::class,
