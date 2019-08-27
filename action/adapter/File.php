@@ -44,6 +44,10 @@ class File extends Adapter
         }
 
         $extensionAttribute = $this->extensionAttribute;
+        if (!$class::getTableSchema()->getColumn($dataAttribute)) {
+            throw new NotFoundHttpException();
+        }
+
         $selectedAttributes = [
             $this->nameAttribute,
             $dataAttribute,
