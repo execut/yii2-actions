@@ -21,6 +21,7 @@ class MassDelete extends Model
     protected $_deleteRelationsModels = null;
     public $deleteErrors = [];
     public $isEmulation = false;
+    public $batchLimit = 10000;
 
     public function load($data, $formName = null)
     {
@@ -137,7 +138,7 @@ class MassDelete extends Model
         \yii::$app->cache->delete($this->getStopKey());
         $currentCount = 0;
         $this->clearDeleteErrors();
-        foreach ($query->batch(10000) as $models) {
+        foreach ($query->batch($this->batchLimit) as $models) {
             foreach ($models as $model) {
                 \yii::$app->cache->set($this->getDeletedCurrentCountKey(), $currentCount++);
                 $mergeRelation = new MergeRelations();

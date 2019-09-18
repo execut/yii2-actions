@@ -18,6 +18,7 @@ use yii\db\ActiveRecord;
 class MassHandler extends Form
 {
     public $scenario = Field::SCENARIO_GRID;
+    public $batchLimit = 10000;
     public function getDefaultViewRendererConfig()
     {
         return [
@@ -47,6 +48,7 @@ class MassHandler extends Form
         }
 
         $model = new MassDelete([
+            'batchLimit' => $this->batchLimit,
             'owner' => $filter
         ]);
 
