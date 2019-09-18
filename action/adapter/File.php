@@ -25,6 +25,7 @@ class File extends Adapter
     public $dataAttribute = 'data';
     public $nameAttribute = 'name';
     public $mimeTypeAttribute = 'mime_type';
+    public $mimeType = null;
     public $extensionAttribute = 'extension';
     public $extensionIsRequired = true;
     protected function _run() {
@@ -79,11 +80,24 @@ class File extends Adapter
         $this->model = $result;
 
         $response = \Yii::$app->getResponse();
-        if ($this->mimeTypeAttribute) {
-            if (strpos($result->mime_type, 'image/') === 0) {
-                $response->headers->set('Content-Type', $result->mime_type);
+        if ($this->mimeTypeAttribute || $this->mimeType) {
+            if ($this->mimeType) {
+                if (is_callable($this->mimeType)) {
+                    $mimeType = call_user_func_array($this->mimeType, [$result, $dataAttribute]);
+                } else {
+                    $mimeType = $this->mimeType;
+                }
+            }
+
+            if (empty($mimeType) && $this->mimeTypeAttribute) {
+                $mimeTypeAttribute = $this->mimeTypeAttribute;
+                $mimeType = $result->$mimeTypeAttribute;
+            }
+
+            if (strpos($mimeType, 'image/') === 0) {
+                $response->headers->set('Content-Type', $mimeType);
             } else {
-                $response->setDownloadHeaders($result->{$this->nameAttribute}, $result->mime_type);
+                $response->setDownloadHeaders($result->{$this->nameAttribute}, $mimeType);
             }
         } else {
             $response->headers->set('Content-Type', 'image/jpeg');
