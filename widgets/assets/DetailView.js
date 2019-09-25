@@ -11,25 +11,38 @@
         },
         isSaved: false,
         _initEvents: function () {
-            var t = this;
+            var t = this,
+                loadingOverlayIsShowed = false;
             t.formEl.on('beforeValidate', function (e, xhr, options) {
                 var handlerCallback = function () {
                     t.formEl.unbind('ajaxComplete', handlerCallback);
-                    t.element.loadingOverlay('remove');
+                    if (loadingOverlayIsShowed) {
+                        t.element.loadingOverlay('remove');
+                        loadingOverlayIsShowed = false;
+                    }
                 };
                 t.formEl.on('ajaxComplete', handlerCallback);
 
-                t.element.loadingOverlay({
-                    loadingText: 'Загрузка..'
-                });
+                if (!loadingOverlayIsShowed) {
+                    loadingOverlayIsShowed = true;
+                    t.element.loadingOverlay({
+                        loadingText: 'Загрузка..'
+                    });
+                }
             });
             t.formEl.on('submit', function (e, xhr, options) {
-                t.element.loadingOverlay({
-                    loadingText: 'Загрузка..'
-                });
+                if (!loadingOverlayIsShowed) {
+                    loadingOverlayIsShowed = true;
+                    t.element.loadingOverlay({
+                        loadingText: 'Загрузка..'
+                    });
+                }
             });
             t.formEl.on('afterValidate', function (e, xhr, options) {
-                t.element.loadingOverlay('remove');
+                if (loadingOverlayIsShowed) {
+                    t.element.loadingOverlay('remove');
+                    loadingOverlayIsShowed = false;
+                }
             });
         }
     })
