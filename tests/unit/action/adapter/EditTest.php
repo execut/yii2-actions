@@ -17,27 +17,27 @@ use yii\web\UploadedFile;
 class EditTest extends TestCase
 {
     public function testRunWithNewRecord() {
-        $action = $this->getMockBuilder(Edit::className())->setMethods(['getDefaultViewRendererConfig'])->getMock();
+        $action = $this->getMockBuilder(Edit::class)->setMethods(['getDefaultViewRendererConfig'])->getMock();
         $action->method('getDefaultViewRendererConfig')->willReturn([]);
-        $action->modelClass = TestModel::className();
+        $action->modelClass = TestModel::class;
         $response = $action->run();
         $vars = $response->content;
         $this->assertArrayHasKey('model', $vars);
         $this->assertArrayHasKey('mode', $vars);
-        $this->assertInstanceOf(TestModel::className(), $vars['model']);
+        $this->assertInstanceOf(TestModel::class, $vars['model']);
         $this->assertEquals('edit', $vars['mode']);
     }
 
     public function testCreateNewRecord() {
         Bootstrap::initI18N();
-        $action = $this->getMockBuilder(Edit::className())->setMethods(['getDefaultViewRendererConfig'])->getMock();
+        $action = $this->getMockBuilder(Edit::class)->setMethods(['getDefaultViewRendererConfig'])->getMock();
         $session = $this->getMockBuilder(Session::class)->setMethods(['addFlash'])->getMock();
         $session->expects($this->once())->method('addFlash')
             ->with('kv-detail-success', 'Record #1 is successfully updated');
 
         $action->session = $session;
         $action->method('getDefaultViewRendererConfig')->willReturn([]);
-        $action->modelClass = TestModel::className();
+        $action->modelClass = TestModel::class;
         $action->setActionParams([
             'controller' => 'test',
             'post' => [
@@ -45,7 +45,7 @@ class EditTest extends TestCase
             ]
         ]);
         $response = $action->run();
-        $this->assertInstanceOf(Response::className(), $response->content);
+        $this->assertInstanceOf(Response::class, $response->content);
 
         $model = $action->model;
         $this->assertTrue($model->saveIsCalled, 'Check what save is called');
@@ -57,9 +57,9 @@ class EditTest extends TestCase
     }
 
     public function testEdit() {
-        $action = $this->getMockBuilder(Edit::className())->setMethods(['getDefaultViewRendererConfig'])->getMock();
+        $action = $this->getMockBuilder(Edit::class)->setMethods(['getDefaultViewRendererConfig'])->getMock();
         $action->method('getDefaultViewRendererConfig')->willReturn([]);
-        $action->modelClass = TestModel::className();
+        $action->modelClass = TestModel::class;
         $action->setActionParams([
             'get' => [
                 'id' => '1',
@@ -75,9 +75,9 @@ class EditTest extends TestCase
     }
 
     public function testWithAdditionalAttributes() {
-        $action = $this->getMockBuilder(Edit::className())->setMethods(['getDefaultViewRendererConfig'])->getMock();
+        $action = $this->getMockBuilder(Edit::class)->setMethods(['getDefaultViewRendererConfig'])->getMock();
         $action->method('getDefaultViewRendererConfig')->willReturn([]);
-        $action->modelClass = TestModel::className();
+        $action->modelClass = TestModel::class;
         $action->additionalAttributes = [
             'addinalAttribute',
         ];

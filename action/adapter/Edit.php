@@ -231,7 +231,7 @@ class Edit extends Form
 
     public function getDefaultViewRendererConfig() {
         return [
-            'class' => DetailView::className(),
+            'class' => DetailView::class,
             'uniqueId' => $this->uniqueId,
             'heading' => $this->getHeading(),
             'action' => $this->getFormAction(),

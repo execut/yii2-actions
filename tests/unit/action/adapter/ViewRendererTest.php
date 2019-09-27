@@ -14,7 +14,7 @@ use yii\base\View;
 class ViewRendererTest extends TestCase
 {
     public function testRun() {
-        $adapter = $this->getMockForAbstractClass(ViewRenderer::className());
+        $adapter = $this->getMockForAbstractClass(ViewRenderer::class);
         $adapter->expects($this->once())->method('_run')->will($this->returnValue([]));
 
         $adapter->view = new View();

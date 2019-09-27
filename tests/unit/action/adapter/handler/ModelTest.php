@@ -28,7 +28,7 @@ class ModelTest extends TestCase
     }
 
     public function testRun() {
-        $query = $this->getMockBuilder(ActiveRecord::className())->setMethods(['select', 'queryAttribute', 'limit', 'createCommand'])->getMock();
+        $query = $this->getMockBuilder(ActiveRecord::class)->setMethods(['select', 'queryAttribute', 'limit', 'createCommand'])->getMock();
         $query->method('select')->with('{{%test_model}}.id')->willReturn($query);
 
         $command = $this->getMockBuilder(Command::class)->setMethods(['queryColumn'])->getMock();
@@ -41,7 +41,7 @@ class ModelTest extends TestCase
 
         $handler = new Model([
             'attributes' => ['attribute' => 'value'],
-            'modelClass' => TestModel::className(),
+            'modelClass' => TestModel::class,
             'dataProvider' => $dataProvider,
             'successMessage' => '# records succesfull updated',
             'method' => 'updateAll',
@@ -50,9 +50,9 @@ class ModelTest extends TestCase
         $this->assertEquals(['attribute' => 'value'], TestModel::$updatedAttributes);
         $this->assertEquals(['id' => [1,2]], TestModel::$conditions);
 
-        $this->assertInstanceOf(\execut\actions\action\Response::className(), $response);
+        $this->assertInstanceOf(\execut\actions\action\Response::class, $response);
 
-        $this->assertInstanceOf(\yii\base\Response::className(), $response->content);
+        $this->assertInstanceOf(\yii\base\Response::class, $response->content);
         $this->assertEquals('test', $response->content->getHeaders()->get('Location'));
 
         $this->assertEquals([
