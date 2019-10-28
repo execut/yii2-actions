@@ -190,7 +190,7 @@ class GridView extends \kartik\grid\GridView
                 'alertId' => $this->id . '-alert',
                 'clientOptions' => [
                     'inputsPrefix' => str_replace('-', '', Inflector::camel2id($model->formName())),
-                    'editButtons' => 'tr[data-key]',
+                    'editButtons' => 'tr[data-id]',
                     'gridId' => $gridId,
                 ],
                 'toggleButtonOptions' => false,
@@ -243,5 +243,24 @@ class GridView extends \kartik\grid\GridView
             $model = $model();
         }
         return $model;
+    }
+
+    /**
+     * Returns the options for the grid view JS widget.
+     * @return array the options
+     */
+    protected function getClientOptions()
+    {
+        $filterUrl = isset($this->filterUrl) ? $this->filterUrl : \Yii::$app->request->url;
+        $id = $this->filterRowOptions['id'];
+        $filterSelector = "#$id input:enabled, #$id select:enabled";
+        if (!empty($this->filterSelector)) {
+            $filterSelector .= ', ' . $this->filterSelector;
+        }
+
+        return [
+            'filterUrl' => Url::to($filterUrl),
+            'filterSelector' => $filterSelector,
+        ];
     }
 }
