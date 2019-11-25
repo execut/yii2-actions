@@ -9,6 +9,7 @@
 namespace execut\actions\widgets;
 
 
+use execut\actions\HelpModule;
 use execut\yii\jui\WidgetTrait;
 use kartik\alert\Alert;
 use yii\db\ActiveRecord;
@@ -129,7 +130,20 @@ class GridView extends \kartik\grid\GridView
     public function run()
     {
         $this->registerWidget();
+        $this->toolbar['help'] = $this->renderHelp();
+
         parent::run();
+    }
+
+
+    protected function renderHelp() {
+        if (!\yii::$app->controller || !($module = \yii::$app->controller->module) || !($module instanceof HelpModule)) {
+            return;
+        }
+
+        $helpUrl = $module->getHelpUrl();
+
+        return '<a target="_blank" href="' . $helpUrl . '" class="btn btn-info glyphicon glyphicon-question-sign" title="Help"></a>';
     }
 
     /**
