@@ -22,7 +22,7 @@ class MassHandler extends Form
     public function getDefaultViewRendererConfig()
     {
         return [
-            'class' => \execut\actions\action\adapter\viewRenderer\MassHandler::className(),
+            'class' => \execut\actions\action\adapter\viewRenderer\MassHandler::class,
 //            'title' => $this->model->getModelLabelOld(2),
         ];
     }

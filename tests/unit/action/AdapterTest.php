@@ -16,7 +16,7 @@ use yii\web\Response;
 class AdapterTest extends TestCase
 {
     public function testRender() {
-        $adapter = $this->getMockForAbstractClass(Adapter::className());
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
         $response = new \execut\actions\action\Response();
         $adapter->expects($this->once())->method('_run')->will($this->returnValue($response));
 
@@ -25,7 +25,7 @@ class AdapterTest extends TestCase
     }
 
     public function testWithView() {
-        $adapter = $this->getMockForAbstractClass(Adapter::className());
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
         $response = new \execut\actions\action\Response([
             'content' => [
                 'testProperty' => 'testValue',
@@ -36,30 +36,30 @@ class AdapterTest extends TestCase
         $view = new AdapterTestView();
         $adapter->view = $view;
         $result = $adapter->run();
-        $this->assertInstanceOf(\execut\actions\action\Response::className(), $result);
+        $this->assertInstanceOf(\execut\actions\action\Response::class, $result);
         $this->assertEquals('run result', $result->content);
         $this->assertEquals('testValue', $view->testProperty);
     }
 
     public function testSetViewFromConfig() {
-        $adapter = $this->getMockForAbstractClass(Adapter::className());
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
         $adapter->view = [
-            'class' => AdapterTestView::className(),
+            'class' => AdapterTestView::class,
         ];
-        $this->assertInstanceOf(AdapterTestView::className(), $adapter->view);
+        $this->assertInstanceOf(AdapterTestView::class, $adapter->view);
     }
 
     public function testGetDefaultViewConfig() {
-        $adapter = $this->getMockBuilder(Adapter::className())->setMethods(['getDefaultViewRendererConfig', '_run'])->getMock();
+        $adapter = $this->getMockBuilder(Adapter::class)->setMethods(['getDefaultViewRendererConfig', '_run'])->getMock();
         $adapter->method('getDefaultViewRendererConfig')
             ->willReturn([
-                'class' => AdapterTestView::className(),
+                'class' => AdapterTestView::class,
             ]);
-        $this->assertInstanceOf(AdapterTestView::className(), $adapter->view);
+        $this->assertInstanceOf(AdapterTestView::class, $adapter->view);
     }
 
     public function testGetData() {
-        $adapter = $this->getMockForAbstractClass(Adapter::className());
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
         $data = [
             'test' => 'test'
         ];
@@ -74,14 +74,14 @@ class AdapterTest extends TestCase
     }
 
     public function testCreateFromAdapter() {
-        $adapter = $this->getMockForAbstractClass(Adapter::className());
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
         $adapter->setActionParams([]);
         $adapterNew = $adapter->createFromAdapter($adapter);
-        $this->assertInstanceOf(Adapter::className(), $adapterNew);
+        $this->assertInstanceOf(Adapter::class, $adapterNew);
     }
 
     public function testSetActionParams() {
-        $adapter = $this->getMockForAbstractClass(Adapter::className());
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
         $adapter->setActionParams([
             'get' => 'test'
         ]);
@@ -89,27 +89,27 @@ class AdapterTest extends TestCase
     }
 
     public function testGetUniqueId() {
-        $params = $this->getMockBuilder(Params::className())->setMethods(['getUniqueId'])->getMock();
+        $params = $this->getMockBuilder(Params::class)->setMethods(['getUniqueId'])->getMock();
         $params->method('getUniqueId')->willReturn('test');
-        $adapter = $this->getMockForAbstractClass(Adapter::className());
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
         $adapter->actionParams = $params;
         $this->assertEquals('test', $adapter->uniqueId);
     }
 
     public function testRenderWithResponse() {
-        $adapter = $this->getMockForAbstractClass(Adapter::className());
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
         $adapter->method('_run')->will($this->returnCallback(function () use ($adapter) {
             return new \execut\actions\action\Response([
                 'content' => new Response(),
             ]);
         }));
-        $adapter->setView($this->getMockForAbstractClass(ViewRenderer::className()));
+        $adapter->setView($this->getMockForAbstractClass(ViewRenderer::class));
 
-        $this->assertInstanceOf(Response::className(), $adapter->run()->content);
+        $this->assertInstanceOf(Response::class, $adapter->run()->content);
     }
 
 //    public function testRenderWithViewString() {
-//        $adapter = $this->getMockForAbstractClass(Adapter::className());
+//        $adapter = $this->getMockForAbstractClass(Adapter::class);
 //        $adapter->method('_run')->will($this->returnCallback(function () use ($adapter) {
 //            return new \execut\actions\action\Response([
 //                'content' => [
@@ -119,7 +119,7 @@ class AdapterTest extends TestCase
 //        }));
 //        $adapter->setView('test');
 //
-//        $this->assertInstanceOf(Response::className(), $adapter->run()->content);
+//        $this->assertInstanceOf(Response::class, $adapter->run()->content);
 //    }
 }
 

@@ -269,7 +269,7 @@ trait MassEditTrait
                     return implode(', ', $modelsNames);
                 },
                 'widgetOptions' => [
-                    'class' => Select2::className(),
+                    'class' => Select2::class,
                     //            'format' => 'raw',
                     'data' => $data,
                     'pluginOptions' => [

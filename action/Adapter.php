@@ -110,7 +110,7 @@ abstract class Adapter extends Component
     public function setActionParams($params) {
         if (is_array($params)) {
             if (!isset($params['class'])) {
-                $params['class'] = Params::className();
+                $params['class'] = Params::class;
             }
 
             $params = \yii::createObject($params);

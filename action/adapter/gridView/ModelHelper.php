@@ -144,7 +144,7 @@ trait ModelHelper
                 ]),
             ],
             'actions' => [
-                'class' => ActionColumn::className(),
+                'class' => ActionColumn::class,
                 'buttons' => [
                     'view' => function () {},
                 ],

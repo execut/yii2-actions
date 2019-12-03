@@ -22,7 +22,7 @@ class EditWithRelations extends Adapter
     public $relationAdapterConfig = [];
     public function getDefaultEditAdapterConfig() {
         return [
-            'class' => Edit::className(),
+            'class' => Edit::class,
             'requestType' => 'post',
 //            'modelClass' => $this->modelClass,
 //            'scenario' => $this->scenario,
@@ -31,7 +31,7 @@ class EditWithRelations extends Adapter
 //            'mode' => $this->mode,
             //                    'findAttribute' => 'id',
 //            'view' => [
-//                'class' => DetailView::className(),
+//                'class' => DetailView::class,
 //                'uniqueId' => $this->uniqueId,
 //            ],
         ];
@@ -45,9 +45,9 @@ class EditWithRelations extends Adapter
 
     public function getDefaultRelationAdapterConfig() {
         $config = [
-            'class' => \execut\actions\action\adapter\GridView::className(),
+            'class' => \execut\actions\action\adapter\GridView::class,
             'view' => [
-                'class' => DynaGrid::className(),
+                'class' => DynaGrid::class,
             ],
         ];
 

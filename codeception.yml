@@ -1,12 +1,6 @@
 namespace: execut\actions
 paths:
     tests: tests
-    log: tests/_log
+    output: tests/_output
     data: tests/_data
-    helpers: tests/_helpers
-settings:
-    bootstrap: _bootstrap.php
-    suite_class: \PHPUnit_Framework_TestSuite
-    colors: true
-    memory_limit: 500M
-    log: true
+    support: tests/_support

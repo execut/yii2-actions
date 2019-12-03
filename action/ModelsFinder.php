@@ -17,6 +17,7 @@ class ModelsFinder extends BaseObject
     public $modelClass = null;
     protected $actionParams = null;
     protected $findAttributes = null;
+    public $isCastParameters = true;
 
     public function setFindAttributes($attributes) {
         $this->findAttributes = $attributes;
@@ -65,10 +66,12 @@ class ModelsFinder extends BaseObject
             $model = new $class;
             if ($model instanceof ActiveRecord) {
                 foreach ($where as $attribute => $value) {
-                    $column = $model->getTableSchema()->getColumn($attribute);
-                    if ($column) {
-                        $value = $column->phpTypecast($value);
-                        $where[$attribute] = $value;
+                    if ($this->isCastParameters) {
+                        $column = $model->getTableSchema()->getColumn($attribute);
+                        if ($column) {
+                            $value = $column->phpTypecast($value);
+                            $where[$attribute] = $value;
+                        }
                     }
                 }
             }

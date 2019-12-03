@@ -196,7 +196,7 @@ class GridView extends \execut\actions\action\adapter\Form
     public function getDefaultViewRendererConfig()
     {
         return [
-            'class' => DynaGrid::className(),
+            'class' => DynaGrid::class,
 //            'title' => $this->model->getModelLabelOld(2),
             'modelClass' => $this->model->className(),
         ];

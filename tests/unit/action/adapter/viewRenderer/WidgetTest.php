@@ -15,7 +15,7 @@ class WidgetTest extends TestCase
     public function testRender() {
         $viewRenderer = new \execut\actions\action\adapter\viewRenderer\Widget();
         $viewRenderer->widget = [
-            'class' => WidgetForTest::className(),
+            'class' => WidgetForTest::class,
             'out' => 'test',
         ];
 
@@ -34,7 +34,7 @@ class WidgetTest extends TestCase
     }
 
     public function testSetDefaultOptions() {
-        $viewRenderer = $this->getMockBuilder(Widget::className())->setMethods(['getDefaultWidgetOptions'])
+        $viewRenderer = $this->getMockBuilder(Widget::class)->setMethods(['getDefaultWidgetOptions'])
             ->getMock();
         $viewRenderer->expects($this->once())->method('getDefaultWidgetOptions')->willReturn([
                 'defaultKey' => 'defaultValue'

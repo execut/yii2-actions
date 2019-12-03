@@ -43,7 +43,7 @@ class ParamsTest extends TestCase
 
         $controller = $action->controller;
 
-        $helper = $this->getMockBuilder(RequestHelper::className())->setMethods([
+        $helper = $this->getMockBuilder(RequestHelper::class)->setMethods([
             'getPost',
             'getGet',
             'getFiles',
@@ -91,7 +91,7 @@ class ParamsTest extends TestCase
      */
     protected function getAction()
     {
-        $controller = $this->getMockBuilder(Controller::className())->setMethods(['render'])->setConstructorArgs(['id', new Module('id')])->getMock();
+        $controller = $this->getMockBuilder(Controller::class)->setMethods(['render'])->setConstructorArgs(['id', new Module('id')])->getMock();
 
         $action = new Action('id', $controller);
         return $action;
