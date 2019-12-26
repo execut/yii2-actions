@@ -1,20 +1,37 @@
-.kv-edit-mode .kv-detail-view {
-  margin-bottom: -18px;
+.detail-view.table {
+  position: relative;
+  border: none;
 }
-.kv-edit-mode .buttons-container {
-  margin-left: 10px;
-  margin-right: 8px;
-  margin-top: 8px;
-  text-align: right;
-}
-.kv-edit-mode .buttons-container .alert {
+.detail-view.table .kv-edit-mode .kv-detail-view .table {
   margin-bottom: 0;
 }
-.kv-edit-mode .buttons-container .kv-buttons-1,
-.kv-edit-mode .buttons-container .kv-buttons-2 {
+.detail-view.table .kv-edit-mode .buttons-container {
+  padding: 8px 8px 0 10px;
+  margin: 0;
+  text-align: right;
+  border: 1px solid #dddddd;
+}
+.detail-view.table .kv-edit-mode .buttons-container .alert {
+  margin-bottom: 0;
+}
+.detail-view.table .kv-edit-mode .buttons-container .kv-buttons-1,
+.detail-view.table .kv-edit-mode .buttons-container .kv-buttons-2 {
   display: inline-block;
   text-align: left;
 }
-.kv-edit-mode .buttons-container .kv-buttons-2 {
+.detail-view.table .kv-edit-mode .buttons-container .kv-buttons-2 {
   margin-bottom: 8px;
+}
+.detail-view.table .kv-edit-mode .buttons-container.floated-buttons {
+  z-index: 10;
+  position: absolute;
+  bottom: 211px;
+  width: 100%;
+  height: 52px;
+  background: white;
+  left: 0;
+  padding-top: 10px;
+  border-top: 1px solid #dddddd;
+  margin: 0;
+  padding-right: 10px;
 }

@@ -1,24 +1,48 @@
-.kv-edit-mode {
-  .kv-detail-view {
-    margin-bottom: -18px;
-  }
-
-  .buttons-container {
-    margin-left: 10px;
-    margin-right: 8px;
-    margin-top: 8px;
-    text-align: right;
-    .alert {
-      margin-bottom: 0;
+@borderColor: #dddddd;
+.detail-view.table {
+  position: relative;
+  border: none;
+  .kv-edit-mode {
+    .kv-detail-view {
+      .table {
+        margin-bottom: 0;
+      }
     }
 
-    .kv-buttons-1, .kv-buttons-2 {
-      display: inline-block;
-      text-align: left;
-    }
+    .buttons-container {
+      padding: 8px 8px 0 10px;
+      margin: 0;
+      text-align: right;
+      border: 1px solid #dddddd;
 
-    .kv-buttons-2 {
-      margin-bottom: 8px;
+      .alert {
+        margin-bottom: 0;
+      }
+
+      .kv-buttons-1, .kv-buttons-2 {
+        display: inline-block;
+        text-align: left;
+      }
+
+      .kv-buttons-2 {
+        margin-bottom: 8px;
+      }
+
+      &.floated-buttons {
+        z-index: 10;
+        position: absolute;
+        bottom: 211px;
+        width: 100%;
+        height: 52px;
+        background: white;
+        left: 0;
+        padding-top: 10px;
+        border-top: 1px solid @borderColor;
+        //border-left: 1px solid @borderColor;
+        margin: 0;
+        padding-right: 10px;
+        //border-right: 1px solid @borderColor;
+      }
     }
   }
 }
