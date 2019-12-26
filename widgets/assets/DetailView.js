@@ -62,7 +62,7 @@
             }
         },
         initButtonsOffsetTop: function () {
-            let t = this;
+            var t = this;
             if (t.topOffset === null) {
                 t.topOffset = t.buttonsEl.removeClass('floated-buttons').offset().top + t.buttonsEl.outerHeight(true);
             }
@@ -70,13 +70,12 @@
             t.positionizeButtons();
         },
         positionizeButtons: function () {
-            let t = this,
+            var t = this,
                 diff = $(window).scrollTop() + $(window).height() - t.topOffset + 5,
                 isFloat = diff < 0;
-            console.debug('Diff{' + diff + '}=$(window).scrollTop(){' + $(window).scrollTop() + '} + $(window).height(){' + $(window).height() + '} - t.topOffset{' + t.topOffset + '}');
             if (isFloat) {
                 t.buttonsEl.addClass('floated-buttons');
-                let bottom = Math.floor(-diff - t.buttonsEl.outerHeight(true) + 5) + 'px';
+                var bottom = Math.floor(-diff - t.buttonsEl.outerHeight(true) + 5) + 'px';
                 t.buttonsEl.css('bottom', bottom);
             } else {
                 t.buttonsEl.removeClass('floated-buttons');
