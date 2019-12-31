@@ -23,7 +23,7 @@
   margin-bottom: 8px;
 }
 .detail-view.table .kv-edit-mode .buttons-container.floated-buttons {
-  z-index: 10;
+  z-index: 5;
   position: absolute;
   bottom: 211px;
   width: 100%;
