@@ -37,15 +37,17 @@ class DynaGrid extends KartikDynaGrid
 //            unset($column['visible']);
 //        }
 
-        if (\yii::$app->request->post('exportFull_' . $this->id)) {
+        $id = $this->getId();
+        if (\yii::$app->request->post('exportFull_' . $id . '-export')) {
             ini_set('max_execution_time', 1200);
         }
 
         if (empty($this->options['id'])) {
-            $this->options['id'] = $this->getId();
+            $this->options['id'] = $id;
         }
 
         $fullExportMenu = ExportMenu::widget([
+            'id' => $id . '-export',
             'dataProvider' => $this->dataProvider,
             'columns' => $columns,
             'showColumnSelector' => true,
@@ -55,7 +57,7 @@ class DynaGrid extends KartikDynaGrid
             'asDropdown' => false,
             'dynagrid' => true,
             'dynagridOptions' => [
-                'options' => ['id' => $this->options['id']],
+                'options' => ['id' => $id],
                 'gridOptions' => [
                     'columns' => $columns,
                 ],
