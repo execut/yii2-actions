@@ -46,27 +46,6 @@ class DynaGrid extends KartikDynaGrid
             $this->options['id'] = $id;
         }
 
-        $fullExportMenu = ExportMenu::widget([
-            'id' => $id . '-export',
-            'dataProvider' => $this->dataProvider,
-            'columns' => $columns,
-            'showColumnSelector' => true,
-            'target' => ExportMenu::TARGET_BLANK,
-            'batchSize' => 1000,
-            'fontAwesome' => true,
-            'asDropdown' => false,
-            'dynagrid' => true,
-            'dynagridOptions' => [
-                'options' => ['id' => $id],
-                'gridOptions' => [
-                    'columns' => $columns,
-                ],
-            ],
-            'dropdownOptions' => [
-                'label' => '<i class="glyphicon glyphicon-export"></i> Full'
-            ],
-        ]);
-
         $this->columns = $columns;
 
         if ($this->gridOptions === null) {
@@ -112,7 +91,6 @@ JS
                 'itemsAfter'=> [
                     '<li role="presentation" class="divider"></li>',
                     '<li class="dropdown-header">Export All Data</li>',
-                    $fullExportMenu
                 ]
             ],
             'toggleDataOptions' => [
@@ -157,5 +135,40 @@ JS
         }
 
         echo Html::tag('div', $widgetClass::widget($this->gridOptions), $this->options);
+    }
+    protected function initWidget()
+    {
+        parent::initWidget();
+        $this->initFullExportMenu();
+    }
+
+    protected function initFullExportMenu(): void
+    {
+        $columns = $this->gridOptions['columns'];
+        $fullExportMenu = ExportMenu::widget([
+            'id' => $this->id . '-export',
+            'options' => [
+                'id' => $this->id . '-export',
+            ],
+            'dataProvider' => $this->dataProvider,
+            'columns' => $columns,
+            'showColumnSelector' => true,
+            'target' => ExportMenu::TARGET_BLANK,
+            'batchSize' => 1000,
+            'fontAwesome' => true,
+            'asDropdown' => false,
+            'dynagrid' => true,
+            'dynagridOptions' => [
+                'options' => ['id' => $this->id],
+                'gridOptions' => [
+                    'class' => $this->gridOptions['class'],
+                    'columns' => $columns,
+                ],
+            ],
+            'dropdownOptions' => [
+                'label' => '<i class="glyphicon glyphicon-export"></i> Full'
+            ],
+        ]);
+        $this->gridOptions['export']['itemsAfter'][] = $fullExportMenu;
     }
 }
