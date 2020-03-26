@@ -11,11 +11,13 @@ namespace execut\actions\widgets;
 
 use execut\loadingOverlay\LoadingOverlay;
 use execut\yii\jui\WidgetTrait;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use kartik\alert\Alert;
+use yii\web\Response;
 
 class DetailView extends \kartik\detail\DetailView
 {
@@ -32,6 +34,8 @@ class DetailView extends \kartik\detail\DetailView
     public $backUrl = null;
     public $alertBlockAddon = null;
     public $isFloatedButtons = true;
+    public $reloadedAttributes = [];
+    public $refreshAfterAttributeChange = null;
 
     const BUTTON_CANCEL = '<input type="submit" name="cancel" value="Отмена" class="btn btn-default" title="Отменить" onclick="$(this).parents(\'form\').data(\'yiiActiveForm\').validated = true">';
     const BUTTON_APPLY = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Сохранить изменения">';
@@ -81,11 +85,61 @@ class DetailView extends \kartik\detail\DetailView
         parent::__construct($config);
     }
 
+    protected function checkReloadedAttributes() {
+        $request = \yii::$app->request;
+        if (!$request->isAjax || !$request->getQueryParam('getReloadedAttributes')) {
+            return;
+        }
+
+        $reloadedAttributes = [];
+        $attributes = $this->attributes;
+        foreach ($this->reloadedAttributes as $attribute) {
+            if (empty($attributes[$attribute])) {
+                continue;
+            }
+            $reloadedAttributes[$attribute] = $attributes[$attribute];
+        }
+
+        $rows = [];
+        $i = 0;
+        foreach ($reloadedAttributes as $attributeKey => $attribute) {
+            $rows['row-' . $attributeKey] = $this->renderAttributeRow($attribute);
+        }
+
+        // only need the content enclosed within this widget
+        $response = \Yii::$app->getResponse();
+        $response->clearOutputBuffers();
+        $response->setStatusCode(200);
+        $response->format = Response::FORMAT_JSON;
+        $data = [
+            'rows' => $rows
+        ];
+
+        if ($this->refreshAfterAttributeChange) {
+            $attribute = $this->refreshAfterAttributeChange;
+            if (!empty($attributes[$attribute])) {
+                $data['refreshAttribute'] = $this->renderAttributeRow($attributes[$attribute]);
+            }
+        }
+
+        $response->data = $data;
+
+        \Yii::$app->end();
+    }
+
     public function run() {
+        $this->checkReloadedAttributes();
         $this->mainTemplate = $this->renderAlertBlock() . ((!$this->isFloatedButtons && !empty($this->attributes) && count($this->attributes) > 8) ? '{buttons}' : '') . '{detail}{buttons}';
 
         $this->_registerBundle();
         $this->pluginOptions['isFloatedButtons'] = $this->isFloatedButtons;
+        $this->pluginOptions['reloadedAttributes'] = $this->reloadedAttributes;
+
+        $attributes = $this->attributes;
+        if ($this->refreshAfterAttributeChange) {
+            $this->pluginOptions['initialValueRefreshAttribute'] = $this->renderAttributeRow($attributes[$this->refreshAfterAttributeChange]);
+        }
+
         parent::registerPlugin('DetailView');
         echo $this->_beginContainer();
         $r = parent::run();
@@ -97,6 +151,14 @@ class DetailView extends \kartik\detail\DetailView
     public function init()
     {
         $this->attributes = $this->model->getFormFields();
+        foreach ($this->attributes as $attribute => &$options) {
+            if (empty($options['rowOptions'])) {
+                $options['rowOptions'] = [];
+            }
+
+            $options['rowOptions'] = ['class' => 'row-' . $attribute];
+        }
+
         if (!array_key_exists('action', $this->formOptions)) {
             $this->formOptions['action'] = $this->getAction();
         }

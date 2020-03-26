@@ -9,6 +9,7 @@
 namespace execut\actions\widgets;
 
 use execut\actions\action\adapter\viewRenderer\DynaGridRow;
+use execut\actions\widgets\dynaGrid\ToolbarButton;
 use execut\yii\jui\WidgetTrait;
 use kartik\export\ExportMenu;
 use yii\helpers\ArrayHelper;
@@ -22,6 +23,7 @@ class DynaGrid extends KartikDynaGrid
     public $dataProvider = null;
     public $storage = KartikDynaGrid::TYPE_DB;
     public $filter = null;
+    public $toolbarButtons = [];
 
     public function init()
     {
@@ -38,7 +40,7 @@ class DynaGrid extends KartikDynaGrid
 //        }
 
         $id = $this->getId();
-        if (\yii::$app->request->post('exportFull_' . $id . '-export')) {
+        if (\yii::$app && \yii::$app->request->post('exportFull_' . $id . '-export')) {
             ini_set('max_execution_time', 1200);
         }
 
@@ -47,6 +49,19 @@ class DynaGrid extends KartikDynaGrid
         }
 
         $this->columns = $columns;
+
+        foreach ($this->toolbarButtons as $key => $button) {
+            if (is_array($button)) {
+                if (!empty($button['class'])) {
+                    $class = $button['class'];
+                } else {
+                    $class = ToolbarButton::class;
+                }
+
+                $button = \yii::createObject($class, $button);
+                $this->toolbarButtons[$key] = $button;
+            }
+        }
 
         if ($this->gridOptions === null) {
             $this->gridOptions = [];
@@ -97,7 +112,7 @@ JS
                 'maxCount' => 100000,
             ],
             'filterModel' => $this->filter,
-//            'toolbar' => $this->getToolbarConfig(),
+            'toolbar' => $this->getToolbarConfig(),
             'dataProvider' => $this->dataProvider,
         ], $this->gridOptions);
 
@@ -106,6 +121,10 @@ JS
 
 
     public function getGridId() {
+        if (!empty($this->gridOptions['id'])) {
+            return $this->gridOptions['id'];
+        }
+
         return $this->id . '-grid';
     }
 
@@ -170,5 +189,16 @@ JS
             ],
         ]);
         $this->gridOptions['export']['itemsAfter'][] = $fullExportMenu;
+    }
+
+    public function getToolbarConfig() {
+        $result = [];
+        foreach ($this->toolbarButtons as $key => $button) {
+            $result[$key] = [
+                'content' => $button->render($this)
+            ];
+        }
+
+        return $result;
     }
 }

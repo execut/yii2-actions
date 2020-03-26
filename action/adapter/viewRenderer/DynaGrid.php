@@ -76,7 +76,7 @@ class DynaGrid extends Widget
                 'updateUrl' => $this->getUpdateUrlParams(),
                 'addButtonUrl' => $this->getAddUrlParams(),
                 'layout' => '{alertBlock}<div class="dyna-grid-footer">{summary}{pager}<div class="dyna-grid-toolbar">{toolbar}</div></div>{items}',
-                'toolbar' => $this->getToolbarConfig(),
+                'toolbar' => $this->getToolbarConfigOld(),
 //                'panel' => [
 //                    'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-cog"></i> ' . \yii::t('execut.actions', 'List') . ' ' . $this->lcfirst($this->title) . '</h3>',
 //                    'before' => $alertBlock,
@@ -88,6 +88,36 @@ class DynaGrid extends Widget
             'options' => [
                 'id' => $this->getDynaGridId(),
             ],
+        ];
+    }
+
+    /**
+     * @TODO Need refactory to toolbarConfig
+     * @param $refreshUrlParams
+     * @return array
+     */
+    public function getToolbarConfigOld(): array
+    {
+        $refreshUrlParams = [
+            $this->adapter->uniqueId,
+        ];
+
+        foreach ($this->refreshAttributes as $key) {
+            if (!empty($this->adapter->actionParams->get[$key])) {
+                $refreshUrlParams[$key] = $this->adapter->actionParams->get[$key];
+            }
+        }
+
+        return [
+            'massEdit' => ['content' => $this->renderMassEditButton()],
+            'massVisible' => ['content' => $this->renderVisibleButtons()],
+            'add' => ['content' => $this->renderAddButton()],
+            'refresh' => [
+                'content' => Html::a('<i class="glyphicon glyphicon-repeat"></i>', $refreshUrlParams, ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid']),
+            ],
+            'dynaParams' => ['content' => '{dynagridFilter}{dynagridSort}{dynagrid}'],
+            'toggleData' => '{toggleData}',
+            'export' => '{export}',
         ];
     }
 
@@ -162,35 +192,6 @@ class DynaGrid extends Widget
         $out .= "\n</div>";
 
         return $out;
-    }
-
-    /**
-     * @param $refreshUrlParams
-     * @return array
-     */
-    public function getToolbarConfig(): array
-    {
-        $refreshUrlParams = [
-            $this->adapter->uniqueId,
-        ];
-
-        foreach ($this->refreshAttributes as $key) {
-            if (!empty($this->adapter->actionParams->get[$key])) {
-                $refreshUrlParams[$key] = $this->adapter->actionParams->get[$key];
-            }
-        }
-
-        return [
-            'massEdit' => ['content' => $this->renderMassEditButton()],
-            'massVisible' => ['content' => $this->renderVisibleButtons()],
-            'add' => ['content' => $this->renderAddButton()],
-            'refresh' => [
-                'content' => Html::a('<i class="glyphicon glyphicon-repeat"></i>', $refreshUrlParams, ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid']),
-            ],
-            'dynaParams' => ['content' => '{dynagridFilter}{dynagridSort}{dynagrid}'],
-            'toggleData' => '{toggleData}',
-            'export' => '{export}',
-        ];
     }
 
     protected function lcfirst($string, $encoding = "UTF-8")

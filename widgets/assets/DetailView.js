@@ -6,11 +6,52 @@
             var t = this;
             t._initElements();
             t._initEvents();
+            t._initReloadedAttributes();
         },
         _initElements: function () {
             var t = this;
             t.formEl = t.element.parent();
             t.buttonsEl = t.element.find('.buttons-container');
+        },
+        _initialValueRefreshAttribute: null,
+        _initReloadedAttributes: function () {
+            var t = this;
+            if (!t.options.reloadedAttributes.length) {
+                return;
+            }
+
+            setTimeout(function () {
+                t.reloadReloadedAttributes()
+            }, 5000);
+        },
+        reloadReloadedAttributes: function () {
+            var t =this;
+            $.ajax({
+                dataType: "json",
+                url: location.href,
+                data: {getReloadedAttributes: 1},
+                success: function (data) {
+                    for (var attributeKey in data.rows) {
+                        $('.' + attributeKey).replaceWith(data.rows[attributeKey]);
+                    }
+
+                    if (t.options.initialValueRefreshAttribute && typeof data.refreshAttribute !== 'undefined') {
+                        if (data.refreshAttribute !== t.options.initialValueRefreshAttribute) {
+                            // console.debug('different');
+                            // console.debug('current: ' + t.options.initialValueRefreshAttribute);
+                            // console.debug('remove: ' + data.refreshAttribute);
+                            location.reload();
+                        }
+                    }
+
+                    setTimeout(function () {
+                        t.reloadReloadedAttributes()
+                    }, 5000);
+                },
+                headers: {
+                    'X-Pjax': 1,
+                }
+            });
         },
         isSaved: false,
         _initEvents: function () {

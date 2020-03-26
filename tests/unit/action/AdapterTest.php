@@ -100,7 +100,9 @@ class AdapterTest extends TestCase
         $adapter = $this->getMockForAbstractClass(Adapter::class);
         $adapter->method('_run')->will($this->returnCallback(function () use ($adapter) {
             return new \execut\actions\action\Response([
-                'content' => new Response(),
+                'content' => new Response([
+                    'charset' => 'utf8'
+                ]),
             ]);
         }));
         $adapter->setView($this->getMockForAbstractClass(ViewRenderer::class));
