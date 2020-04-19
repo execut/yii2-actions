@@ -23,6 +23,12 @@ return [
         'assetManager' => [
             'basePath' => __DIR__ . '/../../tests/assets/',
             'bundles' => [
+                \execut\actions\widgets\MassHandlerButtonAsset::class => [
+                    'sourcePath' => null,
+                    'js' => [],
+                    'css' => [],
+                    'depends' => [],
+                ],
                 'yii\\web\\JqueryAsset' => [
                     'sourcePath' => null,
                     'js' => [],
