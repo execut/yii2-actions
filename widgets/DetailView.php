@@ -156,7 +156,7 @@ class DetailView extends \kartik\detail\DetailView
                 $options['rowOptions'] = [];
             }
 
-            $options['rowOptions'] = ['class' => 'row-' . $attribute];
+            Html::addCssClass($options['rowOptions'], 'row-' . $attribute);
         }
 
         if (!array_key_exists('action', $this->formOptions)) {
