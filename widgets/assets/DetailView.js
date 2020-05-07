@@ -116,7 +116,7 @@
         },
         positionizeButtons: function () {
             var t = this,
-                diff = $(window).scrollTop() + $(window).innerHeight() - t.topOffset + 5,
+                diff = $(window).scrollTop() + $(window).outerHeight() - t.topOffset + 5,
                 isFloat = diff < 0;
             if (isFloat) {
                 t.buttonsEl.addClass('floated-buttons');
