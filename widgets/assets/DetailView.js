@@ -98,14 +98,18 @@
                 $(window).on('scroll', function () {
                     t.positionizeButtons();
                 }).on('resize', function () {
+                    t.initButtonsOffsetTop(true);
+                    t.positionizeButtons();
+                }).on('orientationchange', function () {
+                    t.initButtonsOffsetTop(true);
                     t.positionizeButtons();
                 });
             }
         },
-        initButtonsOffsetTop: function () {
+        initButtonsOffsetTop: function (isResetTopOffset) {
             var t = this;
-            if (t.topOffset === null) {
-                t.topOffset = t.buttonsEl.removeClass('floated-buttons').offset().top + t.buttonsEl.outerHeight(true);
+            if (t.topOffset === null || isResetTopOffset) {
+                t.topOffset = t.buttonsEl.css('bottom', false).removeClass('floated-buttons').offset().top + t.buttonsEl.outerHeight(true);
             }
 
             t.positionizeButtons();
