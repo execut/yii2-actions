@@ -24,11 +24,10 @@
 }
 .detail-view.table .kv-edit-mode .buttons-container.floated-buttons {
   z-index: 5;
-  position: absolute;
-  bottom: 211px;
+  position: fixed;
+  bottom: 0;
   width: 100%;
   background: white;
-  left: 0;
   padding-top: 10px;
   border-top: 1px solid #dddddd;
   margin: 0;

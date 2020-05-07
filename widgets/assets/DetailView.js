@@ -1,7 +1,9 @@
 (function () {
     $.widget("execut.DetailView", {
+        isDebug: false,
         buttonsEl: null,
         topOffset: null,
+        sizesEl: null,
         _create: function () {
             var t = this;
             t._initElements();
@@ -12,6 +14,10 @@
             var t = this;
             t.formEl = t.element.parent();
             t.buttonsEl = t.element.find('.buttons-container');
+            if (t.isDebug) {
+                t.sizesEl = $('<div style="display: inline-block; font-size: 6px"></div>');
+                t.buttonsEl.prepend(t.sizesEl);
+            }
         },
         _initialValueRefreshAttribute: null,
         _initReloadedAttributes: function () {
@@ -97,13 +103,13 @@
                 t.initButtonsOffsetTop();
                 $(window).on('scroll', function () {
                     t.positionizeButtons();
-                }).on('resize', function () {
-                    t.initButtonsOffsetTop(true);
-                    t.positionizeButtons();
-                }).on('orientationchange', function () {
+                }).on('resize orientationchange', function () {
                     t.initButtonsOffsetTop(true);
                     t.positionizeButtons();
                 });
+                $(document).on('touchmove', function () {
+                    t.positionizeButtons();
+                })
             }
         },
         initButtonsOffsetTop: function (isResetTopOffset) {
@@ -118,13 +124,29 @@
             var t = this,
                 diff = $(window).scrollTop() + $(window).outerHeight() - t.topOffset + 5,
                 isFloat = diff < 0;
+            if (t.isDebug) {
+            //     var addressBarSize = getComputedStyle(document.documentElement).perspective;
+                t.sizesEl.html('Time: ' + Date.now()
+                    + '<br>t.buttonsEl.parent().width(): ' + Math.floor(t.buttonsEl.parent().width()));
+            //         + '<br>addressBarSize: ' + addressBarSize
+            //         + '<br>$(window).scrollTop(): ' + Math.floor($(window).scrollTop())
+            //         + '<br>window.innerHeight: ' + Math.floor($(window).innerHeight)
+            //         + '<br>window.height(): ' + Math.floor($(window).height())
+            //         + '<br>$(window).innerHeight(): ' + Math.floor($(window).innerHeight())
+            //         + '<br>window.outerHeight: ' + Math.floor(window.outerHeight)
+            //         + '<br>document.documentElement.clientHeight: ' + document.documentElement.clientHeight
+            //         + '<br>$(window).outerHeight(): ' + Math.floor($(window).outerHeight())
+            //         + '<br>t.topOffset: ' + Math.floor(t.topOffset));
+            }
+
             if (isFloat) {
                 t.buttonsEl.addClass('floated-buttons');
-                var bottom = Math.floor(-diff - t.buttonsEl.outerHeight(true) + 5) + 'px';
-                t.buttonsEl.css('bottom', bottom);
+                // var bottom = Math.floor(-diff - t.buttonsEl.outerHeight(true) + 5) + 'px';
             } else {
                 t.buttonsEl.removeClass('floated-buttons');
             }
+
+            t.buttonsEl.css('width', Math.floor(t.buttonsEl.parent().width()));
         }
     })
 })();
