@@ -291,7 +291,9 @@ class Edit extends Form
     protected function getDefaultRedirectParams() {
         if ($params = $this->loadRedirectUrl()) {
             $model = $this->getModel();
-            $params = $params . (strpos($params, '?') === false ? '?' : '&') . 'redirect=1';
+            if (strpos($params, 'redirect=1') === false) {
+                $params = $params . (strpos($params, '?') === false ? '?' : '&') . 'redirect=1';
+            }
 
             $hash = $this->getUrlHashFromModel($model);
             $params = Url::to($params) . '#' . $hash;
