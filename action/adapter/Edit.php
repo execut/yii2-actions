@@ -130,7 +130,7 @@ class Edit extends Form
                 ]);
             }
 
-            if (!empty($model->errors)) {
+            if (!empty($model->errors) && empty($this->actionParams->get['refreshedAttributes'])) {
                 $flash = Html::errorSummary($model, [
                     'encode' => false,
                 ]);

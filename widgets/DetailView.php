@@ -9,15 +9,22 @@
 namespace execut\actions\widgets;
 
 
+use execut\crudFields\fields\Field;
+use execut\crudFields\fields\reloader\Reloader;
+use execut\crudFields\fields\reloader\Target;
+use execut\crudFields\fields\reloader\Periodically;
 use execut\loadingOverlay\LoadingOverlay;
 use execut\yii\jui\WidgetTrait;
+use yii\base\Exception;
 use yii\base\InvalidConfigException;
+use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use kartik\alert\Alert;
 use yii\web\Response;
+use yii\web\View;
 
 class DetailView extends \kartik\detail\DetailView
 {
@@ -26,6 +33,11 @@ class DetailView extends \kartik\detail\DetailView
     const All_BUTTONS_TEMPLATE = '{check}&nbsp;&nbsp;{save}&nbsp;&nbsp;{apply}&nbsp;&nbsp;{cancel}';
     public $uniqueId = null;
     public $action = null;
+
+    /**
+     * @var Model
+     */
+    public $model;
     public $buttonsTemplate = self::DEFAULT_BUTTONS_TEMPLATE;
     public $saveButton = self::BUTTON_SAVE;
     public $checkButton = self::BUTTON_CHECK;
@@ -35,7 +47,6 @@ class DetailView extends \kartik\detail\DetailView
     public $alertBlockAddon = null;
     public $isFloatedButtons = true;
     public $reloadedAttributes = [];
-    public $refreshAfterAttributeChange = null;
 
     const BUTTON_CANCEL = '<input type="submit" name="cancel" value="Отмена" class="btn btn-default" title="Отменить" onclick="$(this).parents(\'form\').data(\'yiiActiveForm\').validated = true">';
     const BUTTON_APPLY = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Сохранить изменения">';
@@ -87,39 +98,42 @@ class DetailView extends \kartik\detail\DetailView
 
     protected function checkReloadedAttributes() {
         $request = \yii::$app->request;
-        if (!$request->isAjax || !$request->getQueryParam('getReloadedAttributes')) {
+        if (!$request->isAjax || !$request->getQueryParam('refreshedAttributes')) {
             return;
         }
 
-        $reloadedAttributes = [];
-        $attributes = $this->attributes;
-        foreach ($this->reloadedAttributes as $attribute) {
-            if (empty($attributes[$attribute])) {
-                continue;
-            }
-            $reloadedAttributes[$attribute] = $attributes[$attribute];
-        }
-
-        $rows = [];
-        $i = 0;
-        foreach ($reloadedAttributes as $attributeKey => $attribute) {
-            $rows['row-' . $attributeKey] = $this->renderAttributeRow($attribute);
-        }
-
-        // only need the content enclosed within this widget
         $response = \Yii::$app->getResponse();
         $response->clearOutputBuffers();
         $response->setStatusCode(200);
         $response->format = Response::FORMAT_JSON;
-        $data = [
-            'rows' => $rows
-        ];
+        $attributes = $request->getQueryParam('refreshedAttributes');
+        $reloadedAttributes = [];
+        foreach ($attributes as $attribute) {
+            $reloadedAttributes[$attribute] = $this->attributes[$attribute];
+        }
 
-        if ($this->refreshAfterAttributeChange) {
-            $attribute = $this->refreshAfterAttributeChange;
-            if (!empty($attributes[$attribute])) {
-                $data['refreshAttribute'] = $this->renderAttributeRow($attributes[$attribute]);
+        $rows = [];
+        $view = $this->getView();
+        foreach ($attributes as $attribute) {
+            $view->js = [];
+            $view->jsFiles = [];
+            $renderedRow = [
+                'html' => $this->renderAttributeRow($reloadedAttributes[$attribute])
+            ];
+            ob_start();
+            $view->endBody();
+            ob_end_clean();
+
+            if (!empty($view->js[View::POS_READY])) {
+                $renderedRow['js'] = implode('', $view->js[View::POS_READY]);
+                $renderedRow['html'] .= implode('', $view->jsFiles[View::POS_END]);
             }
+
+            $rows[$attribute] = $renderedRow;
+
+            $data = [
+                'rows' => $rows
+            ];
         }
 
         $response->data = $data;
@@ -135,10 +149,8 @@ class DetailView extends \kartik\detail\DetailView
         $this->pluginOptions['isFloatedButtons'] = $this->isFloatedButtons;
         $this->pluginOptions['reloadedAttributes'] = $this->reloadedAttributes;
 
-        $attributes = $this->attributes;
-        if ($this->refreshAfterAttributeChange) {
-            $this->pluginOptions['initialValueRefreshAttribute'] = $this->renderAttributeRow($attributes[$this->refreshAfterAttributeChange]);
-        }
+        $this->pluginOptions['refreshedRows'] = $this->getRefreshedRows();
+        $this->pluginOptions['fields'] = $this->getFieldsJsParams();
 
         parent::registerPlugin('DetailView');
         echo $this->_beginContainer();
@@ -146,6 +158,75 @@ class DetailView extends \kartik\detail\DetailView
         echo $this->_endContainer();
 
         return $r;
+    }
+
+    protected function getFieldsJsParams() {
+        $params = [];
+        foreach ($this->model->fields as $field) {
+            $name = $field->getName();
+            $param = [
+                'name' => $name,
+                'rowSelector' => '.' . $this->getRowClass($name),
+            ];
+            $attribute = $field->getAttribute();
+            if ($attribute) {
+                $param['fieldSelector'] = '#' . Html::getInputId($this->model, $attribute);
+            }
+            $params[$name] = $param;
+        }
+        return $params;
+    }
+
+    protected function getRefreshedRows() {
+        $result = [];
+        /**
+         * @var Field $field
+         */
+        foreach ($this->model->fields as $key => $field) {
+            $reloaders = $field->getReloaders();
+            foreach ($reloaders as $reloader) {
+                $name = $field->getName();
+                if (empty($name)) {
+                    throw new Exception('Name for field with key ' . $key . ' is required');
+                }
+                $reloaderOptions = [
+                    'refreshType' => $reloader->getKey(),
+                    'name' => $name,
+                ];
+
+                $targets = $reloader->getTargets();
+                $targetsOptions = [];
+                /**
+                 * @var Target $target
+                 */
+                foreach ($targets as $target) {
+                    $targetOptions = [
+                        'name' => $target->getField()->getName(),
+                    ];
+
+                    $values = $target->getValues();
+                    if (!empty($values)) {
+                        $targetOptions['values'] = $values;
+                    }
+
+                    $whenIsEmpty = $target->getWhenIsEmpty();
+                    if ($whenIsEmpty !== null) {
+                        $targetOptions['whenIsEmpty'] = $whenIsEmpty;
+                    }
+
+                    $targetsOptions[] = $targetOptions;
+                }
+
+                $reloaderOptions['watchedInputs'] = $targetsOptions;
+                $result[] = $reloaderOptions;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getRowClass($attribute) {
+        return 'row-' . $attribute;
     }
 
     public function init()
@@ -156,7 +237,7 @@ class DetailView extends \kartik\detail\DetailView
                 $options['rowOptions'] = [];
             }
 
-            Html::addCssClass($options['rowOptions'], 'row-' . $attribute);
+            Html::addCssClass($options['rowOptions'], $this->getRowClass($attribute));
         }
 
         if (!array_key_exists('action', $this->formOptions)) {
