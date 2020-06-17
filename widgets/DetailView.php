@@ -361,6 +361,12 @@ class DetailView extends \kartik\detail\DetailView
      */
     protected function getFields()
     {
-        return $this->model->getFields();
+        if ($this->model->hasMethod('getFields')) {
+            $fields = $this->model->getFields();
+        } else {
+            $fields = [];
+        }
+
+        return $fields;
     }
 }
