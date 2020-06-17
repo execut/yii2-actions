@@ -162,7 +162,7 @@ class DetailView extends \kartik\detail\DetailView
 
     protected function getFieldsJsParams() {
         $params = [];
-        foreach ($this->model->fields as $field) {
+        foreach ($this->getFields() as $field) {
             $name = $field->getName();
             $param = [
                 'name' => $name,
@@ -182,7 +182,7 @@ class DetailView extends \kartik\detail\DetailView
         /**
          * @var Field $field
          */
-        foreach ($this->model->fields as $key => $field) {
+        foreach ($this->getFields() as $key => $field) {
             $reloaders = $field->getReloaders();
             foreach ($reloaders as $reloader) {
                 $name = $field->getName();
@@ -354,5 +354,13 @@ class DetailView extends \kartik\detail\DetailView
             '{apply}' => $this->applyButton,
             '{cancel}' => $cancelButton,
         ]);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getFields()
+    {
+        return $this->model->getFields();
     }
 }
