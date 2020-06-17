@@ -2,6 +2,9 @@
   position: relative;
   border: none;
 }
+.detail-view.table .kv-edit-mode .kv-detail-view {
+  overflow: visible;
+}
 .detail-view.table .kv-edit-mode .kv-detail-view .table {
   margin-bottom: 0;
 }

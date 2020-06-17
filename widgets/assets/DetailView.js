@@ -7,14 +7,11 @@
         initialHtml: {},
         timeout: 1000,
         _initInitialHtml: function () {
-            var t = this,
-                attribute = null,
-                refreshParams = null;
-            for (attribute in t.options.refreshedRows) {
-                refreshParams = t.options.refreshedRows[attribute];
-                var el = $(t.options.fields[refreshParams.name].rowSelector);
-                t.initialHtml[attribute] = t._replaceNewStrings($("<div />").append(el.clone()).html());
-            }
+            var t = this;
+            t.options.refreshedRows.forEach(function (refreshedRow) {
+                var el = $(t.options.fields[refreshedRow.name].rowSelector);
+                t.initialHtml[refreshedRow.name] = t._replaceNewStrings($("<div />").append(el.clone()).html());
+            });
         },
         _replaceNewStrings: function (s) {
             return s.replace(/(?:\r\n|\r|\n)/g, "");
@@ -205,6 +202,8 @@
                     if (disabledEls) {
                         disabledEls.prop('disabled', true);
                     }
+
+                    el.val('-1');
                 }
             });
             var data = $form.serialize();

@@ -170,7 +170,7 @@ class DetailView extends \kartik\detail\DetailView
             ];
             $attribute = $field->getAttribute();
             if ($attribute) {
-                $param['fieldSelector'] = '#' . Html::getInputId($this->model, $attribute);
+                $param['fieldSelector'] = '#' . Html::getInputId($field->model, $attribute);
             }
             $params[$name] = $param;
         }
@@ -183,43 +183,50 @@ class DetailView extends \kartik\detail\DetailView
          * @var Field $field
          */
         foreach ($this->getFields() as $key => $field) {
-            $reloaders = $field->getReloaders();
-            foreach ($reloaders as $reloader) {
-                $name = $field->getName();
-                if (empty($name)) {
-                    throw new Exception('Name for field with key ' . $key . ' is required');
-                }
-                $reloaderOptions = [
-                    'refreshType' => $reloader->getKey(),
-                    'name' => $name,
+            $result = ArrayHelper::merge($result, $this->getRefreshedFieldRows($field));
+        }
+
+        return $result;
+    }
+
+    protected function getRefreshedFieldRows($field) {
+        $reloaders = $field->getReloaders();
+        $result = [];
+        foreach ($reloaders as $reloader) {
+            $name = $field->getName();
+            if (empty($name)) {
+                throw new Exception('Name for field is required');
+            }
+            $reloaderOptions = [
+                'refreshType' => $reloader->getKey(),
+                'name' => $name,
+            ];
+
+            $targets = $reloader->getTargets();
+            $targetsOptions = [];
+            /**
+             * @var Target $target
+             */
+            foreach ($targets as $target) {
+                $targetOptions = [
+                    'name' => $target->getField()->getName(),
                 ];
 
-                $targets = $reloader->getTargets();
-                $targetsOptions = [];
-                /**
-                 * @var Target $target
-                 */
-                foreach ($targets as $target) {
-                    $targetOptions = [
-                        'name' => $target->getField()->getName(),
-                    ];
-
-                    $values = $target->getValues();
-                    if (!empty($values)) {
-                        $targetOptions['values'] = $values;
-                    }
-
-                    $whenIsEmpty = $target->getWhenIsEmpty();
-                    if ($whenIsEmpty !== null) {
-                        $targetOptions['whenIsEmpty'] = $whenIsEmpty;
-                    }
-
-                    $targetsOptions[] = $targetOptions;
+                $values = $target->getValues();
+                if (!empty($values)) {
+                    $targetOptions['values'] = $values;
                 }
 
-                $reloaderOptions['watchedInputs'] = $targetsOptions;
-                $result[] = $reloaderOptions;
+                $whenIsEmpty = $target->getWhenIsEmpty();
+                if ($whenIsEmpty !== null) {
+                    $targetOptions['whenIsEmpty'] = $whenIsEmpty;
+                }
+
+                $targetsOptions[] = $targetOptions;
             }
+
+            $reloaderOptions['watchedInputs'] = $targetsOptions;
+            $result[] = $reloaderOptions;
         }
 
         return $result;
@@ -361,10 +368,14 @@ class DetailView extends \kartik\detail\DetailView
      */
     protected function getFields()
     {
+        $fields = [];
         if ($this->model->hasMethod('getFields')) {
-            $fields = $this->model->getFields();
-        } else {
-            $fields = [];
+            $fields = $fieldsSource = $this->model->getFields();
+            foreach ($fieldsSource as $field) {
+                if ($field->isRenderRelationFields) {
+                    $fields = array_merge($fields, $field->getRelationObject()->getRelationFields());
+                }
+            }
         }
 
         return $fields;
