@@ -48,10 +48,10 @@ class DetailView extends \kartik\detail\DetailView
     public $isFloatedButtons = true;
     public $reloadedAttributes = [];
 
-    const BUTTON_CANCEL = '<input type="submit" name="cancel" value="Отмена" class="btn btn-default" title="Отменить" onclick="$(this).parents(\'form\').data(\'yiiActiveForm\').validated = true">';
-    const BUTTON_APPLY = '<input type="submit" name="apply" value="Применить" class="btn btn-primary" href="" title="Сохранить изменения">';
-    const BUTTON_CHECK = '<input type="submit" name="check" value="Проверить" class="btn btn-info" href="" title="Проверить">';
-    const BUTTON_SAVE = '<input type="submit" name="save" value="Отправить" class="btn btn-primary" href="" title="Сохранить и вернуться">';
+    const BUTTON_CANCEL = '<input type="submit" name="cancel" value="{Cancel}" class="btn btn-default" title="{Do cancel}" onclick="$(this).parents(\'form\').data(\'yiiActiveForm\').validated = true">';
+    const BUTTON_APPLY = '<input type="submit" name="apply" value="{Apply}" class="btn btn-primary" href="" title="{Save changes}">';
+    const BUTTON_CHECK = '<input type="submit" name="check" value="{Check}" class="btn btn-info" href="" title="{Check errors}">';
+    const BUTTON_SAVE = '<input type="submit" name="save" value="{Save}" class="btn btn-primary" href="" title="{Save and return}">';
 
     public function __construct($config = [])
     {
@@ -347,6 +347,8 @@ class DetailView extends \kartik\detail\DetailView
 
         $cancelButton = strtr($cancelButton, [
             '{backUrl}' => $backUrl,
+            '{Cancel}' => \yii::t('execut.actions', 'Cancel'),
+            '{Do cancel}' => \yii::t('execut.actions', 'Do cancel'),
         ]);
 
 
@@ -355,10 +357,23 @@ class DetailView extends \kartik\detail\DetailView
             $buttonsTemplate = call_user_func($buttonsTemplate, $this->model);
         }
 
+        $checkButton = strtr($this->checkButton, [
+            '{Check}' => \yii::t('execut.actions', 'Check'),
+            '{Check errors}' => \yii::t('execut.actions', 'Check errors'),
+        ]);
+        $saveButton = strtr($this->saveButton, [
+            '{Save}' => \yii::t('execut.actions', 'Save'),
+            '{Save and return}' => \yii::t('execut.actions', 'Save and return'),
+        ]);
+        $applyButton = strtr($this->applyButton, [
+            '{Apply}' => \yii::t('execut.actions', 'Apply'),
+            '{Save changes}' => \yii::t('execut.actions', 'Save changes'),
+        ]);
+
         return strtr($buttonsTemplate, [
-            '{check}' => $this->checkButton,
-            '{save}' => $this->saveButton,
-            '{apply}' => $this->applyButton,
+            '{check}' => $checkButton,
+            '{save}' => $saveButton,
+            '{apply}' => $applyButton,
             '{cancel}' => $cancelButton,
         ]);
     }
