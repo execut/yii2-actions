@@ -358,7 +358,6 @@ class DynaGrid extends Widget
 //                'title' => $buttonOptions['label'],
 //                'class' => 'btn btn-' . $buttonClass
 //            ]);
-
         }
 
         if ($this->isRenderMassDelete) {
@@ -369,6 +368,7 @@ class DynaGrid extends Widget
                 'url' => $urlParams,
                 'gridId' => $this->getGridId(),
                 'model' => $this->filter,
+                'buttonIcon' => 'trash',
             ]);
         }
 
