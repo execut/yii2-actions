@@ -192,7 +192,7 @@
             refreshedAttributes.forEach(function (refreshedAttribute) {
                 if (typeof t.options.fields[refreshedAttribute] !== 'undefined') {
                     var el = $(t.options.fields[refreshedAttribute].fieldSelector),
-                        disabledEls = false;
+                        disabledEls = el;
                     if (el.is('div')) {
                         disabledEls = el.parent().find('input');
                         el = el.find('input:checked');
@@ -203,14 +203,14 @@
                         disabledEls.prop('disabled', true);
                     }
 
-                    el.val('-1');
+                    el.val('');
                 }
             });
             var data = $form.serialize();
             refreshedAttributes.forEach(function (refreshedAttribute) {
                 if (typeof t.options.fields[refreshedAttribute] !== 'undefined') {
                     var el = $(t.options.fields[refreshedAttribute].fieldSelector),
-                        disabledEls = false;
+                        disabledEls = el;
                     if (el.is('div')) {
                         disabledEls = el.parent().find('input');
                         el = el.find('input:checked');
