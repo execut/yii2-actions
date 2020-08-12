@@ -6,6 +6,7 @@
   overflow: visible;
 }
 .detail-view.table .kv-edit-mode .kv-detail-view .table {
+  overflow: visible;
   margin-bottom: 0;
 }
 .detail-view.table .kv-edit-mode .buttons-container {
