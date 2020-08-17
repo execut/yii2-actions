@@ -72,6 +72,19 @@ class DeleteTest extends TestCase
             'kv-detail-warning' => 'Record #' . $model->id . ' cannot be deleted because it has associated entries that cannot be deleted. Error content: "test exception".',
         ], $response->flashes);
     }
+
+    /**
+     * @link https://github.com/execut/yii2-actions/issues/2
+     */
+    public function testDeleteExsitedRecordError() {
+        $action = new Delete();
+        $action->setModel(false);
+        $response = $action->run();
+
+        $this->assertEquals([
+            'kv-detail-warning' => 'You are trying to delete an already deleted entry.',
+        ], $response->flashes);
+    }
 }
 
 class DeleteTestModel extends ActiveRecord {

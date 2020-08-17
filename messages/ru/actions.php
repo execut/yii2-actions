@@ -23,4 +23,5 @@ return [
     'Save and return' => 'Сохранить и вернуться',
     'cannot be deleted because it has associated entries that cannot be deleted' => 'нельзя удалить, поскольку с ней связаны неудаляемые записи',
     'Error content' => 'Содержимое ошибки',
+    'You are trying to delete an already deleted entry.' => 'Вы пытаетесь удалить уже удалённую запись.',
 ];
