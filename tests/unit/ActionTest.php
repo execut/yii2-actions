@@ -17,22 +17,37 @@ use yii\web\Session;
 
 class ActionTest extends \execut\actions\TestCase
 {
-
-    public function setUp(): void
-    {
-        $this->markTestSkipped('Need repair');
-        parent::setUp();
-    }
     public $beforeRunTriggered = false;
     public $afterRunTriggered = false;
     public $beforeRenderTriggered = false;
+    protected $_oldSession = null;
+
+    protected function _setUp(): void
+    {
+        $this->_oldSession = \yii::$app->session;
+        $newSession = $this->getMockBuilder(Session::class)->getMock();
+
+        \yii::$app->setComponents([
+            'session' => $newSession,
+        ]);
+    }
+
+    protected function _tearDown() {
+        \yii::$app->setComponents([
+            'session' => $this->_oldSession
+        ]);
+    }
 
     public function testGetParams() {
+
+        $this->markTestSkipped('Need repair');
         $action = $this->getAction();
         $this->assertInstanceOf(Params::class, $action->params);
     }
 
     public function testRun() {
+
+        $this->markTestSkipped('Need repair');
         $action = $this->getAction();
         $adapter = $this->getMockForAbstractClass(Adapter::class);
         $action->controller->expects($this->once())->method('render')->with('test', ['test'])->will($this->returnValue('test'));
@@ -70,6 +85,8 @@ class ActionTest extends \execut\actions\TestCase
     }
 
     public function testGetAdapter() {
+
+        $this->markTestSkipped('Need repair');
         $adapter = $this->getMockForAbstractClass(Adapter::class);
         $action = new Action('id', '');
         $action->adapter = [
@@ -80,6 +97,8 @@ class ActionTest extends \execut\actions\TestCase
     }
 
     public function testRenderWithResponse() {
+
+        $this->markTestSkipped('Need repair');
         $action = $this->getAction();
 
         $adapter = $this->getMockForAbstractClass(Adapter::class);
@@ -92,6 +111,52 @@ class ActionTest extends \execut\actions\TestCase
         $action->adapter = $adapter;
         $this->assertInstanceOf(Response::class, $action->run());
         $this->assertFalse(\yii::$app->layout);
+    }
+
+    public function testRunWithFlash() {
+        $session = \yii::$app->session;
+        $session->method('setFlash')->with('key', ['value'])->willReturn([]);
+        $action = $this->getAction();
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
+        $adapter->method('_run')->will($this->returnCallback(function () use ($adapter) {
+            return new \execut\actions\action\Response([
+                'flashes' => [
+                    'key' => 'value',
+                ]
+            ]);
+        }));
+        $action->adapter = $adapter;
+        $action->run();
+    }
+
+    /**
+     * @link https://github.com/execut/yii2-actions/issues/1
+     */
+    public function testBugWithManyFlashes() {
+        $oldSession = \yii::$app->session;
+        $newSession = $this->getMockBuilder(Session::class)->getMock();
+        $newSession->method('getFlash')->with('key')->willReturn(['value']);
+        $newSession->expects($this->once())->method('setFlash')->willReturn(['test']);
+
+        \yii::$app->setComponents([
+            'session' => $newSession,
+        ]);
+
+        $action = $this->getAction();
+        $adapter = $this->getMockForAbstractClass(Adapter::class);
+        $adapter->method('_run')->will($this->returnCallback(function () use ($adapter) {
+            return new \execut\actions\action\Response([
+                'flashes' => [
+                    'key' => 'test',
+                ]
+            ]);
+        }));
+        $action->adapter = $adapter;
+        $action->run();
+
+        \yii::$app->setComponents([
+            'session' => $oldSession
+        ]);
     }
 
     /**

@@ -109,10 +109,13 @@ class Action extends \yii\base\Action
         return $result;
     }
 
-    protected function addFlash($key, $flash) {
+    protected function addFlash($key, $flashString) {
         $session = \yii::$app->session;
         if ($oldFlash = $session->getFlash($key)) {
-            $flash = $oldFlash . "<br>" . $flash;
+            $oldFlash[] = $flashString;
+            $flash = $oldFlash;
+        } else {
+            $flash = [$flashString];
         }
 
         $session->setFlash($key, $flash);
