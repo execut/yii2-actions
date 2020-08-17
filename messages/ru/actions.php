@@ -21,4 +21,6 @@ return [
     'Check errors' => 'Проверить на ошибки',
     'Save' => 'Отправить',
     'Save and return' => 'Сохранить и вернуться',
+    'cannot be deleted because it has associated entries that cannot be deleted' => 'нельзя удалить, поскольку с ней связаны неудаляемые записи',
+    'Error content' => 'Содержимое ошибки',
 ];

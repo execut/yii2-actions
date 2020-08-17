@@ -10,6 +10,7 @@ namespace execut\actions\action\adapter;
 
 use execut\actions\action\Adapter;
 use execut\actions\action\Response;
+use yii\db\IntegrityException;
 
 class Delete extends Adapter
 {
@@ -18,13 +19,23 @@ class Delete extends Adapter
     protected function _run()
     {
         $model = $this->getModel();
-        $model->delete();
-        if ($this->isRedirect) {
+        $isFailedDelete = false;
+        try {
+            $model->delete();
+        } catch (IntegrityException $e) {
+            $isFailedDelete = true;
             $response = \yii::$app->response->redirect(\Yii::$app->request->referrer);
-            $flashes = ['kv-detail-success' => $this->translate('Record') . ' #' . $model->primaryKey . ' ' . $this->translate('is successfully') . ' ' . $this->translate('deleted')];
-        } else {
-            $flashes = [];
-            $response = '';
+            $flashes = ['kv-detail-warning' => $this->translate('Record') . ' #' . $model->primaryKey . ' ' . $this->translate('cannot be deleted because it has associated entries that cannot be deleted') . '. ' . $this->translate('Error content') . ': "' . $e->getMessage() . '".'];
+        }
+
+        if (!$isFailedDelete) {
+            if ($this->isRedirect) {
+                $response = \yii::$app->response->redirect(\Yii::$app->request->referrer);
+                $flashes = ['kv-detail-success' => $this->translate('Record') . ' #' . $model->primaryKey . ' ' . $this->translate('is successfully') . ' ' . $this->translate('deleted')];
+            } else {
+                $flashes = [];
+                $response = '';
+            }
         }
 
         $response = $this->getResponse([
