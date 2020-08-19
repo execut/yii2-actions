@@ -64,31 +64,34 @@ class Bootstrap extends \execut\yii\Bootstrap
     }
 
     protected function registerKCFinderSessionSettings($app) {
-        $kcfOptions = array_merge(KCFinder::$kcfDefaultOptions, [
-            'uploadURL' => '@web/upload',
-            'access' => [
-                'files' => [
-                    'upload' => true,
-                    'delete' => false,
-                    'copy' => false,
-                    'move' => false,
-                    'rename' => false,
+        $app->on(Application::EVENT_BEFORE_REQUEST, function () use ($app) {
+            ;
+            $kcfOptions = array_merge(KCFinder::$kcfDefaultOptions, [
+                'uploadURL' => '@web/upload',
+                'access' => [
+                    'files' => [
+                        'upload' => true,
+                        'delete' => false,
+                        'copy' => false,
+                        'move' => false,
+                        'rename' => false,
+                    ],
+                    'dirs' => [
+                        'create' => true,
+                        'delete' => false,
+                        'rename' => false,
+                    ],
                 ],
-                'dirs' => [
-                    'create' => true,
-                    'delete' => false,
-                    'rename' => false,
-                ],
-            ],
-        ], $this->kCFinderOptions);
-        if ($this->allowedRole !== false) {
-            if (!(!$app->user->isGuest && $this->allowedRole === '@') && !$app->user->can($this->allowedRole)) {
-                $kcfOptions['disabled'] = true;
+            ], $this->kCFinderOptions);
+            if ($this->allowedRole !== false) {
+                if (!(!$app->user->isGuest && $this->allowedRole === '@') && !$app->user->can($this->allowedRole)) {
+                    $kcfOptions['disabled'] = true;
+                }
             }
-        }
 
-        $kcfOptions['uploadURL'] = \yii::getAlias($kcfOptions['uploadURL']);
-        $app = \yii::$app;
-        $app->session->set('KCFINDER', $kcfOptions);
+            $kcfOptions['uploadURL'] = \yii::getAlias($kcfOptions['uploadURL']);
+
+            $app->session->set('KCFINDER', $kcfOptions);
+        });
     }
 }
