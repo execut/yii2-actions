@@ -40,19 +40,22 @@ class Bootstrap extends \execut\yii\Bootstrap
     public function bootstrap($app)
     {
         parent::bootstrap($app);
-        if ($app instanceof Application) {
-            $this->registerKCFinderSessionSettings($app);
-        }
 
-        self::initI18N();
+        $app->on(Application::EVENT_BEFORE_REQUEST, function () use ($app) {
+            if ($app instanceof Application) {
+                $this->registerKCFinderSessionSettings($app);
+            }
+
+            self::initI18N($app);
+        });
     }
 
 
 
-    public static function initI18N() {
+    public static function initI18N($app) {
         \yii::setAlias('@execut', '@vendor/execut');
-        if (\Yii::$app->i18n) {
-            \Yii::$app->i18n->translations['execut.actions'] = [
+        if ($app->i18n) {
+            $app->i18n->translations['execut.actions'] = [
                 'class' => 'yii\i18n\PhpMessageSource',
                 'sourceLanguage' => 'en-US',
                 'basePath' => '@execut/yii2-actions/messages',
@@ -64,34 +67,31 @@ class Bootstrap extends \execut\yii\Bootstrap
     }
 
     protected function registerKCFinderSessionSettings($app) {
-        $app->on(Application::EVENT_BEFORE_REQUEST, function () use ($app) {
-            ;
-            $kcfOptions = array_merge(KCFinder::$kcfDefaultOptions, [
-                'uploadURL' => '@web/upload',
-                'access' => [
-                    'files' => [
-                        'upload' => true,
-                        'delete' => false,
-                        'copy' => false,
-                        'move' => false,
-                        'rename' => false,
-                    ],
-                    'dirs' => [
-                        'create' => true,
-                        'delete' => false,
-                        'rename' => false,
-                    ],
+        $kcfOptions = array_merge(KCFinder::$kcfDefaultOptions, [
+            'uploadURL' => '@web/upload',
+            'access' => [
+                'files' => [
+                    'upload' => true,
+                    'delete' => false,
+                    'copy' => false,
+                    'move' => false,
+                    'rename' => false,
                 ],
-            ], $this->kCFinderOptions);
-            if ($this->allowedRole !== false) {
-                if (!(!$app->user->isGuest && $this->allowedRole === '@') && !$app->user->can($this->allowedRole)) {
-                    $kcfOptions['disabled'] = true;
-                }
+                'dirs' => [
+                    'create' => true,
+                    'delete' => false,
+                    'rename' => false,
+                ],
+            ],
+        ], $this->kCFinderOptions);
+        if ($this->allowedRole !== false) {
+            if (!(!$app->user->isGuest && $this->allowedRole === '@') && !$app->user->can($this->allowedRole)) {
+                $kcfOptions['disabled'] = true;
             }
+        }
 
-            $kcfOptions['uploadURL'] = \yii::getAlias($kcfOptions['uploadURL']);
+        $kcfOptions['uploadURL'] = \yii::getAlias($kcfOptions['uploadURL']);
 
-            $app->session->set('KCFINDER', $kcfOptions);
-        });
+        $app->session->set('KCFINDER', $kcfOptions);
     }
 }
