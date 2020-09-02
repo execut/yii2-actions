@@ -57,7 +57,7 @@ class Delete extends Adapter
      */
     protected function translate($m): string
     {
-        if (YII_ENV !== 'test') {
+        if (YII_ENV !== 'test_unit') {
             $m = \yii::t('execut.actions', $m);
         }
 
