@@ -180,7 +180,7 @@
             var t = this,
                 $form = t.element.parent('form');
             if (!refreshedAttributes.length) {
-                console.debug('skip');
+                // console.debug('skip');
                 if (onComplete) {
                     onComplete();
                 }
@@ -247,10 +247,10 @@
                         // }
 
                         if (row.html !== t.initialHtml[fieldName] && typeof t.options.fields[fieldName] !== 'undefined') {
-                            console.debug('update ' + fieldName);
-                            console.debug(row.js);
-                            console.debug('old html:', t.initialHtml[fieldName]);
-                            console.debug('new html:', row.html);
+                            // console.debug('update ' + fieldName);
+                            // console.debug(row.js);
+                            // console.debug('old html:', t.initialHtml[fieldName]);
+                            // console.debug('new html:', row.html);
                             // console.debug('replace ' + fieldName + ' ' + t.options.fields[fieldName].rowSelector + ' to ', row.html);
                             $(t.options.fields[fieldName].rowSelector).replaceWith(row.html);
                             t.initialHtml[fieldName] = row.html;
