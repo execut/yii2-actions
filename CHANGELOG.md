@@ -1,6 +1,10 @@
 execut\yii2-actions releases
 ==============================================
 
+1.42.5 2020-09-28
+---
+- Fixed a bug with 500 errors of file action
+
 1.42.0
 ---
 - Changelog started
