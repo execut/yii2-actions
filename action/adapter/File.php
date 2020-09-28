@@ -30,6 +30,10 @@ class File extends Adapter
     public $extensionIsRequired = true;
     protected function _run() {
         $attributes = $this->actionParams->get;
+        if (empty($attributes['id'])) {
+            throw new NotFoundHttpException('Id attribute required');
+        }
+
         $class = $this->modelClass;
         unset($attributes['r']);
 
