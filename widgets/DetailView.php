@@ -240,6 +240,9 @@ class DetailView extends \kartik\detail\DetailView
     {
         $this->attributes = $this->model->getFormFields();
         foreach ($this->attributes as $attribute => &$options) {
+            if (is_string($options)) {
+                $this->attributes[$attribute] = $options = ['attribute' => $options];
+            }
             if (empty($options['rowOptions'])) {
                 $options['rowOptions'] = [];
             }
