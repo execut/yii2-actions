@@ -36,7 +36,7 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {};
                 t.editButtons = $(t.options.editButtons);
             }
 
-            t.addButton = $('#' + t.element.attr('id') + '-add-button');
+            // t.addButton = $('#' + t.element.attr('id') + '-add-button');
         },
         _initEvents: function () {
             var t = this,
@@ -55,12 +55,12 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {};
                 };
             t.formEl.on('ajaxComplete', onAjaxComplete);
 
-            t.addButton.click(function () {
-                t.values(t._defaultAttributes);
-
-                t.open();
-                return false;
-            });
+            // t.addButton.on('click', function () {
+            //     t.values(t._defaultAttributes);
+            //
+            //     t.open();
+            //     return false;
+            // });
 
             t.formEl.on('beforeSubmit', function (event) {
                 event.result = false;
