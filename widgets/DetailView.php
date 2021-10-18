@@ -304,9 +304,7 @@ class DetailView extends \kartik\detail\DetailView
     {
         $session = \Yii::$app->session;
         $flashes = $session->getAllFlashes();
-        $alertContainerOptions = [
-            'style' => 'max-width:400px'
-        ];
+        $alertContainerOptions = [];
         if (count($flashes) === 0) {
             Html::addCssStyle($alertContainerOptions, 'display:none;');
         }

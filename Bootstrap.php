@@ -4,7 +4,7 @@
 
 namespace execut\actions;
 
-use iutbay\yii2kcfinder\KCFinder;
+use execut\yii2kcfinder\KCFinder;
 use yii\web\Application;
 
 class Bootstrap extends \execut\yii\Bootstrap
